@@ -34,10 +34,12 @@ Trabajar mediante prompts numerados. Cada prompt autoriza únicamente su alcance
 - Raíz: `AGENTS.md`, `project.godot` y `.gitignore`; `docs/`: diseño, narrativa, planificación, progreso, decisiones y entorno técnico.
 - `scenes/core/main.tscn`: entrada y controlador de vistas; `scenes/screens/` y `scenes/components/`: interfaz; `scripts/ui/`: interacción y navegación; `assets/ui/`: Theme e iconos propios; `tests/`: auxiliares de validación. Crear otras carpetas cuando la fase autorizada necesite archivos reales.
 - `scripts/narrative/`: motor independiente de la interfaz; `data/cases/test_narrative.json`: demostración técnica no canónica; `tests/narrative/`: pruebas y fixtures, algunas inválidas deliberadamente.
+- `scripts/systems/`: SaveManager y adaptador opcional de ciclo de vida; `tests/save/`: pruebas aisladas de persistencia, sin tocar partidas reales.
 - `docs/GDD.md`: diseño y alcance; `docs/STORY_BIBLE.md`: hechos narrativos y preguntas abiertas.
 - `docs/ROADMAP.md`: fases, dependencias y aceptación; `docs/PROGRESS.md`: avance y validaciones; `docs/DECISIONS.md`: decisiones y propuestas.
 - `docs/UI_NAVIGATION.md`: flujo de interfaz, archivos, comandos y límites actuales. TECHNICAL_SETUP conserva el registro de la base de 03.
 - `docs/technical/NARRATIVE_ENGINE.md`: esquema 1, API, transacciones, eventos y límites del motor. No cambiar su formato o semántica sin documentarlo y validar las pruebas pertinentes.
+- `docs/technical/SAVE_SYSTEM.md`: formato de guardado 1, restauración, rutas user://, respaldos, autoguardado y garantías reales. Las pruebas escriben únicamente bajo user://save_tests/.
 
 ## Verificación y cierre
 
@@ -55,5 +57,5 @@ Trabajar mediante prompts numerados. Cada prompt autoriza únicamente su alcance
 - El audio usa grabaciones y filtros simulados; no implementar procesamiento avanzado de señales ni reconocimiento de voz.
 - No realizar commits, pushes, despliegues, publicaciones, cambios remotos, operaciones con credenciales ni otros cambios externos sin autorización explícita.
 - PROMPT 03 aprueba las etapas 00–02 y autoriza exclusivamente la base técnica ya creada. Las menciones de revisión pendiente en las entregas originales del Caso 001 describen su estado al entregarse en 02; consultar su aprobación posterior en D-017 y PROGRESS.
-- PROMPT 05 aprueba 00–04 y autoriza exclusivamente motor narrativo, sesión temporal, caso técnico y pruebas aisladas. La consola sigue sin conexión al motor y el Caso 001 no está integrado. Al cerrar 05, detenerse y esperar autorización para 06.
-- No crear todavía guardado en disco, llamadas jugables, interfaz de conversaciones, reproducción de audio, mapas funcionales, despacho, expedientes jugables ni deducciones. No modificar la interfaz, instalar herramientas, crear APK o configurar publicación sin autorización.
+- PROMPT 06 aprueba 00–05 y autoriza exclusivamente persistencia local, recuperación, autoguardado y pruebas con el motor existente. El motor y el guardado siguen sin conexión al menú/consola; Continuar permanece deshabilitado y el Caso 001 no está integrado. Al cerrar 06, detenerse y esperar autorización para 07. No hacer commits ni pushes en esta fase.
+- No crear todavía llamadas jugables, interfaz de conversaciones, reproducción de audio, mapas funcionales, despacho, expedientes jugables ni deducciones. No modificar la interfaz, instalar herramientas, crear APK o configurar publicación sin autorización.

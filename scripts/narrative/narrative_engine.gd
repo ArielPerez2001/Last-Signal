@@ -8,12 +8,14 @@ signal evidence_registered(evidence_id: String)
 signal event_requested(event: Dictionary)
 signal case_finished(ending_id: String)
 signal narrative_error(diagnostics: Array)
+signal session_restored(snapshot: Dictionary)
 
 const Loader = preload("res://scripts/narrative/narrative_loader.gd")
 const Validator = preload("res://scripts/narrative/narrative_validator.gd")
 const SessionState = preload("res://scripts/narrative/narrative_session_state.gd")
 const Conditions = preload("res://scripts/narrative/condition_evaluator.gd")
 const Effects = preload("res://scripts/narrative/effect_processor.gd")
+const StateValidator = preload("res://scripts/narrative/narrative_state_validator.gd")
 const MAX_AUTO_TRANSITIONS: int = 64
 
 var _case: Dictionary = {}
@@ -189,6 +191,65 @@ func get_available_choices() -> Array[Dictionary]:
 
 func get_state_snapshot() -> Dictionary:
 	return {} if _state == null else _state.snapshot()
+
+
+func get_case_metadata() -> Dictionary:
+	if _case.is_empty():
+		return {}
+	return {"case_id": _case.case_id, "content_version": _case.content_version, "narrative_schema_version": int(_case.schema_version), "content_fingerprint": JSON.stringify(_case, "", true, true).sha256_text()}
+
+
+func is_busy() -> bool:
+	return _busy
+
+
+func validate_state_snapshot(snapshot: Dictionary) -> Dictionary:
+	var validation: Dictionary = StateValidator.validate(snapshot, _case)
+	if not validation.ok:
+		return validation
+	var candidate: Dictionary = validation.data
+	# Replay is confined to an unobserved engine. The live session emits no effects.
+	var replay = get_script().new()
+	replay._case = _case.duplicate(true)
+	replay._nodes = _nodes.duplicate(true)
+	if not replay.start_case():
+		return StateValidator.failure("invalid_history", "El contenido no permite reconstruir el inicio.")
+	var consumed_index: int = 0
+	for entry: Dictionary in candidate.transaction_log:
+		while replay.get_state_snapshot().revision < entry.revision:
+			if consumed_index >= candidate.consumed_events.size() or not replay.consume_event(candidate.consumed_events[consumed_index]):
+				return StateValidator.failure("invalid_history", "El historial de consumo de eventos es inconsistente.")
+			consumed_index += 1
+		var before: Dictionary = replay.get_state_snapshot()
+		if before.revision != entry.revision or before.current_node != entry.node_id or not replay.select_choice(entry.choice_id, entry.revision):
+			return StateValidator.failure("invalid_history", "Una decisión del historial no es válida para su nodo o revisión.")
+	while consumed_index < candidate.consumed_events.size():
+		if not replay.consume_event(candidate.consumed_events[consumed_index]):
+			return StateValidator.failure("invalid_history", "El registro contiene un evento desconocido o ya consumido.")
+		consumed_index += 1
+	if replay.get_state_snapshot() != candidate:
+		return StateValidator.failure("inconsistent_snapshot", "El estado, sus referencias o sus efectos no coinciden con el historial confirmado.")
+	return {"ok": true, "code": "valid_snapshot", "message": "Estado completo validado contra el contenido.", "data": candidate.duplicate(true)}
+
+
+func restore_state_snapshot(snapshot: Dictionary) -> bool:
+	if _busy:
+		return _fail("busy", "No se permite restaurar durante una notificación.")
+	_busy = true
+	var validation: Dictionary = validate_state_snapshot(snapshot)
+	if not validation.ok:
+		_busy = false
+		return _fail(validation.code, validation.message, "session")
+	var candidate: SessionState = SessionState.new()
+	candidate.data = validation.data.duplicate(true)
+	_state = candidate
+	_clear_errors()
+	# Restoration is its own notification, not a narrative advance or new event.
+	session_restored.emit(get_state_snapshot())
+	node_changed.emit(get_current_node())
+	choices_changed.emit(get_available_choices())
+	_busy = false
+	return true
 
 
 func is_case_finished() -> bool:

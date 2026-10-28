@@ -1,8 +1,8 @@
 # ÚLTIMA SEÑAL — Plan de desarrollo
 
-Actualizado: 2026-10-27. Las fases son planificación y no autorizan ejecución. Cada prompt posterior delimita el trabajo; una etapa puede requerir varios prompts.
+Actualizado: 2026-10-28. Las fases son planificación y no autorizan ejecución. Cada prompt posterior delimita el trabajo; una etapa puede requerir varios prompts.
 
-Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**. Una dependencia futura no convierte por sí sola una fase en bloqueada. Las etapas 00–05 están completadas. El motor se verifica aisladamente con JSON técnico; la interfaz anterior se conserva y no hay Caso 001 jugable ni autorización para 06.
+Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**. Una dependencia futura no convierte por sí sola una fase en bloqueada. Las etapas 00–06 están completadas. El motor y el guardado se verifican con JSON técnico; la interfaz anterior se conserva, Continuar sigue deshabilitado y no hay Caso 001 jugable ni autorización para 07.
 
 ## 00. Contexto maestro
 
@@ -50,7 +50,7 @@ Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**
 - **Dependencias:** 02, 03 y base de navegación de 04.
 - **Entregables:** esquema de contenido, evaluación de condiciones, transiciones y validación de referencias.
 - **Aceptación:** recorridos reproducibles y detección de referencias o condiciones inválidas con datos de comprobación.
-- **Estado:** completado. Núcleo independiente, esquema JSON 1, transacciones, condiciones/efectos, eventos, finales y reinicio; 485 comprobaciones de núcleo y regresión de interfaz correctas. API, esquema, correspondencia con preproducción y límites en [NARRATIVE_ENGINE.md](technical/NARRATIVE_ENGINE.md). Sin guardado ni integración jugable del Caso 001; 06 no autorizado.
+- **Estado:** completado. Núcleo independiente, esquema JSON 1, transacciones, condiciones/efectos, eventos, finales y reinicio; 485 comprobaciones de núcleo y regresión de interfaz correctas. API, esquema, correspondencia con preproducción y ampliación de restauración en [NARRATIVE_ENGINE.md](technical/NARRATIVE_ENGINE.md). La persistencia se añade en 06; integración jugable del Caso 001 pendiente.
 
 ## 06. Estado y guardado
 
@@ -58,7 +58,7 @@ Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**
 - **Dependencias:** 05 y definición de los datos persistentes.
 - **Entregables:** estado del juego, guardado versionado y carga local.
 - **Aceptación:** guardar, cerrar y recuperar un estado representativo; comportamiento documentado ante ausencia o invalidez del archivo.
-- **Estado:** pendiente.
+- **Estado:** completado. Formato 1 en user://, temporal verificado, respaldo válido anterior, recuperación sin sobrescribir originales, importación transaccional, autoguardado y ciclo de vida opcional. Pruebas de disco, procesos separados y regresión anteriores correctas; API, garantías y límites en [SAVE_SYSTEM.md](technical/SAVE_SYSTEM.md). Sin integración al menú/Caso 001, sin pruebas Android y sin iniciar 07.
 
 ## 07. Llamadas
 

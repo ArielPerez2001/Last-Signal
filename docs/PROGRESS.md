@@ -2,7 +2,7 @@
 
 ## Estado actual
 
-Actualizado: 2026-10-27, fecha local del usuario. **Etapa 05 completada: motor narrativo independiente verificado en Godot 4.7.2 estable, en escritorio Windows.** El usuario aprobó 00–04 al enviar PROMPT 05. El motor solo ejecuta contenido técnico aislado; la interfaz anterior permanece igual y el Caso 001 no es jugable. Trabajo detenido; PROMPT 06 no autorizado.
+Actualizado: 2026-10-28, fecha local del usuario. **Etapa 06 completada: estado, guardado y recuperación local verificados en Godot 4.7.2 estable, en escritorio Windows.** El usuario aprobó 00–05 al enviar PROMPT 06. Motor y persistencia solo se integran por API con contenido técnico aislado; interfaz anterior igual, Continuar deshabilitado y Caso 001 sin integrar. Trabajo detenido; PROMPT 07 no autorizado.
 
 ## Etapas completadas
 
@@ -12,8 +12,9 @@ Actualizado: 2026-10-27, fecha local del usuario. **Etapa 05 completada: motor n
 - **03 — Proyecto Godot:** configuración, escena principal, Theme, importación, inicio directo y validación de tres resoluciones en headless y con renderizado real.
 - **04 — Navegación e interfaz base:** menú, consola, cuatro paneles reutilizables, pantallas informativas y regreso; configuración conservada, cuatro resoluciones verificadas y 28 capturas inspeccionadas.
 - **05 — Motor narrativo:** carga/validación JSON, estado temporal, condiciones, efectos, transacciones, eventos, transiciones, finales y reinicio. Caso técnico de seis nodos y dos desenlaces, sin conexión a la consola.
+- **06 — Estado y guardado:** JSON versionado en user://, validación completa, respaldo, recuperación transaccional, importación sin duplicar consecuencias, autoguardado y adaptador opcional de ciclo de vida. Pruebas aisladas con procesos separados, sin activar funciones del menú.
 
-Las etapas 06–23 y las subfases 19.1–19.4 permanecen pendientes. El estado detallado y la aceptación de cada etapa están en [ROADMAP.md](ROADMAP.md). Los estados de revisión pendiente en las entregas originales de 02 describen su situación al entregarse, anterior a la aprobación de PROMPT 03.
+Las etapas 07–23 y las subfases 19.1–19.4 permanecen pendientes. El estado detallado y la aceptación de cada etapa están en [ROADMAP.md](ROADMAP.md). Los estados de revisión pendiente en las entregas originales de 02 describen su situación al entregarse, anterior a la aprobación de PROMPT 03.
 
 ## Cambios de fase 01 — 2026-10-27
 
@@ -180,6 +181,49 @@ Incidencias resueltas: comparar un Array inválido con un Dictionary podía gene
 - El push normal fue rechazado con HTTP 403: Permission to ArielPerez2001/Last-Signal.git denied to arpe22. La cuenta de Git disponible es arpe22; necesita permiso de escritura o debe autenticarse una cuenta autorizada. La conexión de GitHub de la app también requiere reautenticación. El contenido está comprometido localmente, pero no se ha subido ni se ha podido comprobar coincidencia local/remoto.
 - No cambió el código del juego; los resultados funcionales siguen siendo los registrados en la fase 05. La subida queda pendiente de resolver el acceso, sin iniciar otra fase.
 
+## Cambios de fase 06 — 2026-10-28
+
+- Leídos PROMPT 06, instrucciones y documentos obligatorios; inspeccionados motor, snapshot, señales, caso técnico, pruebas, escena principal y navegación. No hay instrucciones anidadas aplicables ni cambios locales anteriores al comenzar esta fase. La nueva autorización sustituye la prohibición temporal de persistencia, sin autorizar 07.
+- Creado `scripts/systems/save_manager.gd`: una ranura, resultados estructurados, consultas puras, JSON versionado, temporales verificados, respaldo y recuperación conservadora. `save_lifecycle.gd` prepara notificaciones de pausa/foco/cierre como adaptador opcional; no se añade a Main ni actúa sobre UI.
+- Añadido `scripts/narrative/narrative_state_validator.gd` y ampliado únicamente `narrative_engine.gd` con metadatos/fingerprint, consulta busy, validación e importación transaccional. NarrativeSessionState y su esquema de 17 campos se conservan sin cambios.
+- La restauración verifica estructura/tipos y reconstruye historial en un motor aislado sin observadores; después compara el estado completo. La sesión viva solo se sustituye al pasar todo; no reentra en el nodo ni vuelve a publicar evidencias, eventos o final. Se emite session_restored y vistas actualizadas.
+- Adoptados save_version 1, game_id ultima_senal, narrative_schema_version 1 independiente, content_version/fingerprint exactos y fecha UTC. Límites y extensión futura documentados; no hay migraciones automáticas, objetos Godot, rutas del dispositivo o campos ficticios de investigación.
+- El autoguardado difiere y agrupa solicitudes de cambios confirmados. Incluye transiciones/final en una escritura, persiste consumos, detecta reinicios y conserva dirty tras errores. Carga no reescribe originales; borrado explícito conserva respaldo por defecto y desactiva autoguardado. No hay cierre que garantice ejecución en Android.
+- Creados cinco scripts de pruebas en `tests/save/`: dos suites, soporte, gestor con fallos inyectados y worker de procesos separados. Ocho scripts nuevos con sus UID generados por Godot. Archivos de prueba únicamente en carpetas únicas user://save_tests; producción user://saves no se usa en estos ensayos.
+- Añadido [SAVE_SYSTEM.md](technical/SAVE_SYSTEM.md), actualizados NARRATIVE_ENGINE, AGENTS, ROADMAP, DECISIONS y este progreso. Decisiones D-031–D-036. Siete capturas nuevas de regresión en docs/validation/prompt_06/720x1280.
+- No se cambiaron project.godot, escenas, scripts UI, Theme/iconos, caso técnico, pruebas anteriores, GDD, STORY_BIBLE ni documentación/reportes del Caso 001. No se realizaron commits, pushes, autenticaciones, instalaciones o exportaciones en 06.
+
+## Validaciones de fase 06
+
+Motor real: `4.7.2.stable.official.ed1daf0bf`; escritorio Windows, Compatibility/OpenGL 3.3.0, Intel UHD Graphics. Ejecuciones finales con salida 0 y sin errores de script o E/S inesperados reportados. Comandos reproducibles en [SAVE_SYSTEM.md](technical/SAVE_SYSTEM.md).
+
+| Prueba o grupo de PROMPT 06 | Resultado ejecutado |
+| --- | --- |
+| 01 Crear guardado | Principal válido creado; metadatos y estado verificables, sin respaldo anterior ficticio |
+| 02–04 Progreso/evidencias/efectos | Snapshot completo igual tras cargar; tipos int/bool, evidencias y eventos consumidos conservados; sin señales nuevas de efectos o adquisiciones |
+| 05 Reinicio de proceso | Dos procesos reales separados: uno guarda una decisión/consumo y termina; el otro carga contenido sin iniciar el nodo, recupera el checkpoint y continúa al mismo desenlace |
+| 06–10 Ausencia/corrupción/respaldo/incompatibilidad/nodo | Errores controlados; recuperación informa respaldo sin modificar originales; versión/caso/fingerprint y cursor desconocido rechazados |
+| 11 Escritura fallida | Fallos inyectados en temporal, temporal de respaldo y ambos renombrados; temporal corrupto detectado; carpeta real obstruida devuelve error. Checkpoint recuperable y sesión conservados; reintento sin repetir efectos |
+| 12 Guardados consecutivos | Principal más reciente y respaldo del checkpoint previo validados; un principal corrupto no se copia al respaldo |
+| 13 Borrado controlado | Principal eliminado explícitamente, respaldo conservado por defecto; true elimina ambos y sus temporales; archivo ajeno y memoria conservados; pausa/cola pendientes no recrean la ranura |
+| 14 Sesión terminada | Final y registros restaurados; elecciones posteriores bloqueadas; consumo posterior al final también persiste |
+| 15–16 Tipos/referencias/consultas | Variaciones de tipo, fracciones, bool por int, ID, eventos, historial, registros, enums, objetos/ciclos y límites rechazados; consultas repetidas sin cambiar bytes/sesión/último resultado |
+| 17 Regresión del motor | Suites anteriores PASS: 151 + 334 = 485 comprobaciones, sin modificar sus archivos |
+| 18 Integridad visual | Bootstrap y navegación PASS headless en 720 × 1280, 1080 × 1920, 1080 × 2400 y 720 × 1600; 106 nodos estables. Navegación gráfica PASS a 720 × 1280; siete capturas inspeccionadas |
+| 19 Autoguardado | Una escritura por estado confirmado agrupado; transiciones/final y consumos completos; sin escritura dentro del callback, por frame o durante carga. Fallo mantiene dirty; reintento posterior correcto |
+| 20 Restauración fallida | Estado activo completo conservado tras todos los archivos/estados inválidos; sin restauración parcial ni notificación de sesión restaurada |
+| Importación e inicio directo | Importación headless y arranque normal headless/gráfico con salida 0; Continuar deshabilitado, menú y cuatro secciones anteriores funcionales |
+| Suites nuevas | test_save_manager: PASS, 114 comprobaciones. test_save_validation: PASS, 905 comprobaciones |
+| Total de aserciones de las cuatro suites principales | 1019 nuevas + 485 de regresión = 1504 comprobaciones; los contadores internos de los workers no se suman de nuevo |
+| Integridad de archivos | 139 archivos no vacíos fuera de .git/.godot; 97 enlaces locales y 70 referencias reales a recursos válidos. Se excluyen de referencias ausentes los dos literales deliberados de pruebas negativas |
+| Alcance conservado | 109 de los 115 archivos iniciales mantienen SHA-256 idéntico. Los seis modificados son AGENTS, PROGRESS, ROADMAP, DECISIONS, NARRATIVE_ENGINE y el script narrative_engine; se añaden 24 archivos de esta fase |
+
+Capturas de esta fase: [Menú](validation/prompt_06/720x1280/menu.png), [Llamadas](validation/prompt_06/720x1280/calls.png), [Audio](validation/prompt_06/720x1280/audio.png), [Mapa](validation/prompt_06/720x1280/map.png), [Expedientes](validation/prompt_06/720x1280/evidence.png), [Configuración](validation/prompt_06/720x1280/settings.png) y [Créditos](validation/prompt_06/720x1280/credits.png). No se declara una nueva inspección gráfica de las otras tres resoluciones; sus ejecuciones de 06 fueron headless.
+
+Incidencias resueltas: metadatos mal tipados podían comparar Array con String y lanzar un error de script; se añadieron guardas de tipo antes de comparar. Una aserción inicial comparaba JSON sin normalizar con enteros del estado: ahora comprueba el respaldo mediante el mismo contrato de validación/normalización, manteniendo igualdad de todos los campos. La API de crear directorios imprimía un error nativo para una carpeta obstruida: el gestor detecta primero el archivo que la bloquea y devuelve diagnóstico estructurado. Se fortalecieron los bloqueos para alias de mayúsculas en Windows y la detección de cambios sin suscripción automática; borrado desactiva también el adaptador de ciclo de vida. Las suites finales pasan sin retirar las aserciones de integridad.
+
+Limitaciones de evidencia: no se probaron Android, APK, permisos físicos, corte de energía, disco lleno real, terminación abrupta durante un rename ni rendimiento móvil. Los fallos de E/S son inyectados y una obstrucción real aislada; no se dañó almacenamiento del usuario. Las notificaciones Android se simularon por sus constantes en escritorio. Las pruebas PS01–PS13 del Caso 001 siguen futuras: no se integró su contenido ni sus recursos.
+
 ## Problemas conocidos y pendientes
 
 - La carpeta ya tiene repositorio Git local y origin configurado por autorización posterior del usuario. La futura publicación de otros cambios sigue requiriendo autorización explícita.
@@ -187,14 +231,14 @@ Incidencias resueltas: comparar un Array inválido con un Dictionary podía gene
 - No están definidos dispositivos objetivo, versión mínima de Android ni presupuestos técnicos medibles.
 - Público objetivo y mejoras de accesibilidad adicionales figuran como propuestas, pendientes de aprobación.
 - No hay contradicciones detectadas entre MVP y campaña. PROMPT 02 confirma incendio y clausura en 1981; sus fechas exactas siguen propuestas. Su relación causal con el incidente general sigue abierta.
-- El objetivo de 8–15 minutos del Caso 001 sigue siendo una estimación sin pruebas de personas reales. La carga, errores e idempotencia del núcleo genérico ya se probaron en 05; su integración con el contenido oficial y el guardado definitivo siguen pendientes.
+- El objetivo de 8–15 minutos del Caso 001 sigue siendo una estimación sin pruebas de personas reales. El núcleo genérico y su persistencia están probados en 05–06; su integración con el contenido oficial y sus invariantes específicas siguen pendientes.
 - Android sigue pendiente: no hay APK, exportación, SDK validado, plantillas de exportación verificadas ni prueba en dispositivo real. Las capturas son de escritorio y no demuestran zonas seguras o rendimiento móvil.
-- Menú y navegación siguen funcionando y sus módulos permanecen vacíos. Existe un motor independiente con datos técnicos de prueba, pero no llamadas jugables, reproducción de audio, mapa funcional, expedientes, deducciones, datos oficiales del Caso 001 ni guardado.
+- Menú y navegación siguen funcionando y sus módulos permanecen vacíos. Existen motor y persistencia por API con datos técnicos de prueba, pero no llamadas jugables, reproducción de audio, mapa funcional, expedientes, deducciones, datos oficiales del Caso 001 ni Continuar activado.
 - Los márgenes seguros Android tienen adaptación por API, pendiente de probar en dispositivo. Retroceso gestual/físico, densidad táctil real, lector de pantalla y rendimiento móvil permanecen pendientes. No hay APK ni pruebas en teléfono.
 - Créditos carece todavía de autoría confirmada y Configuración no permite ajustar preferencias; ambas limitaciones son visibles en la interfaz.
 - El validador no demuestra todas las combinaciones de condiciones. Una carga estructuralmente válida puede tener un inicio bloqueado: start_case informa el error sin sesión parcial. Las elecciones fallidas conservan su estado anterior. Los contratos de variantes de texto y resolución específica del caso siguen pendientes de integración autorizada.
-- La fase 06 deberá definir guardado/restauración y versiones de archivo, conservando cursores, registros de ejecución y eventos sin repetir efectos. No se implementó esa fase.
+- El guardado 1 exige contenido/fingerprint exactos y no incluye migraciones. Usa I/O síncrona, límites documentados y bloqueos de hilo principal dentro de un proceso; no hay garantía de atomicidad universal, durabilidad eléctrica o coordinación entre procesos externos. La UI futura debe decidir cómo informar/reintentar, confirmar reemplazo y gestionar salida; no se implementa aquí.
 
 ## Próxima etapa autorizable
 
-**06 — Estado y guardado**, únicamente después de recibir el siguiente prompt con autorización explícita. El motor ofrece snapshots serializables, versión de contenido y registros temporales, pero todavía no escribe ni restaura archivos. Esta fase 05 termina aquí. Al reanudar, consultar primero [AGENTS.md](../AGENTS.md), [NARRATIVE_ENGINE.md](technical/NARRATIVE_ENGINE.md) y los documentos pertinentes.
+**07 — Llamadas**, únicamente después de recibir el siguiente prompt con autorización explícita. La persistencia está disponible por API y probada de forma aislada; el flujo del jugador todavía conserva la interfaz vacía de 04. Esta fase 06 termina aquí. Al reanudar, consultar primero [AGENTS.md](../AGENTS.md), [NARRATIVE_ENGINE.md](technical/NARRATIVE_ENGINE.md), [SAVE_SYSTEM.md](technical/SAVE_SYSTEM.md) y los documentos pertinentes.

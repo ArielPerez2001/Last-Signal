@@ -278,6 +278,60 @@ Los registros D-012–D-015 describen el estado de diseño al entregar 02. Su ap
 - **Consecuencias:** incluir fuentes, documentación, pruebas y capturas; respetar .gitignore y excluir caché/credenciales/exports. Usar push normal, sin force. No se modifica el juego ni se inicia PROMPT 06; no se autoriza publicar cambios futuros automáticamente.
 - **Estado:** inicialización y commit local realizados; push pendiente por HTTP 403 para arpe22. No se forzó ni completó la subida.
 
+## D-031 — Alcance autorizado de persistencia
+
+- **Fecha:** 2026-10-28.
+- **Tema:** autorización de PROMPT 06.
+- **Decisión tomada:** registrar aprobación de 00–05 e implementar exclusivamente estado persistente local, recuperación y autoguardado por API con pruebas aisladas.
+- **Justificación:** autorización explícita del nuevo prompt, que sustituye la espera de 06.
+- **Consecuencias:** Continuar deshabilitado, escenas/UI sin cambios, Caso 001 sin integrar y ninguna implementación de 07; sin commits, pushes, permisos Android o dependencias nuevas.
+- **Estado:** aprobada e implementada en PROMPT 06.
+
+## D-032 — Formato de guardado 1 y compatibilidad estricta
+
+- **Fecha:** 2026-10-28.
+- **Tema:** esquema persistente y detección de cambios.
+- **Decisión tomada:** JSON con save_version 1, game_id, caso, content_version, narrative_schema_version separado, fingerprint SHA-256 del contenido, fecha UTC y los 17 campos reales de sesión de 05.
+- **Justificación:** conservar todos los efectos/consumos y detectar contenido modificado incluso sin incremento de versión; no inventar sistemas futuros ni flags redundantes.
+- **Consecuencias:** coincidencia exacta de contenido, enteros JSON normalizados solo tras validar tipo/rango, extensiones desconocidas rechazadas, sin migración automática ni rutas del dispositivo en datos. Límites: 4 MiB, profundidad 32, 250000 valores y 2048 decisiones/consumos confirmados.
+- **Estado:** adoptada, implementada y probada.
+
+## D-033 — Restauración lógica y verificación del historial
+
+- **Fecha:** 2026-10-28.
+- **Tema:** importación sin duplicar efectos.
+- **Decisión tomada:** añadir validate_state_snapshot y restore_state_snapshot al motor; validar estructura y comparar con una reconstrucción en una instancia aislada sin observadores antes de reemplazar toda la sesión viva.
+- **Justificación:** los registros de 05 permiten verificar decisiones/consumos intercalados y todo el estado, evitando reparaciones silenciosas y estados inventados.
+- **Consecuencias:** la reconstrucción no afecta al juego vivo ni al disco. La importación emite session_restored, node_changed y choices_changed, sin eventos/evidencias/final nuevos; mutaciones reentrantes bloqueadas. El núcleo sigue sin lectura/escritura de partidas y las pruebas anteriores pasan.
+- **Estado:** adoptada, implementada y probada.
+
+## D-034 — Temporal, respaldo y recuperación conservadora
+
+- **Fecha:** 2026-10-28.
+- **Tema:** integridad de archivos locales.
+- **Decisión tomada:** SaveManager administra una carpeta canónica bajo user:// y cuatro nombres fijos de slot_01. Escribe/valida temporal, confirma respaldo del principal válido anterior y solo entonces intenta sustituir/verificar principal.
+- **Justificación:** no destruir el único checkpoint válido ni rotar corrupción al respaldo; inspección/carga no deben cambiar archivos.
+- **Consecuencias:** cargas intentan principal y respaldo e informan del origen sin reparar originales. Un principal inválido sin respaldo compatible exige reemplazo explícito. No se promete atomicidad universal, durabilidad eléctrica o bloqueo entre procesos. delete_save conserva respaldo por defecto y true exige borrarlo también expresamente.
+- **Estado:** adoptada, implementada y probada en escritorio Windows.
+
+## D-035 — Autoguardado en puntos estables y ciclo de vida opcional
+
+- **Fecha:** 2026-10-28.
+- **Tema:** coordinación sin reentradas ni escrituras redundantes.
+- **Decisión tomada:** conectar state_changed a dirty/llamada diferida coalescida; guardar fuera de callbacks, después de decisiones/transiciones/finales completos y consumos. Añadir SaveLifecycle opcional para pausa/foco/cierre y salida controlada.
+- **Justificación:** una acción confirma primero toda su lógica; las señales de presentación no son checkpoints nuevos. Android puede terminar sin notificación final.
+- **Consecuencias:** fallo mantiene memoria y dirty para reintento explícito, sin bucle. Bloqueos por carpeta dentro del proceso, servicio de hilo principal. Restaurar no reescribe archivos; borrar desactiva autoguardado. Adaptador no se añade a Main ni cierra el juego por su cuenta; simulaciones de escritorio no equivalen a Android.
+- **Estado:** adoptada, implementada y probada con el caso técnico.
+
+## D-036 — Pruebas aisladas y límites de evidencia
+
+- **Fecha:** 2026-10-28.
+- **Tema:** verificación reproducible de persistencia.
+- **Decisión tomada:** dos suites de guardado con carpetas únicas user://save_tests, fallos de E/S inyectados y reales controlados, dos procesos separados y repetición de las suites narrativas y navegación previa.
+- **Justificación:** demostrar progreso durable sin depender de memoria anterior y sin tocar partidas auténticas; conservar la distinción entre validación headless, capturas y plataforma móvil.
+- **Consecuencias:** documentación de resultados reales en PROGRESS/SAVE_SYSTEM. Revisión gráfica de siete vistas a 720 × 1280 y regresión headless en cuatro tamaños. No se prueba corte eléctrico, disco físicamente lleno, APK, rendimiento o dispositivo Android; pruebas PS específicas del Caso 001 siguen futuras.
+- **Estado:** adoptada y verificada en PROMPT 06.
+
 ## Plantilla para nuevos registros
 
 - **Identificador y tema:** D-XXX — título.

@@ -2,6 +2,8 @@
 
 PROMPT 05 · 2026-10-27 · Godot `4.7.2.stable.official.ed1daf0bf` · Esquema canónico 1.
 
+Integración añadida en PROMPT 06 · 2026-10-28: validación e importación transaccional de snapshots para el [sistema de guardado](SAVE_SYSTEM.md). Se conserva el esquema narrativo 1 y la API anterior.
+
 El motor interpreta casos JSON, mantiene una sesión temporal y entrega vistas y señales independientes de Godot Control. No se instancia desde el menú ni modifica la consola. El único contenido ejecutable de demostración es [test_narrative.json](../../data/cases/test_narrative.json), una prueba técnica ajena a la historia oficial. El Caso 001 sigue siendo documentación de diseño, sin integrar.
 
 ## Responsabilidades y archivos
@@ -25,6 +27,7 @@ flowchart LR
 | `condition_evaluator.gd` | Condiciones declarativas previamente validadas |
 | `effect_processor.gd` | Efectos sobre un candidato temporal y avisos pendientes |
 | `narrative_engine.gd` | API, transacciones, transiciones, finales y señales |
+| `narrative_state_validator.gd` | Integración 06: estructura/tipos/límites del snapshot y normalización explícita de enteros JSON |
 
 Todos heredan de RefCounted. No requieren escena, autoload, nodos gráficos ni dependencias externas. El núcleo no contiene rutas del Caso 001, nombres de botones, lógica de hotel o resultados oficiales.
 
@@ -232,6 +235,10 @@ var narrative = Narrative.new()
 | `get_pending_events() -> Array[Dictionary]` | Copias de instancias emitidas aún no consumidas |
 | `consume_event(instance_id) -> bool` | Confirma una instancia pendiente de la sesión actual |
 | `get_diagnostics() -> Dictionary` | Copia de `{ok, errors, warnings}` de las operaciones de carga/ejecución |
+| `get_case_metadata() -> Dictionary` | Copia de ID, versión, esquema y fingerprint SHA-256 del contenido; sin ruta de archivo |
+| `is_busy() -> bool` | Consulta del límite de ejecución/notificación para consumidores de persistencia |
+| `validate_state_snapshot(snapshot) -> Dictionary` | Validación completa sin modificar sesión/diagnósticos, mediante estructura y reconstrucción aislada del historial |
+| `restore_state_snapshot(snapshot) -> bool` | Sustitución completa después de validar; fallo conserva sesión y emite diagnóstico |
 
 Solo se permiten rutas de archivo `.json`, con prefijo res:// y ya canónicas. Se rechazan user://, rutas del sistema, barras invertidas o segmentos de navegación. Esta autorización permite leer recursos JSON del proyecto; el efecto narrativo no puede abrir archivos.
 
@@ -253,7 +260,11 @@ Resultado esperado y comprobado: test_success. Ruta alternativa: test_skip → t
 
 El snapshot contiene schema_version, content_version, case_id, current_node, variables, evidence, events, consumed_events, executed_actions, applied_once_keys, applied_effects, visits, visit_serial, transaction_log, revision, finished y ending_id. Son valores serializables, sin nodos, recursos, métodos ni referencias gráficas. Los datos devueltos no permiten mutar las estructuras internas por referencia.
 
-No hay escritura de partidas, migración o API de restauración. La fase 06 deberá definir su guardado versionado, validar contenido/cursor/registros y reanudar sin ejecutar de nuevo entradas comprometidas. Exportar una copia serializable hoy no implementa ese guardado ni autoriza comenzarlo.
+PROMPT 06 añade importación explícita: se validan tipos, referencias y registros contra una reconstrucción determinista en una instancia sin observadores. Se intercalan consumos según las revisiones de transaction_log; la comparación completa impide restaurar una evidencia, efecto, cursor o final contradictorio. Solo al coincidir se sustituye la sesión viva por una copia, sin volver a entrar en el nodo ni aplicar efectos sobre ella.
+
+La señal nueva session_restored(snapshot) se emite seguida de node_changed y choices_changed. No se emiten state_changed, evidence_registered, event_requested ni case_finished por restaurar. Los eventos pendientes siguen disponibles para consulta y consumo explícito. Las mutaciones reentrantes permanecen bloqueadas.
+
+El núcleo no escribe partidas: SaveManager administra esos archivos según [SAVE_SYSTEM.md](SAVE_SYSTEM.md). No hay migración automática. Límites de importación/guardado: 2048 operaciones confirmadas, JSON de profundidad 32 y 250000 valores, números finitos seguros y, en archivos, 4 MiB. Son límites explícitos, no promesas de rendimiento móvil.
 
 ## Política de errores y límites estáticos
 
@@ -310,8 +321,8 @@ Evidencias gráficas de regresión: [Menú](../validation/prompt_05/720x1280/men
 
 ## Limitaciones e integraciones posteriores
 
-No hay guardado en disco, visualización de conversaciones, deducciones, analizador, despacho, servicios ni Caso 001 jugable. El motor queda fuera del flujo normal del jugador; F5 continúa abriendo exactamente el menú de 04.
+El guardado en disco existe desde 06 como servicio separado, probado con contenido técnico. No hay visualización de conversaciones, deducciones, analizador, despacho, servicios ni Caso 001 jugable. El motor queda fuera del flujo normal del jugador; F5 continúa abriendo exactamente el menú de 04.
 
-06 deberá integrar persistencia; 07 presentará las vistas de nodo/opciones y enviará revisión al elegir; 08 añadirá reglas visuales de evidencia/deducción; 09 y 10 consumirán solicitudes de audio/mapa mediante contratos autorizados; 11–12 integrarán y comprobarán el caso y sus tres resultados. Ninguna de esas implementaciones se incluye aquí.
+06 integra persistencia por API; 07 presentará las vistas de nodo/opciones y enviará revisión al elegir; 08 añadirá reglas visuales de evidencia/deducción; 09 y 10 consumirán solicitudes de audio/mapa mediante contratos autorizados; 11–12 integrarán y comprobarán el caso y sus tres resultados. Las implementaciones de 07 en adelante requieren autorización posterior.
 
-No se exportó APK ni se probó el motor en dispositivo Android real. Tampoco se ejecutó nuevamente la revisión gráfica de las otras tres resoluciones en 05; sus pruebas headless y fuentes visuales conservadas no equivalen a esa ejecución gráfica adicional. **PROMPT 06 no está autorizado.**
+No se exportó APK ni se probó el motor en dispositivo Android real. La evidencia gráfica de 05 descrita arriba conserva su alcance histórico; los nuevos ensayos de persistencia y regresión de 06 se registran en [PROGRESS.md](../PROGRESS.md). **PROMPT 07 no está autorizado.**
