@@ -36,12 +36,14 @@ Trabajar mediante prompts numerados. Cada prompt autoriza únicamente su alcance
 - `scripts/narrative/`: motor independiente de la interfaz; `data/cases/test_narrative.json`: demostración técnica no canónica; `tests/narrative/`: pruebas y fixtures, algunas inválidas deliberadamente.
 - `scripts/systems/`: SaveManager y adaptador opcional de ciclo de vida; `tests/save/`: pruebas aisladas de persistencia, sin tocar partidas reales.
 - `scripts/systems/call_controller.gd`, `scripts/ui/calls_panel.gd` y `scenes/components/calls/`: comunicaciones y presentación; `tests/calls/`: pruebas del controlador y GUI. La demo de desarrollo usa data/cases/ui_call_demo.json y user://call_demo, nunca user://saves.
+- `scripts/systems/evidence_manager.gd`, `deduction_manager.gd`, `scripts/ui/evidence_panel.gd` y `scenes/components/evidence/`: investigación genérica de 08. Demo data/cases/investigation_demo.json, guardado user://investigation_demo; tests/investigation usa rutas únicas user://save_tests.
 - `docs/GDD.md`: diseño y alcance; `docs/STORY_BIBLE.md`: hechos narrativos y preguntas abiertas.
 - `docs/ROADMAP.md`: fases, dependencias y aceptación; `docs/PROGRESS.md`: avance y validaciones; `docs/DECISIONS.md`: decisiones y propuestas.
 - `docs/UI_NAVIGATION.md`: flujo de interfaz, archivos, comandos y límites actuales. TECHNICAL_SETUP conserva el registro de la base de 03.
-- `docs/technical/NARRATIVE_ENGINE.md`: esquema 1, API, transacciones, eventos y límites del motor. No cambiar su formato o semántica sin documentarlo y validar las pruebas pertinentes.
-- `docs/technical/SAVE_SYSTEM.md`: formato de guardado 1, restauración, rutas user://, respaldos, autoguardado y garantías reales. Las pruebas escriben únicamente bajo user://save_tests/.
+- `docs/technical/NARRATIVE_ENGINE.md`: esquemas 1/2, API, transacciones, eventos y límites del motor. No cambiar su formato o semántica sin documentarlo y validar las pruebas pertinentes.
+- `docs/technical/SAVE_SYSTEM.md`: formato 1 para casos esquema 1 y formato 2 para investigación esquema 2; sin migración automática. Restauración, rutas user://, respaldos, autoguardado y garantías reales. Las pruebas escriben únicamente bajo user://save_tests/.
 - `docs/technical/CALL_SYSTEM.md`: acceso a la demo, ciclo visual, historial derivado, señales, integración y pruebas de llamadas.
+- `docs/technical/INVESTIGATION_SYSTEM.md`: catálogo, proyecciones sin spoilers, reglas exactas, acciones externas atómicas, registro persistente, UI, pruebas y autoría futura. Las conclusiones derivan de executed_actions; no duplicar estado ni ejecutar efectos desde UI.
 
 ## Verificación y cierre
 
@@ -59,5 +61,5 @@ Trabajar mediante prompts numerados. Cada prompt autoriza únicamente su alcance
 - El audio usa grabaciones y filtros simulados; no implementar procesamiento avanzado de señales ni reconocimiento de voz.
 - No realizar commits, pushes, despliegues, publicaciones, cambios remotos, operaciones con credenciales ni otros cambios externos sin autorización explícita.
 - PROMPT 03 aprueba las etapas 00–02 y autoriza exclusivamente la base técnica ya creada. Las menciones de revisión pendiente en las entregas originales del Caso 001 describen su estado al entregarse en 02; consultar su aprobación posterior en D-017 y PROGRESS.
-- PROMPT 07 aprueba 00–06 y autoriza exclusivamente llamadas/conversaciones, integración con motor/guardado y demo técnica fuera de campaña, accesible solo en desarrollo. Continuar permanece deshabilitado, el guardado oficial aislado y el Caso 001 sin integrar. Al cerrar 07, detenerse y esperar autorización para 08. No hacer commits ni pushes en esta fase.
-- No crear todavía llamadas oficiales del Caso 001, reproducción de audio, mapas funcionales, despacho, expedientes jugables, deducciones o resultados definitivos. No instalar herramientas, crear APK o configurar publicación sin autorización.
+- PROMPT 08 aprueba 00–07 y autoriza exclusivamente evidencias, expedientes y deducciones genéricos, integración con llamadas/guardado y demo técnica fuera de campaña. Continuar permanece deshabilitado, el guardado oficial aislado y el Caso 001 sin integrar. Al cerrar 08, detenerse y esperar autorización explícita para 09. No hacer commits ni pushes en esta fase.
+- No crear todavía llamadas oficiales del Caso 001, reproducción/filtros de audio, mapas funcionales, despacho o resultados definitivos. No instalar herramientas, crear APK o configurar publicación sin autorización.

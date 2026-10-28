@@ -6,6 +6,8 @@ Integración añadida en PROMPT 06 · 2026-10-28: validación e importación tra
 
 Integración PROMPT 07 · 2026-10-28: [llamadas de desarrollo](CALL_SYSTEM.md) conectadas mediante API. Se añade get_conversation_history sin cambiar esquema o estado persistente.
 
+Integración PROMPT 08 · 2026-10-28: [investigación](INVESTIGATION_SYSTEM.md), esquema 2 con catálogo/acciones/deducciones y confirmación externa atómica. Esquema 1 conserva su contrato; los apartados originales de 05–07 describen esa versión salvo indicación expresa. Guardado 2 solo para casos esquema 2; sin migración automática.
+
 El motor interpreta casos JSON, mantiene una sesión temporal y entrega vistas y señales independientes de Godot Control. En 07, Llamadas posee un controlador que lo usa al iniciar o recuperar expresamente una demo de desarrollo; no se inicia narrativa al abrir el menú. [test_narrative.json](../../data/cases/test_narrative.json) conserva la prueba de núcleo y [ui_call_demo.json](../../data/cases/ui_call_demo.json) añade prueba visual fuera de campaña. El Caso 001 sigue siendo documentación de diseño, sin integrar.
 
 ## Responsabilidades y archivos
@@ -284,7 +286,7 @@ Advertencias actuales: nodos inalcanzables y diálogos cuyas salidas son todas c
 No se modificó [CASE_001_TECHNICAL_SPEC.md](../cases/CASE_001_TECHNICAL_SPEC.md). PROMPT 05 concreta su contrato conceptual y añade estos nombres/versiones explícitos:
 
 - id de caso → case_id; entry_node → initial_node; se añade schema_version separado de content_version. Los ID de nodos/opciones conservan el campo id.
-- `evidencias` del diseño corresponde al conjunto evidence del snapshot. Su interfaz y combinación no se implementan.
+- `evidencias` del diseño corresponde al conjunto evidence del snapshot. En 08 se añade interfaz/combinación genérica con una demo; las fichas y reglas oficiales del Caso 001 siguen sin integrar.
 - Se conservan visible_when/enabled_when, set/add_clamped/add_to_set/mark_once y once_key. at_least/at_most tienen alias documentados; all/any/not/always mantienen el significado aprobado.
 - El avance enter_node se representa por next y nodos transition; la terminación genérica, por ending con ending_id. No se acepta un efecto arbitrario que cambie cursor o cierre la sesión desde datos sin validar.
 - La resolución K02, sus variables de resultado y su presentación posterior en F pertenecen a la integración de 11–12. No se traduce aquí esa lógica ni se cambia qué produce cada resultado.
@@ -324,10 +326,29 @@ La suite de validación prueba estructura, referencias, versiones, tipos erróne
 
 Evidencias gráficas de regresión: [Menú](../validation/prompt_05/720x1280/menu.png), [Llamadas](../validation/prompt_05/720x1280/calls.png), [Audio](../validation/prompt_05/720x1280/audio.png), [Mapa](../validation/prompt_05/720x1280/map.png), [Expedientes](../validation/prompt_05/720x1280/evidence.png), [Configuración](../validation/prompt_05/720x1280/settings.png), [Créditos](../validation/prompt_05/720x1280/credits.png). La revisión visual de esta fase es 720 × 1280; las otras tres resoluciones se comprobaron headless y conservan las capturas gráficas históricas de 04.
 
+## Ampliación de investigación en PROMPT 08
+
+El esquema 2 acepta todos los campos de 1 y exige investigation con arrays evidence, deductions y actions. Las fichas cubren exactamente evidence_catalog; categorías e importancia validadas, imágenes opcionales restringidas y fallback textual. Reglas de dos/tres evidencias distintas, conjunto exacto sin orden, condiciones adicionales y efectos existentes; sin repeticiones o reglas ambiguas para el mismo conjunto. Opciones, acciones y deducciones tienen ID globales únicos. Contrato completo y ejemplos de autoría en [INVESTIGATION_SYSTEM.md](INVESTIGATION_SYSTEM.md).
+
+| Nueva API | Resultado |
+| --- | --- |
+| get_investigation_catalog() -> Dictionary | Copia interna completa con case_id/title; vacío para esquema 1. No usar como proyección de jugador |
+| get_investigation_actions() -> Array | Solo disponibles/no ejecutadas en sesión abierta; id/title/enabled/revision |
+| process_investigation_action(id, expected_revision = -1) -> Dictionary | Verifica acción declarada y condición actual; confirma una vez |
+| confirm_deduction(evidence_ids, expected_revision = -1) -> Dictionary | Evalúa conjunto/condiciones y confirma una conclusión nueva mediante candidato completo |
+
+Respuestas `{ok, code, message, data}`; códigos VALID, ALREADY_DISCOVERED, INSUFFICIENT, LOCKED, INVALID y operativos STALE/BUSY. EvidenceManager y DeductionManager presentan vistas sin pistas ocultas, importancia o efectos arbitrarios. La evaluación preview es pura. Ya confirmada devuelve la conclusión sin nueva revisión o señales; condición pendiente no devuelve metadatos de solución.
+
+La transacción externa conserva cursor/visitas, agrega su ID a executed_actions y `{node_id, choice_id, revision}` al registro, aplica EffectProcessor con ámbito investigation:<id> y verifica que quede al menos una opción elegible. Si falla, revierte variables, evidencia, eventos y todos los registros. Al confirmar incrementa revision, publica state_changed, avisos, **deduction_confirmed(id)** para una conclusión nueva y choices_changed; no publica node_changed ni vuelve a entrar al diálogo.
+
+En esquema 2, choice_id del registro puede ser opción, consulta o deducción. La reconstrucción aislada reconoce los ID por catálogo y reproduce la misma API en orden, con consumos intercalados; compara el snapshot completo antes de importar. La transcripción omite acciones externas: no inventa mensajes ni repite la intervención actual. Las opciones sí reflejan las condiciones actualizadas. Al restaurar no se emite deduction_confirmed, igual que no se emiten nuevos eventos/evidencias.
+
+Los 17 campos de NarrativeSessionState y ConditionEvaluator/EffectProcessor permanecen sin cambios. Las conclusiones se derivan de executed_actions; no hay segunda colección persistente. SaveManager usa formato 2 para esta semántica y conserva formato 1 para esquema 1. Se mantienen los límites de importación, reentradas bloqueadas, referencias exactas y compatibilidad por fingerprint.
+
 ## Limitaciones e integraciones posteriores
 
-El guardado en disco existe desde 06 como servicio separado. En 07 hay visualización de conversaciones con demo aislada accesible solo en desarrollo; no hay deducciones, analizador, despacho, servicios ni Caso 001 jugable. F5 conserva el menú de 04 y no inicia una sesión por sí solo.
+El guardado en disco existe desde 06 como servicio separado. En 07 se añadió conversación y en 08 expediente/deducciones genéricos con demos aisladas accesibles solo en desarrollo. No hay analizador, despacho, servicios ni Caso 001 jugable. F5 conserva el menú de 04 y no inicia una sesión por sí solo.
 
-06 integra persistencia y 07 presenta nodo/opciones, envía ID/revisión al elegir y reconstruye historial; 08 añadirá reglas visuales de evidencia/deducción; 09 y 10 consumirán solicitudes de audio/mapa mediante contratos autorizados; 11–12 integrarán y comprobarán el caso y sus tres resultados. Las implementaciones de 08 en adelante requieren autorización posterior.
+06 integra persistencia, 07 presenta nodo/opciones e historial y 08 conecta investigación sin reentradas al diálogo. 09 y 10 incorporarán audio/mapa mediante contratos autorizados; 11–12 integrarán y comprobarán el caso y sus tres resultados. Las implementaciones de 09 en adelante requieren autorización posterior.
 
-No se exportó APK ni se probó el motor en dispositivo Android real. La evidencia gráfica de 05 descrita arriba conserva su alcance histórico; los nuevos ensayos de persistencia, llamadas y regresión se registran en [PROGRESS.md](../PROGRESS.md). **PROMPT 08 no está autorizado.**
+No se exportó APK ni se probó el motor en dispositivo Android real. La evidencia gráfica de 05 descrita arriba conserva su alcance histórico; los ensayos posteriores de persistencia, llamadas e investigación se registran en [PROGRESS.md](../PROGRESS.md). **PROMPT 08 cerrado; PROMPT 09 no autorizado.**

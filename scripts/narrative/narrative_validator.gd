@@ -1,6 +1,8 @@
 extends RefCounted
 
 const SCHEMA_VERSION: int = 1
+const INVESTIGATION_SCHEMA_VERSION: int = 2
+const Evidence = preload("res://scripts/systems/evidence_manager.gd")
 const MAX_SAFE_INTEGER: int = 9007199254740991
 const MAX_CONDITION_DEPTH: int = 32
 const COLLECTIONS: Array[String] = ["evidence", "events", "consumed_events", "applied_once_keys", "executed_actions"]
@@ -27,10 +29,13 @@ func validate(input: Variant, source: String = "memory") -> Dictionary:
 		_error("invalid_root", "La raíz debe ser un objeto.", "$")
 		return _report()
 	var case_data: Dictionary = input
-	if not is_integer(case_data.get("schema_version")) or case_data.get("schema_version") != SCHEMA_VERSION:
-		_error("incompatible_schema", "Se requiere schema_version 1 numérico.", "schema_version")
+	if not is_integer(case_data.get("schema_version")) or int(case_data.get("schema_version")) not in [SCHEMA_VERSION, INVESTIGATION_SCHEMA_VERSION]:
+		_error("incompatible_schema", "Se requiere schema_version 1 o 2 numérico.", "schema_version")
 		return _report()
-	_keys(case_data, ["schema_version", "case_id", "content_version", "title", "initial_node", "initial_state", "variables", "characters", "evidence_catalog", "event_catalog", "endings", "nodes"], "$")
+	var fields: Array = ["schema_version", "case_id", "content_version", "title", "initial_node", "initial_state", "variables", "characters", "evidence_catalog", "event_catalog", "endings", "nodes"]
+	if int(case_data.schema_version) == INVESTIGATION_SCHEMA_VERSION:
+		fields.append("investigation")
+	_keys(case_data, fields, "$")
 	_identifier(case_data.get("case_id"), "case_id")
 	_string(case_data.get("title"), "title")
 	_string(case_data.get("content_version"), "content_version")
@@ -43,6 +48,8 @@ func validate(input: Variant, source: String = "memory") -> Dictionary:
 	_validate_variables(case_data.get("variables"))
 	_validate_initial_state(case_data.get("initial_state"))
 	_validate_nodes(case_data.get("nodes"))
+	if int(case_data.schema_version) == INVESTIGATION_SCHEMA_VERSION:
+		_validate_investigation(case_data.get("investigation"))
 	_validate_references()
 	if _identifier(case_data.get("initial_node"), "initial_node"):
 		if not _nodes.has(case_data.initial_node):
@@ -66,6 +73,81 @@ func _reset(source: String) -> void:
 	_evidence.clear()
 	_events.clear()
 	_endings.clear()
+
+
+func _validate_investigation(input: Variant) -> void:
+	if not input is Dictionary:
+		_error("invalid_investigation", "El esquema 2 requiere un catálogo de investigación.", "investigation")
+		return
+	_keys(input, ["evidence", "deductions", "actions"], "investigation")
+	for field: String in ["evidence", "deductions", "actions"]:
+		if not input.get(field) is Array:
+			_error("invalid_investigation", "Se requiere una lista: " + field, "investigation." + field)
+	if not _errors.is_empty():
+		return
+	var found: Array = []
+	for record: Variant in input.evidence:
+		if not record is Dictionary:
+			_error("invalid_evidence", "Cada evidencia debe ser un objeto.", "investigation.evidence")
+			continue
+		_keys(record, ["id", "title", "description", "category", "source", "importance", "related_asset", "order"], "investigation.evidence")
+		if _identifier(record.get("id"), "investigation.evidence.id"):
+			if record.id in found or record.id not in _evidence:
+				_error("invalid_evidence", "ID duplicado o no declarado.", "investigation.evidence.id")
+			found.append(record.id)
+		for field: String in ["title", "description", "source"]:
+			_string(record.get(field), "investigation.evidence." + field)
+		if not record.get("category") is String or not Evidence.CATEGORIES.has(record.category):
+			_error("invalid_category", "Categoría de evidencia desconocida.", "investigation.evidence.category")
+		if not record.get("importance") is String or record.importance not in Evidence.IMPORTANCE:
+			_error("invalid_importance", "Importancia no reconocida.", "investigation.evidence.importance")
+		if record.has("order") and (not is_integer(record.order) or record.order < 0):
+			_error("invalid_order", "order debe ser un entero no negativo.", "investigation.evidence.order")
+		if record.has("related_asset"):
+			var asset: Variant = record.related_asset
+			if not asset is String:
+				_error("invalid_asset", "related_asset debe ser texto.", "investigation.evidence.related_asset")
+			elif not asset.is_empty():
+				if not asset.begins_with("res://") or asset != asset.simplify_path() or asset.contains("\\") or asset.get_extension().to_lower() not in ["png", "jpg", "jpeg", "webp", "svg"]:
+					_error("invalid_asset", "Solo se permiten imágenes canónicas de res://.", "investigation.evidence.related_asset")
+				elif not ResourceLoader.exists(asset, "Texture2D"):
+					_warning("missing_optional_asset", "La imagen opcional no existe; se utilizará la descripción textual.", "investigation.evidence.related_asset")
+	if found.size() != _evidence.size():
+		_error("incomplete_catalog", "Debe existir una ficha para cada ID de evidence_catalog.", "investigation.evidence")
+	var combinations: Dictionary = {}
+	for group: String in ["deductions", "actions"]:
+		for definition: Variant in input[group]:
+			if not definition is Dictionary:
+				_error("invalid_investigation", "Cada regla/acción debe ser un objeto.", "investigation." + group)
+				continue
+			var path: String = "investigation." + group
+			if _identifier(definition.get("id"), path + ".id"):
+				if _options.has(definition.id):
+					_error("duplicate_id", "Las opciones, acciones y deducciones requieren ID globalmente únicos.", path + ".id")
+				_options[definition.id] = group
+			_string(definition.get("title"), path + ".title")
+			_effects(definition.get("effects"), path + ".effects", "")
+			if group == "actions":
+				_keys(definition, ["id", "title", "condition", "effects"], path)
+				_condition(definition.get("condition", {"op": "always"}), path + ".condition", "")
+			else:
+				_keys(definition, ["id", "title", "description", "required_evidence", "additional_conditions", "result_type", "effects", "repeatable", "narrative_feedback"], path)
+				_string(definition.get("description"), path + ".description")
+				_string(definition.get("narrative_feedback"), path + ".narrative_feedback")
+				var required: Array = _catalog(definition.get("required_evidence"), path + ".required_evidence")
+				if required.size() not in [2, 3]:
+					_error("invalid_combination", "Una deducción requiere dos o tres evidencias distintas.", path)
+				for evidence_id: String in required:
+					if evidence_id not in _evidence:
+						_error("unknown_evidence", "Evidencia requerida inexistente.", path)
+				required.sort()
+				var key: String = ",".join(required)
+				if combinations.has(key):
+					_error("ambiguous_combination", "No puede haber dos reglas para la misma combinación.", path)
+				combinations[key] = true
+				if not definition.get("result_type") is String or definition.result_type != "VALID" or not definition.get("repeatable", false) is bool or definition.get("repeatable", false):
+					_error("invalid_deduction", "Solo se admiten reglas VALID no repetibles.", path)
+				_condition(definition.get("additional_conditions", {"op": "always"}), path + ".additional_conditions", "")
 
 
 func _validate_characters(input: Variant) -> void:

@@ -4,6 +4,8 @@ PROMPT 06 · 2026-10-28 · Godot 4.7.2 estable · formato de guardado 1.
 
 Integración PROMPT 07: [CallController/CallsPanel](CALL_SYSTEM.md) utilizan el servicio sin modificar código de guardado, estructura o versiones. La demo usa user://call_demo y las pruebas user://save_tests; user://saves sigue reservado para producción. Su transcripción se deriva de transaction_log/visitas/consumos, sin campos nuevos.
 
+Integración PROMPT 08: formato **2** para casos narrativos esquema **2**, con registro de acciones externas/deducciones. Los casos de esquema 1 conservan escritura/lectura de formato 1. Sin migración automática. La envoltura y los 17 campos de session permanecen; se amplía la semántica validada del registro. La demo nueva usa user://investigation_demo. El resto de garantías de archivo de 06 se conserva; ver el apartado de formato 2 y [INVESTIGATION_SYSTEM.md](INVESTIGATION_SYSTEM.md).
+
 ## Objetivo y alcance
 
 Conservar una sesión lógica completa, recuperarla offline y seguir sin repetir consecuencias. El sistema se integra con el [motor narrativo](NARRATIVE_ENGINE.md) mediante API; no conoce escenas de la consola ni necesita Llamadas. El flujo normal del juego conserva su menú: Continuar sigue deshabilitado. El Caso 001 y las mecánicas de fases posteriores no se integran aquí.
@@ -22,7 +24,7 @@ Conservar una sesión lógica completa, recuperarla offline y seguir sin repetir
 | [failing_save_manager.gd](../../tests/save/failing_save_manager.gd) | Fallos inyectados de escritura/renombrado para pruebas |
 | [save_process_worker.gd](../../tests/save/save_process_worker.gd) | Dos procesos separados: uno escribe; otro carga y continúa desde disco |
 
-NarrativeSessionState conserva su estructura de 05. No se añaden flags redundantes: los indicadores bool, confianza/estrés/cooperación cuando se declaren, son variables del caso. Tampoco se crean deducciones, grabaciones, recursos ni progreso de campaña vacíos para simular sistemas futuros. Su incorporación exigirá ampliar el contrato y versionarlo cuando se autorice.
+NarrativeSessionState conserva su estructura de 05. No se añaden flags redundantes: los indicadores bool, confianza/estrés/cooperación cuando se declaren, son variables del caso. En 08 las conclusiones reales se derivan de los ID de executed_actions, sin otra lista persistente. No se crean grabaciones, recursos o progreso de campaña vacíos para simular sistemas futuros.
 
 ## Formato 1
 
@@ -177,7 +179,19 @@ En una sesión técnica nueva autorizada: engine.start_case, set_autosave_enable
 
 ## Compatibilidad y ampliación
 
-Formato 1 requiere coincidencia exacta de versión de archivo, esquema narrativo, ID, content_version y fingerprint. No hay migraciones automáticas. Un cambio futuro debe introducir un lector/migrador explícito con validación de salida o informar incompatibilidad y conservar originales. Cambiar deducciones o sistemas de investigación requiere declarar sus estados, invariantes y semántica de reanudación antes de persistirlos.
+Cada formato requiere coincidencia exacta de versión de archivo, esquema narrativo, ID, content_version y fingerprint. No hay migraciones automáticas. Un cambio futuro debe introducir un lector/migrador explícito con validación de salida o informar incompatibilidad y conservar originales. El formato 2 de 08 declara los estados/invariantes de investigación descritos a continuación.
+
+### Formato 2 — Investigación
+
+SaveManager.INVESTIGATION_SAVE_VERSION = 2 se elige únicamente cuando el caso cargado declara esquema 2; SAVE_VERSION = 1 sigue siendo la versión legacy. El lector espera esa misma pareja: formato 1/esquema 1 o formato 2/esquema 2. No acepta formato 1 para la nueva investigación ni formato 2 para contenido antiguo. narrative_schema_version y session.schema_version deben coincidir con el caso; no se convierten tipos de manera permisiva.
+
+La raíz conserva exactamente save_version, game_id, case_id, content_version, narrative_schema_version, content_fingerprint, saved_at y session. Session conserva sus 17 campos: evidence contiene los ID descubiertos; executed_actions contiene opciones/consultas/deducciones, con ID únicos por catálogo; applied_effects y applied_once_keys mantienen idempotencia. transaction_log conserva `{node_id, choice_id, revision}`, pero choice_id puede ser una acción/deducción declarada en esquema 2. Efectos externos usan claves investigation:<id>:<índice>. El diario conserva su orden real y el límite total de 2048 operaciones confirmadas incluye estas acciones además de decisiones/consumos.
+
+La validación aislada reconstruye cada entrada por su tipo declarado, verifica condiciones, evidencias requeridas, revisión/nodo y efectos, e intercala consumos. ID inexistentes, conclusiones imposibles o datos incoherentes se rechazan antes de sustituir memoria. No se ejecutan efectos sobre la sesión viva al recuperar ni se emiten nuevos descubrimientos, deduction_confirmed o eventos; tampoco se escribe por cargar. Las conclusiones se reconstruyen desde executed_actions y el catálogo exacto, y las líneas de conversación omiten entradas externas.
+
+No se guarda otra copia de fichas/reglas/conclusiones, ni selección/filtro/detalle de UI. Abrir detalles, una relación insuficiente o ALREADY_DISCOVERED no solicita autoguardado. Confirmar sí produce state_changed y usa el mismo guardado diferido/coalescido. Ante fallo el expediente informa y permite vaciar el estado pendiente, conservando memoria. Recuperar sigue probando principal/respaldo compatibles sin modificar originales; un archivo de otra versión no se migra ni se reemplaza silenciosamente.
+
+Pruebas de 08: nueva instancia de motor/gestor recupera desde disco cinco evidencias y dos deducciones con snapshot/historial idénticos y sin señales de efectos; referencias inventadas y formato 1/esquema 2 rechazados conservando sesión. Fallo de escritura/reintento comprobado en GUI aislada. Las suites antiguas de formato 1 siguen pasando sin modificaciones (114 y 905 comprobaciones). Más resultados en [PROGRESS.md](../PROGRESS.md).
 
 Los contratos narrativos de [CASE_001_TECHNICAL_SPEC.md](../cases/CASE_001_TECHNICAL_SPEC.md) siguen sin implementación: cursores específicos, K02, procedencia de pistas, variantes y recursos se validarán cuando se integre ese caso. Las pruebas PS01–PS13 de su plan continúan siendo futuras; los ensayos de esta fase verifican equivalentes genéricos con el caso técnico, sin afirmar que probaron esos eventos oficiales.
 
@@ -215,4 +229,4 @@ El detalle de los 20 grupos de aceptación, incidencias corregidas y limitacione
 
 Sin APK, dispositivo real, corte de energía, llenado físico del disco ni prueba de rendimiento Android. Los errores de escritura/renombrado se inyectan en rutas aisladas, junto con un fallo real de carpeta obstruida; no se provoca daño al almacenamiento del usuario. No se promete durabilidad absoluta ni compatibilidad con versiones futuras desconocidas.
 
-F5 sigue abriendo menú sin sesión narrativa ni partidas de producción. En 07 Llamadas permite iniciar/recuperar/reiniciar una demo solo en desarrollo, con SaveLifecycle conectado al mismo gestor y aviso/reintento de escritura. Cargar no reescribe originales y reiniciar elimina únicamente los archivos de ranura de esa demo mediante delete_save(true), sin borrar directorios o archivos ajenos. La interfaz oficial futura deberá confirmar reemplazos/borrados y decidir su salida ante fallos. Continuar permanece deshabilitado, no hay administración de ranuras ni Caso 001 integrado. **PROMPT 08 no se inicia.**
+F5 sigue abriendo menú sin sesión narrativa ni partidas de producción. Llamadas permite iniciar/recuperar/reiniciar demos solo en desarrollo, con SaveLifecycle conectado al mismo gestor y aviso/reintento de escritura. Desde 08 Expedientes comparte ese motor/gestor; la investigación usa user://investigation_demo separada de user://call_demo y user://saves. Cargar no reescribe originales y reiniciar elimina únicamente los archivos de ranura de esa demo mediante delete_save(true), sin borrar directorios o archivos ajenos. La interfaz oficial futura deberá decidir reemplazos/borrados y su salida ante fallos. Continuar permanece deshabilitado, no hay administración de ranuras ni Caso 001 integrado. **PROMPT 08 cerrado; no iniciar 09 sin autorización.**

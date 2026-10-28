@@ -8,6 +8,8 @@ const Saves = preload("res://scripts/systems/save_manager.gd")
 enum CallState { IDLE, INCOMING, CONNECTED, ENDED, ERROR }
 const DEMO_PATH: String = "res://data/cases/ui_call_demo.json"
 const DEMO_DIRECTORY: String = "user://call_demo"
+const INVESTIGATION_PATH: String = "res://data/cases/investigation_demo.json"
+const INVESTIGATION_DIRECTORY: String = "user://investigation_demo"
 
 var engine = Narrative.new()
 var saves: RefCounted
@@ -24,7 +26,7 @@ var _disposed: bool = false
 
 
 func _init(directory: String = DEMO_DIRECTORY, save_script: Script = null) -> void:
-	_storage_valid = directory == DEMO_DIRECTORY or (directory.begins_with("user://save_tests/") and directory == directory.simplify_path() and not directory.contains("\\"))
+	_storage_valid = directory in [DEMO_DIRECTORY, INVESTIGATION_DIRECTORY] or (directory.begins_with("user://save_tests/") and directory == directory.simplify_path() and not directory.contains("\\"))
 	saves = (save_script if save_script != null else Saves).new(engine, directory if _storage_valid else "")
 	saves.operation_completed.connect(_on_save_result)
 	engine.node_changed.connect(_on_engine_changed)

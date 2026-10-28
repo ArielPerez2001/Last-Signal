@@ -2,7 +2,7 @@
 
 Actualizado: 2026-10-28. Las fases son planificación y no autorizan ejecución. Cada prompt posterior delimita el trabajo; una etapa puede requerir varios prompts.
 
-Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**. Una dependencia futura no convierte por sí sola una fase en bloqueada. Las etapas 00–07 están completadas. Llamadas presenta conversaciones de prueba con motor y guardado aislado; menú/navegación se conservan, Continuar sigue deshabilitado y no hay Caso 001 jugable ni autorización para 08.
+Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**. Una dependencia futura no convierte por sí sola una fase en bloqueada. Las etapas 00–08 están completadas. Llamadas y Expedientes comparten una investigación de prueba con motor y guardado aislado; menú/navegación se conservan, Continuar sigue deshabilitado y no hay Caso 001 jugable. PROMPT 09 requiere autorización explícita.
 
 ## 00. Contexto maestro
 
@@ -66,7 +66,7 @@ Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**
 - **Dependencias:** 04, 05 y 06.
 - **Entregables:** interfaz de llamadas y comportamiento de confianza, estrés y cooperación según el diseño aprobado.
 - **Aceptación:** opciones, cambios de información y estados coinciden con recorridos esperados y pueden persistirse.
-- **Estado:** completado. Controlador de cinco estados, sección Llamadas conectada al motor, opciones por ID/revisión, historial derivado y guardado aislado. Dos rutas de demostración y recuperación correctas; regresión anterior y GUI en cuatro resoluciones, con 40 capturas reales. API, acceso y límites en [CALL_SYSTEM.md](technical/CALL_SYSTEM.md). Sin campaña/Caso 001 ni implementación de 08.
+- **Estado:** completado. Controlador de cinco estados, sección Llamadas conectada al motor, opciones por ID/revisión, historial derivado y guardado aislado. Dos rutas de demostración y recuperación correctas; regresión anterior y GUI en cuatro resoluciones, con 40 capturas reales de 07. API, acceso y ampliación de investigación de 08 en [CALL_SYSTEM.md](technical/CALL_SYSTEM.md). Sin campaña/Caso 001.
 
 ## 08. Pistas y deducciones
 
@@ -74,7 +74,7 @@ Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**
 - **Dependencias:** 02, 04, 05, 06 y 07.
 - **Entregables:** expediente, consulta de pistas y evaluación de hipótesis y deducciones.
 - **Aceptación:** reproducir deducciones válidas, incompletas y equivocadas según reglas aprobadas y conservar sus estados.
-- **Estado:** pendiente.
+- **Estado:** completado. Catálogo esquema 2, cinco categorías centrales, expediente de fichas descubiertas, detalle/procedencia, selección de dos y reglas de conjunto exacto. Deducciones atómicas con efectos únicos, desbloqueo real de diálogo y formato de guardado 2; lectores originales de esquema/formato 1 conservados. Demo no canónica de cinco pistas/dos conclusiones, 24 grupos de aceptación verificados, regresión previa correcta y 56 capturas reales en cuatro resoluciones. Contratos, procedimientos y límites en [INVESTIGATION_SYSTEM.md](technical/INVESTIGATION_SYSTEM.md). Android y Caso 001 oficial pendientes; fase detenida antes de 09.
 
 ## 09. Analizador de audio
 

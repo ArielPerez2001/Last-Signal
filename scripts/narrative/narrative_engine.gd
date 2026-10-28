@@ -9,6 +9,7 @@ signal event_requested(event: Dictionary)
 signal case_finished(ending_id: String)
 signal narrative_error(diagnostics: Array)
 signal session_restored(snapshot: Dictionary)
+signal deduction_confirmed(deduction_id: String)
 
 const Loader = preload("res://scripts/narrative/narrative_loader.gd")
 const Validator = preload("res://scripts/narrative/narrative_validator.gd")
@@ -16,6 +17,7 @@ const SessionState = preload("res://scripts/narrative/narrative_session_state.gd
 const Conditions = preload("res://scripts/narrative/condition_evaluator.gd")
 const Effects = preload("res://scripts/narrative/effect_processor.gd")
 const StateValidator = preload("res://scripts/narrative/narrative_state_validator.gd")
+const Deductions = preload("res://scripts/systems/deduction_manager.gd")
 const MAX_AUTO_TRANSITIONS: int = 64
 
 var _case: Dictionary = {}
@@ -203,6 +205,80 @@ func is_busy() -> bool:
 	return _busy
 
 
+func get_investigation_catalog() -> Dictionary:
+	if not _case.has("investigation"):
+		return {}
+	var catalog: Dictionary = _case.investigation.duplicate(true)
+	catalog.case_id = _case.case_id
+	catalog.title = _case.title
+	return catalog
+
+
+func get_investigation_actions() -> Array:
+	var result: Array = []
+	if _state == null or _state.data.finished:
+		return result
+	for action: Dictionary in _case.get("investigation", {}).get("actions", []):
+		if action.id not in _state.data.executed_actions and Conditions.evaluate(action.get("condition", {"op": "always"}), _state.data):
+			result.append({"id": action.id, "title": action.title, "enabled": true, "revision": _state.data.revision})
+	return result
+
+
+func process_investigation_action(action_id: String, expected_revision: int = -1) -> Dictionary:
+	if _busy:
+		return Deductions.result(false, "BUSY", "Espere a que termine la operación actual.")
+	for action: Dictionary in _case.get("investigation", {}).get("actions", []):
+		if action.id == action_id:
+			if _state == null or _state.data.finished:
+				return Deductions.result(false, "LOCKED", "No hay una sesión activa que admita cambios.")
+			if action_id in _state.data.executed_actions:
+				return Deductions.result(true, "ALREADY_DISCOVERED", "La consulta ya está registrada.")
+			if not Conditions.evaluate(action.get("condition", {"op": "always"}), _state.data):
+				return Deductions.result(false, "LOCKED", "La consulta todavía no está disponible.")
+			return _commit_investigation(action, false, expected_revision)
+	return Deductions.result(false, "INVALID", "Acción de investigación desconocida.")
+
+
+func confirm_deduction(evidence_ids: Array, expected_revision: int = -1) -> Dictionary:
+	if _busy:
+		return Deductions.result(false, "BUSY", "Espere a que termine la operación actual.")
+	var evaluated: Dictionary = Deductions.evaluate(get_investigation_catalog(), get_state_snapshot(), evidence_ids)
+	if evaluated.code != "VALID":
+		return evaluated
+	for definition: Dictionary in _case.investigation.deductions:
+		if definition.id == evaluated.data.id:
+			var committed: Dictionary = _commit_investigation(definition, true, expected_revision)
+			if committed.ok:
+				evaluated.data.confirmed = true
+			return evaluated if committed.ok else committed
+	return Deductions.result(false, "INVALID", "Regla no disponible.")
+
+
+func _commit_investigation(definition: Dictionary, is_deduction: bool, expected_revision: int) -> Dictionary:
+	if expected_revision < -1 or (expected_revision != -1 and expected_revision != _state.data.revision):
+		return Deductions.result(false, "STALE", "La selección corresponde a un estado anterior.")
+	_busy = true
+	var candidate: SessionState = _state.copy()
+	candidate.data.executed_actions.append(definition.id)
+	candidate.data.transaction_log.append({"node_id": candidate.data.current_node, "choice_id": definition.id, "revision": candidate.data.revision})
+	var pending: Array[Dictionary] = []
+	var error_message: String = Effects.apply(definition.effects, candidate.data, _case.variables, "investigation:" + definition.id, pending)
+	var eligible: bool = false
+	for option: Dictionary in _nodes[candidate.data.current_node].options:
+		eligible = eligible or _eligible(option, candidate.data)
+	if not error_message.is_empty() or not eligible:
+		_busy = false
+		return Deductions.result(false, "INVALID", "La acción no produce un estado narrativo estable.", {"node_id": _state.data.current_node, "detail": error_message if not error_message.is_empty() else "No hay opciones disponibles tras los efectos."})
+	candidate.data.revision += 1
+	_state = candidate
+	_clear_errors()
+	if is_deduction:
+		pending.append({"kind": "deduction", "id": definition.id})
+	_publish(pending, false)
+	_busy = false
+	return Deductions.result(true, "VALID", "Acción de investigación confirmada.", {"id": definition.id})
+
+
 func validate_state_snapshot(snapshot: Dictionary) -> Dictionary:
 	return _validate_snapshot(snapshot, false)
 
@@ -234,6 +310,20 @@ func _validate_snapshot(snapshot: Dictionary, include_history: bool) -> Dictiona
 				return StateValidator.failure("invalid_history", "El historial de consumo de eventos es inconsistente.")
 			consumed_index += 1
 		var before: Dictionary = replay.get_state_snapshot()
+		var investigation: Dictionary = {}
+		var is_deduction: bool = false
+		for group: String in ["actions", "deductions"]:
+			for definition: Dictionary in _case.get("investigation", {}).get(group, []):
+				if definition.id == entry.choice_id:
+					investigation = definition
+					is_deduction = group == "deductions"
+		if not investigation.is_empty():
+			if before.revision != entry.revision or before.current_node != entry.node_id:
+				return StateValidator.failure("invalid_history", "Acción de investigación fuera de su revisión/nodo.")
+			var action_result: Dictionary = replay.confirm_deduction(investigation.required_evidence, entry.revision) if is_deduction else replay.process_investigation_action(investigation.id, entry.revision)
+			if not action_result.ok or action_result.code != "VALID":
+				return StateValidator.failure("invalid_history", "La investigación no corresponde a una acción válida nueva.")
+			continue
 		var chosen_text: String = ""
 		if include_history and _nodes.has(entry.node_id):
 			for option: Dictionary in _nodes[entry.node_id].get("options", []):
@@ -330,6 +420,8 @@ func _publish(pending: Array[Dictionary], changed_node: bool) -> void:
 	for notification: Dictionary in pending:
 		if notification.kind == "evidence":
 			evidence_registered.emit(notification.id)
+		elif notification.kind == "deduction":
+			deduction_confirmed.emit(notification.id)
 		else:
 			event_requested.emit(notification.event.duplicate(true))
 	if changed_node:

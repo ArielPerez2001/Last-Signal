@@ -1,6 +1,6 @@
 # ÚLTIMA SEÑAL — Documento de diseño
 
-Fecha de registro: 2026-10-27. Actualización técnica: 2026-10-28, PROMPT 07. Estado: diseño del Caso 001 aprobado; base técnica, navegación, motor/guardado e interfaz de conversaciones con demo de desarrollo implementados. Caso 001 sin integrar.
+Fecha de registro: 2026-10-27. Actualización técnica: 2026-10-28, PROMPT 08. Estado: diseño del Caso 001 aprobado; base técnica, navegación, motor/guardado, conversaciones e investigación con demos de desarrollo implementados. Caso 001 sin integrar.
 
 ## 1. Identidad y concepto aprobados
 
@@ -73,7 +73,7 @@ Preferir escenas reutilizables, interfaces separadas de la lógica narrativa, ca
 
 El código deberá ser legible, mantenible, modular y apropiado para Godot, con tipado de GDScript cuando resulte útil. Evitar sistemas excesivamente complejos y dependencias externas innecesarias. Optimizar recursos para Android y facilitar pruebas reproducibles.
 
-La base de carpetas, la escena de entrada y el Theme se documentan en [TECHNICAL_SETUP.md](TECHNICAL_SETUP.md). El proyecto ofrece menú, consola, motor narrativo y guardado local; Llamadas presenta una demostración técnica aislada y Audio/Mapa/Expedientes siguen como secciones informativas vacías. El flujo base consta en [UI_NAVIGATION.md](UI_NAVIGATION.md) y la integración de conversaciones en [CALL_SYSTEM.md](technical/CALL_SYSTEM.md). Los módulos y contenido oficiales se implementarán al autorizar sus fases.
+La base de carpetas, la escena de entrada y el Theme se documentan en [TECHNICAL_SETUP.md](TECHNICAL_SETUP.md). El proyecto ofrece menú, consola, motor narrativo y guardado local; Llamadas y Expedientes comparten una investigación técnica aislada con evidencias y deducciones. Audio/Mapa siguen como secciones informativas vacías. El flujo base consta en [UI_NAVIGATION.md](UI_NAVIGATION.md), conversaciones en [CALL_SYSTEM.md](technical/CALL_SYSTEM.md) e investigación en [INVESTIGATION_SYSTEM.md](technical/INVESTIGATION_SYSTEM.md). Los módulos y contenido oficiales se implementarán al autorizar sus fases.
 
 ## 7. Alcance del MVP
 

@@ -1,0 +1,18 @@
+{
+  "schema_version": 2, "case_id": "blocked_effect", "content_version": "test-1", "title": "Prueba de rollback", "initial_node": "gate",
+  "characters": [{"id": "system", "display_name": "Sistema"}],
+  "variables": {"open": {"type": "bool"}}, "initial_state": {"variables": {"open": true}, "evidence": ["clue_a", "clue_b"]},
+  "evidence_catalog": ["clue_a", "clue_b"], "event_catalog": ["test_event"], "endings": ["done"],
+  "nodes": [
+    {"id": "gate", "type": "dialogue", "speaker_id": "system", "text": "Prueba técnica", "options": [{"id": "finish", "text": "Finalizar", "enabled_when": {"op": "equals", "target": "open", "value": true}, "disabled_reason": "Bloqueada", "next": "ending"}]},
+    {"id": "ending", "type": "ending", "ending_id": "done"}
+  ],
+  "investigation": {
+    "evidence": [
+      {"id": "clue_a", "title": "A", "description": "Prueba A", "category": "document", "source": "Fixture", "importance": "contextual"},
+      {"id": "clue_b", "title": "B", "description": "Prueba B", "category": "record", "source": "Fixture", "importance": "contextual"}
+    ],
+    "actions": [],
+    "deductions": [{"id": "close_gate", "title": "Regla inválida en ejecución", "description": "Prueba de fallo estable", "required_evidence": ["clue_a", "clue_b"], "result_type": "VALID", "effects": [{"op": "set", "target": "open", "value": false}, {"op": "emit_event", "event_id": "test_event"}], "narrative_feedback": "Fixture"}]
+  }
+}

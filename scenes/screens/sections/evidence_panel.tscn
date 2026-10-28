@@ -1,11 +1,119 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=2 format=3]
 
-[ext_resource type="PackedScene" path="res://scenes/components/module_placeholder.tscn" id="1_base"]
-[ext_resource type="Texture2D" path="res://assets/ui/icons/evidence.svg" id="2_icon"]
+[ext_resource type="Script" path="res://scripts/ui/evidence_panel.gd" id="1_script"]
 
-[node name="EvidencePanel" instance=ExtResource("1_base")]
-heading = "ARCHIVO DE INVESTIGACIÓN"
-state_text = "No hay expedientes activos"
-preview_text = "ESPACIO PARA PRUEBAS Y DOCUMENTOS"
-availability_text = "La consulta de expedientes y las deducciones se habilitarán más adelante."
-module_icon = ExtResource("2_icon")
+[node name="EvidencePanel" type="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 16
+script = ExtResource("1_script")
+
+[node name="Heading" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"KickerLabel"
+text = "ARCHIVO DE INVESTIGACIÓN"
+autowrap_mode = 3
+
+[node name="CaseTitle" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+text = "Sin expediente activo"
+autowrap_mode = 3
+
+[node name="Summary" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"SignalLabel"
+text = "0 evidencias · 0 deducciones"
+autowrap_mode = 3
+
+[node name="Notice" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "Todavía no se han registrado evidencias. Examine las comunicaciones disponibles."
+autowrap_mode = 3
+
+[node name="Selection" type="Label" parent="."]
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="SaveNotice" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"AccentLabel"
+autowrap_mode = 3
+
+[node name="RetrySave" type="Button" parent="."]
+visible = false
+custom_minimum_size = Vector2(0, 88)
+layout_mode = 2
+text = "Reintentar guardado"
+autowrap_mode = 3
+
+[node name="Relate" type="Button" parent="."]
+custom_minimum_size = Vector2(0, 88)
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "Relacionar evidencias"
+autowrap_mode = 3
+disabled = true
+
+[node name="Feedback" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"AccentLabel"
+autowrap_mode = 3
+
+[node name="Filters" type="HFlowContainer" parent="."]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
+
+[node name="Cards" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Detail" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+
+[node name="Back" type="Button" parent="Detail"]
+custom_minimum_size = Vector2(0, 88)
+layout_mode = 2
+text = "Volver al listado"
+autowrap_mode = 3
+
+[node name="Title" type="Label" parent="Detail"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+autowrap_mode = 3
+
+[node name="Description" type="Label" parent="Detail"]
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Source" type="Label" parent="Detail"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+autowrap_mode = 3
+
+[node name="Image" type="TextureRect" parent="Detail"]
+visible = false
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ConclusionsHeading" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"KickerLabel"
+text = "CONCLUSIONES CONFIRMADAS"
+autowrap_mode = 3
+
+[node name="Conclusions" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="ActionsHeading" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"KickerLabel"
+text = "CONSULTAS DISPONIBLES"
+autowrap_mode = 3
+
+[node name="Actions" type="VBoxContainer" parent="."]
+layout_mode = 2

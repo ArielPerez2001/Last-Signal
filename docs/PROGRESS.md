@@ -2,7 +2,9 @@
 
 ## Estado actual
 
-Actualizado: 2026-10-28, fecha local del usuario. **Etapa 07 completada: Llamadas presenta conversaciones interactivas de desarrollo conectadas al motor y guardado aislado, verificadas en Godot 4.7.2 estable sobre Windows.** El usuario aprobó 00–06 al enviar PROMPT 07. Menú/navegación conservados, Continuar deshabilitado y Caso 001 sin integrar. Trabajo detenido; PROMPT 08 no autorizado.
+Actualizado: 2026-10-28, fecha local del usuario. **Etapa 08 completada: Expedientes muestra evidencias, detalles y deducciones reales de una demo de investigación compartida con Llamadas y guardado aislado, verificada en Godot 4.7.2 estable sobre Windows.** El usuario aprobó 00–07 al enviar PROMPT 08. Menú/navegación conservados, Continuar deshabilitado y Caso 001 sin integrar. Trabajo detenido; PROMPT 09 requiere autorización explícita. Sin commits ni pushes en 08.
+
+Autorización posterior al cierre de 08 — 2026-10-28: el usuario solicita «Directo a github», autorizando commit de esta entrega y push directo a main de ArielPerez2001/Last-Signal. Esta autorización de publicación sustituye la restricción anterior solo para esta entrega; no inicia PROMPT 09 ni amplía funcionalidades.
 
 ## Etapas completadas
 
@@ -14,8 +16,9 @@ Actualizado: 2026-10-28, fecha local del usuario. **Etapa 07 completada: Llamada
 - **05 — Motor narrativo:** carga/validación JSON, estado temporal, condiciones, efectos, transacciones, eventos, transiciones, finales y reinicio. Caso técnico de seis nodos y dos desenlaces, sin conexión a la consola.
 - **06 — Estado y guardado:** JSON versionado en user://, validación completa, respaldo, recuperación transaccional, importación sin duplicar consecuencias, autoguardado y adaptador opcional de ciclo de vida. Pruebas aisladas con procesos separados, sin activar funciones del menú.
 - **07 — Llamadas:** controlador de cinco estados, conversación y opciones reales desde JSON/motor, transcripción derivada, demo de desarrollo con dos desenlaces, recuperación y autoguardado aislados. Interacción GUI y 40 capturas reales en cuatro tamaños.
+- **08 — Evidencias, expedientes y deducciones:** catálogo esquema 2, cinco categorías, fichas descubiertas, filtro/detalle/procedencia, selección de dos y conclusiones por reglas declarativas. Confirmación atómica e idempotente, diálogo actualizado sin reentrada y guardado 2 con lectores legacy 1 conservados. Demo separada de cinco pistas/dos conclusiones; 24 grupos verificados y 56 capturas reales en cuatro tamaños.
 
-Las etapas 08–23 y las subfases 19.1–19.4 permanecen pendientes. El estado detallado y la aceptación de cada etapa están en [ROADMAP.md](ROADMAP.md). Los estados de revisión pendiente en las entregas originales de 02 describen su situación al entregarse, anterior a la aprobación de PROMPT 03.
+Las etapas 09–23 y las subfases 19.1–19.4 permanecen pendientes. El estado detallado y la aceptación de cada etapa están en [ROADMAP.md](ROADMAP.md). Los estados de revisión pendiente en las entregas originales de 02 describen su situación al entregarse, anterior a la aprobación de PROMPT 03. Los registros de 01–07 conservan su alcance histórico al entregarse; los cambios posteriores se detallan por fase.
 
 ## Cambios de fase 01 — 2026-10-27
 
@@ -273,6 +276,89 @@ Incidencias resueltas: las referencias cruzadas de señales mantenían controlad
 
 Pruebas pendientes/no ejecutadas: Android físico, APK/exportación, compilación release real, gestos/interrupciones de dispositivo, lector de pantalla y rendimiento móvil. Las notificaciones y toques son simulaciones de escritorio. Las escenas de resultados oficiales, audios, expedientes/deducciones, mapa y todos los recorridos del Caso 001 siguen sin implementación.
 
+## Cambios de fase 08 — 2026-10-28
+
+- Revisados AGENTS, progreso/roadmap/decisiones, diseño y especificación oficial, contratos de motor/guardado/llamadas y código pertinente. Repositorio inicialmente limpio en main/origin/main, HEAD 4c7afd3d7a22efd65a2843ee4d0f28c3b07d83ee; conservados hashes SHA-256 de sus 193 archivos de fuente/documentación/evidencia. La autorización del nuevo prompt sustituye la prohibición temporal de 08; no autoriza 09 ni cambios remotos.
+- Creados EvidenceManager y DeductionManager como fachadas del motor existente. Categorías centrales, catálogo completo validado, proyecciones de fichas descubiertas sin importance/total oculto, procedencia, orden estable, recursos opcionales restringidos y fallback textual. Alta real vía add_to_set y acciones declaradas; descubrimiento repetido no duplica conjunto o señal.
+- Introducido esquema narrativo 2 con investigation.evidence/actions/deductions; esquema 1 y sus JSON anteriores conservados. Reglas exactas sin orden de dos/tres fichas, condiciones actuales, resultados VALID/ALREADY_DISCOVERED/INSUFFICIENT/LOCKED/INVALID y operativos STALE/BUSY. Dos reglas para el mismo conjunto o IDs de acción/opción/deducción en colisión se rechazan.
+- Añadida confirmación externa atómica al motor con EffectProcessor existente. Registra ID/revisión en executed_actions/transaction_log, aplica efectos al candidato y verifica opciones elegibles. Rechazo revierte todo; éxito publica estado/avisos/deducción/opciones sin cambiar cursor/visitas, repetir entry_effects o inventar líneas de conversación. ConditionEvaluator, EffectProcessor y NarrativeSessionState permanecen intactos.
+- Versionado save_version 2 para casos esquema 2 y conservado formato 1 para esquema 1. Envoltura de ocho campos y snapshot de 17 campos sin duplicaciones; conclusiones derivadas de executed_actions. Reconstrucción aislada del diario reconoce opciones/consultas/deducciones e intercala consumos. Sin migraciones: referencias/versiones/contenido incompatibles se rechazan preservando sesión/originales y política de respaldo.
+- Reutilizada evidence_panel.tscn con tarjetas, filtros descubiertos, descripción completa/procedencia/imagen opcional, selección de dos, retroalimentación y conclusiones consultables. Expediente finalizado es solo consulta. Selección/filtro/detalle no persisten, no conceden efectos y se conservan entre pestañas/detalle hasta cambiar/restaurar/reiniciar sesión. Navegación inferior fija y Theme/iconos propios conservados.
+- DispatchConsole enlaza el expediente al motor y SaveManager reales de CallController, sin crear otra sesión. CallsPanel añade controller_replaced y botón de desarrollo Prueba de investigación, recuerda caso/ruta para recuperar y conserva flujo anterior. Fallo de E/S visible en ambos paneles, con reintento del mismo estado; dispose/desconexiones conservan ciclo de vida sin fugas.
+- Creado investigation_demo.json no canónico: cinco fichas/cinco categorías, tres adquisiciones por diálogo y dos por consultas condicionadas, dos deducciones (una desbloquea diálogo, otra opcional con requisito adicional), cinco nodos, ocho opciones y dos finales. user://investigation_demo separado de user://call_demo y user://saves. Las pruebas usan únicamente subrutas únicas user://save_tests.
+- Creadas tres suites de investigación, fixture de rollback y seis UID de scripts. Documentación técnica de 18 apartados en [INVESTIGATION_SYSTEM.md](technical/INVESTIGATION_SYSTEM.md), ampliados contratos de motor/guardado/llamadas y estados en AGENTS/GDD/UI_NAVIGATION/ROADMAP/este progreso. Decisiones D-043–D-048. Guardadas 56 capturas reales de Godot en docs/validation/prompt_08.
+- No se modifican historia aprobada, STORY_BIBLE, fuentes del Caso 001, reporte Word, project.godot, Theme/iconos o pruebas anteriores. Sin commits/pushes, credenciales, instalaciones, dependencias, APK, cambios remotos o mecánicas posteriores.
+
+### Archivos de la entrega 08
+
+| Tipo | Archivos |
+| --- | --- |
+| Nuevos servicios/UI | scripts/systems/evidence_manager.gd, scripts/systems/deduction_manager.gd, scripts/ui/evidence_panel.gd y sus tres UID |
+| Nueva escena | scenes/components/evidence/evidence_card.tscn |
+| Nuevos datos | data/cases/investigation_demo.json y tests/investigation/fixtures/blocked_effect.json |
+| Nuevas pruebas | tests/investigation/test_evidence_manager.gd, test_deduction_manager.gd, test_integration.gd y sus tres UID |
+| Nuevos documentos/evidencia | docs/technical/INVESTIGATION_SYSTEM.md y 56 PNG en docs/validation/prompt_08 (14 por tamaño) |
+| Código modificado | scripts/narrative/narrative_engine.gd, narrative_validator.gd, narrative_state_validator.gd; scripts/systems/save_manager.gd y call_controller.gd; scripts/ui/calls_panel.gd y dispatch_console.gd |
+| Escenas modificadas | scenes/screens/sections/evidence_panel.tscn y calls_panel.tscn |
+| Documentos modificados | AGENTS.md; docs/GDD.md, UI_NAVIGATION.md, PROGRESS.md, ROADMAP.md, DECISIONS.md; docs/technical/NARRATIVE_ENGINE.md, SAVE_SYSTEM.md y CALL_SYSTEM.md |
+
+## Validaciones de fase 08
+
+Entorno real: Godot 4.7.2.stable.official.ed1daf0bf, Windows, Compatibility/OpenGL 3.3.0, Intel UHD Graphics. Todos los resultados finales PASS indicados terminaron con salida 0. CALL_DIAGNOSTIC write_error en integración es el fallo de disco inyectado deliberadamente para probar aviso y reintento, no un error de script o fallo del proceso. No hay errores críticos pendientes detectados en el alcance ejecutado.
+
+| Grupo de aceptación del PROMPT 08 | Comprobación realmente ejecutada y resultado |
+| --- | --- |
+| 01 Catálogo | Cinco fichas válidas, categorías/importancia/procedencia/orden y recurso opcional, esquema 2 cargado correctamente |
+| 02 Datos inválidos | Campos ausentes/mal tipados, ID duplicados/no declarados, categorías, importancia, condiciones/efectos, combinación ambigua y rutas inseguras rechazados; imagen ausente advertida con texto disponible |
+| 03 Descubrimiento | Tres elecciones conceden e01–e03 y dos consultas autorizadas e04/e05; Expedientes usa el mismo estado del motor |
+| 04 Duplicados | Repetir adquisición conserva tamaño y no repite señal de descubrimiento |
+| 05 Ocultas | ID oculto/desconocido devuelve UNAVAILABLE vacío; títulos/categorías futuras e importance no aparecen en proyección; acciones condicionadas no filtran títulos |
+| 06 Detalle | Título, descripción completa, categoría y procedencia correctos; imagen validada renderizada; consulta conserva snapshot |
+| 07 Selección | Mouse + toque al viewport seleccionan dos fichas distintas, exactamente una activación táctil; filtro/detalle conservan selección |
+| 08 Selección inválida | Repetidas/desconocidas/no descubiertas devuelven INVALID, conservando estado |
+| 09 Deducción válida | e01 + e02 confirma inv_d01, registra conclusión y aplica una vez variable/contador/evento |
+| 10 Orden | Orden inverso e02 + e01 obtiene la misma relación válida; evaluación exacta de conjunto |
+| 11 Insuficiencia | Una ficha o e01 + e03 devuelve INSUFFICIENT neutral, sin cambios o penalización |
+| 12 Repetida | ALREADY_DISCOVERED sin revisión/efectos/eventos/señal nuevos ni nueva escritura automática |
+| 13 Condición adicional | e04 + e05 devuelve LOCKED sin título de solución hasta inv_review; después confirma inv_d02 |
+| 14 Consecuencias | Aparece inv_unlocked en opciones del nodo vigente; cursor/visitas/historial permanecen idénticos al deducir |
+| 15 Navegación | Llamadas/Audio/Mapa/Expedientes conserva snapshot, selección y número de instancias; retorno muestra opciones actualizadas |
+| 16 Guardado | Documento real save_version 2/narrative_schema_version 2, session de 17 campos con fichas, acciones y efectos |
+| 17 Restauración | Motor/gestor nuevos recuperan disco con cinco fichas, dos conclusiones y snapshot/transcripción exactos |
+| 18 Incompatible | ID de evidencia/deducción inventados y formato 1 para esquema 2 rechazados; sesión viva conservada |
+| 19 Nueva sesión | Reinicio limpia evidencia, conclusiones y selección anterior; vuelve a llamada preparada |
+| 20 Regresión | Suites intactas de motor (151/334), guardado (114/905), controlador (68) e integración de llamadas (402 base) PASS |
+| 21 Integridad visual | Bootstrap y navegación PASS en cuatro resoluciones; menú y cuatro pestañas operativos, Continuar deshabilitado; 56 PNG inspeccionados |
+| 22 Determinismo | Misma secuencia en sesiones nuevas produce snapshot completo idéntico |
+| 23 Persistencia de efectos | Restauración no publica evidence_registered/deduction_confirmed/event_requested; contador/eventos/once_key y transcripción exactos |
+| 24 Rechazo seguro | Pares inválidos/bloqueados y fixture que elimina todas las opciones revierten variables, eventos y diarios; estado anterior intacto |
+
+Comprobaciones adicionales ejecutadas: rechazo STALE sin mutación, BUSY durante notificación, inv_complete alcanzable sin la deducción opcional e inv_partial alcanzable con una sola pista, conservando su consulta sin inventar conclusiones.
+
+### Cifras finales y procedimientos
+
+| Suite/comprobación | Resultado final |
+| --- | --- |
+| test_evidence_manager | PASS, 69 aserciones |
+| test_deduction_manager | PASS, 88 aserciones |
+| Investigación GUI headless, 720×1280 / 1080×1920 | PASS, 2349 aserciones por ejecución |
+| Investigación GUI headless, 1080×2400 / 720×1600 | PASS, 2347 aserciones por ejecución |
+| Investigación GUI gráfica, 720×1280 / 1080×1920 | PASS, 2419 aserciones por ejecución |
+| Investigación GUI gráfica, 1080×2400 / 720×1600 | PASS, 2417 aserciones por ejecución |
+| Regresión de seis suites anteriores | PASS, 1974 aserciones de referencia; fuentes sin cambios |
+| Total principal de referencia | 4480 = 1974 anteriores + 69 + 88 + 2349; no cuenta repeticiones de tamaño/capturas como escenarios nuevos |
+| Bootstrap/navigation | PASS headless en cuatro tamaños; 144 nodos estables antes/después de navegación sin iniciar demo |
+| Importación/arranque | Importación headless, arranque normal headless y gráfico salida 0, sin errores de script/fugas reportados |
+| QA visual | 56 PNG de dimensiones exactas, catorce estados por resolución; inspección de las cuatro hojas de contacto y detalles originales; texto largo accesible por scroll, sin desbordamiento horizontal/superposición y barra inferior accesible |
+| Integridad documental/recursos | 265 archivos no vacíos fuera de .git/.godot, 224 enlaces Markdown locales válidos y 104 referencias resolubles de recursos; seis referencias ausentes/inseguras solo en contextos de pruebas negativas identificados |
+| Integridad de alcance | 175 de los 193 archivos iniciales conservan SHA-256 idéntico; 18 modificados y 72 nuevos (56 capturas y 16 fuentes/datos/documentación/UID). Historia oficial, configuración, Theme, iconos y pruebas anteriores intactos; HEAD/origin/main sin cambios |
+
+Las 70 aserciones adicionales de cada ejecución gráfica verifican catorce capturas. La diferencia de dos entre proporciones depende de controles internos de scroll visibles; no se omiten requisitos. Los contadores son aserciones y no ese número de casos de prueba independientes. Comandos reproducibles, recorrido manual, contratos de autoría y enlaces a capturas en [INVESTIGATION_SYSTEM.md](technical/INVESTIGATION_SYSTEM.md). Ejemplo base: [deducción confirmada](validation/prompt_08/720x1280/valid.png), [detalle](validation/prompt_08/720x1280/evidence_detail.png), [restauración](validation/prompt_08/720x1280/restored.png), [fallo de escritura](validation/prompt_08/720x1280/save_error.png).
+
+Incidencias corregidas: el chequeo de versiones contra un array de enteros rechazaba números JSON integrales representados como float; se normaliza solo después de validar tipo/integralidad, manteniendo rechazos de bool/string/fracciones. Se añadieron controles de candidato estable para impedir una deducción que dejase el diálogo sin opciones. Se preserva el historial hablado al reproducir entradas externas y se desconectan fachadas al sustituir controlador. La proyección de acciones ocultaba su habilitación pero aún mostraba títulos futuros: ahora solo devuelve las disponibles. Se eliminó espacio reservado por etiquetas de aviso vacías y se aseguró aviso visible al intentar una tercera selección. Un toque por la ruta global falló en 1080×1920: el auxiliar ahora envía al viewport con coordenadas locales y exige una sola activación; las cuatro resoluciones gráficas finales pasan. El límite de 30 segundos del auxiliar se agotó capturando closed en 720×1600: se amplió a 60 segundos solo en pruebas y esa resolución completó las 2417 comprobaciones. Las ejecuciones fallidas previas no se cuentan como PASS.
+
+Pruebas no ejecutadas: Android físico, APK/exportación release, gestos físicos/interrupciones reales, accesibilidad con lector de pantalla, rendimiento móvil, corte eléctrico y llenado físico de disco. Fallos de E/S, notificaciones y toque son simulados en escritorio. La compatibilidad release se comprueba únicamente por política de desarrollo, sin exportar. No se ejecutaron pruebas oficiales del Caso 001, que sigue documental. Los resultados de 07 y anteriores conservan sus evidencias históricas; no se atribuyen a los escenarios nuevos.
+
 ## Problemas conocidos y pendientes
 
 - La carpeta ya tiene repositorio Git local y origin configurado por autorización posterior del usuario. La futura publicación de otros cambios sigue requiriendo autorización explícita.
@@ -282,13 +368,14 @@ Pruebas pendientes/no ejecutadas: Android físico, APK/exportación, compilació
 - No hay contradicciones detectadas entre MVP y campaña. PROMPT 02 confirma incendio y clausura en 1981; sus fechas exactas siguen propuestas. Su relación causal con el incidente general sigue abierta.
 - El objetivo de 8–15 minutos del Caso 001 sigue siendo una estimación sin pruebas de personas reales. El núcleo genérico y su persistencia están probados en 05–06; su integración con el contenido oficial y sus invariantes específicas siguen pendientes.
 - Android sigue pendiente: no hay APK, exportación, SDK validado, plantillas de exportación verificadas ni prueba en dispositivo real. Las capturas son de escritorio y no demuestran zonas seguras o rendimiento móvil.
-- Menú y navegación siguen funcionando; Llamadas ofrece conversaciones técnicas solo en desarrollo. Audio/Mapa/Expedientes permanecen vacíos. No hay llamadas oficiales del Caso 001, reproducción de audio, mapa funcional, expedientes, deducciones ni Continuar activado.
+- Menú y navegación siguen funcionando; Llamadas y Expedientes comparten investigación técnica solo en desarrollo. Audio/Mapa permanecen vacíos. No hay llamadas oficiales del Caso 001, reproducción/filtros de audio, mapa funcional, despacho, resultados definitivos o Continuar activado.
 - Los márgenes seguros Android tienen adaptación por API, pendiente de probar en dispositivo. Retroceso gestual/físico, densidad táctil real, lector de pantalla y rendimiento móvil permanecen pendientes. No hay APK ni pruebas en teléfono.
 - Créditos carece todavía de autoría confirmada y Configuración no permite ajustar preferencias; ambas limitaciones son visibles en la interfaz.
 - El validador no demuestra todas las combinaciones de condiciones. Una carga estructuralmente válida puede tener un inicio bloqueado: start_case informa el error sin sesión parcial. Las elecciones fallidas conservan su estado anterior. Los contratos de variantes de texto y resolución específica del caso siguen pendientes de integración autorizada.
-- El guardado 1 exige contenido/fingerprint exactos y no incluye migraciones. Usa I/O síncrona, límites documentados y bloqueos de hilo principal dentro de un proceso; no hay garantía de atomicidad universal, durabilidad eléctrica o coordinación entre procesos externos. La demo ya informa/reintenta; las decisiones de reemplazo y salida de la interfaz oficial siguen futuras.
+- El guardado 1 para esquema 1 y guardado 2 para esquema 2 exigen contenido/fingerprint exactos y no incluyen migraciones. Usan I/O síncrona, límites documentados y bloqueos de hilo principal dentro de un proceso; no hay garantía de atomicidad universal, durabilidad eléctrica o coordinación entre procesos externos. Las demos informan/reintentan; las decisiones de reemplazo y salida de la interfaz oficial siguen futuras.
 - La transcripción deriva presentación lógica confirmada, no acredita lectura humana o dibujo completo antes de una interrupción. Su reconstrucción y los controles crecen con el historial; no se ha medido rendimiento móvil. La demostración está limitada y el guardado conserva sus cotas de 06.
+- La UI de investigación permite dos fichas por relación; servicio/esquema admiten tres para contenido futuro. No hay reglas repetibles o ambiguas, IA de deducción, inventario convencional o migración de partidas. El coste de regenerar tarjetas y reconstruir registros no se ha perfilado en Android.
 
 ## Próxima etapa autorizable
 
-**08 — Pistas y deducciones**, únicamente después de recibir el siguiente prompt con autorización explícita. Llamadas está conectada mediante una demostración fuera de campaña y el resto de sistemas de investigación siguen pendientes. Esta fase 07 termina aquí. Al reanudar, consultar primero [AGENTS.md](../AGENTS.md), [CALL_SYSTEM.md](technical/CALL_SYSTEM.md), [NARRATIVE_ENGINE.md](technical/NARRATIVE_ENGINE.md), [SAVE_SYSTEM.md](technical/SAVE_SYSTEM.md) y los documentos pertinentes.
+**09 — Analizador de audio**, únicamente después de recibir un prompt con autorización explícita. Investigación genérica, llamadas y guardado están conectados en una demo fuera de campaña; el Caso 001 sigue sin integrar. **La fase 08 termina aquí y no se inicia 09.** Al reanudar, consultar primero [AGENTS.md](../AGENTS.md), [INVESTIGATION_SYSTEM.md](technical/INVESTIGATION_SYSTEM.md), [CALL_SYSTEM.md](technical/CALL_SYSTEM.md), [NARRATIVE_ENGINE.md](technical/NARRATIVE_ENGINE.md), [SAVE_SYSTEM.md](technical/SAVE_SYSTEM.md) y los documentos pertinentes.

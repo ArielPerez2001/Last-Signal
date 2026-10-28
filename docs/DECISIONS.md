@@ -386,6 +386,60 @@ Los registros D-012–D-015 describen el estado de diseño al entregar 02. Su ap
 - **Consecuencias:** 68 comprobaciones de controlador y 402 de integración base, junto con 1504 anteriores; 40 capturas gráficas inspeccionadas. Cifras de otras proporciones/capturas registradas por ejecución. No se acredita Android físico, exportación release, rendimiento móvil o accesibilidad de lector de pantalla.
 - **Estado:** adoptada y verificada en PROMPT 07.
 
+## D-043 — Alcance autorizado de investigación
+
+- **Fecha:** 2026-10-28.
+- **Tema:** autorización de PROMPT 08.
+- **Decisión tomada:** aprobar 00–07 y ejecutar exclusivamente evidencias, expedientes/deducciones, integración con los servicios existentes, demo no canónica y pruebas/documentación.
+- **Justificación:** autorización expresa del nuevo prompt; sustituye la espera de 08 al cerrar 07.
+- **Consecuencias:** Expedientes deja de ser placeholder. No se integra Caso 001 ni audio, mapas/despacho, resultados definitivos o fases posteriores. Continuar deshabilitado; sin commits/pushes, instalaciones o cambios externos. Detenerse antes de 09.
+- **Estado:** aprobada e implementada en PROMPT 08.
+
+## D-044 — Esquema 2, catálogo central y proyecciones
+
+- **Fecha:** 2026-10-28.
+- **Tema:** datos de investigación y compatibilidad.
+- **Decisión tomada:** esquema narrativo 2 añade investigation con fichas, acciones y reglas, conservando lectura del esquema 1 sin modificaciones de sus casos. Ficha por ID de evidence_catalog; cinco categorías centrales, importancia solo de autoría y recursos de imagen opcionales restringidos.
+- **Justificación:** contrato explícito que detecta referencias incompletas y evita inventar metadatos para contenido anterior.
+- **Consecuencias:** UI recibe solo fichas/categorías descubiertas y acciones disponibles, sin importancia o total oculto. Detalle de ID oculto/desconocido es indistinguible. Ausencia de imagen admite advertencia/fallback; rutas inseguras se rechazan. Conjunto exacto de dos/tres evidencias, sin reglas ambiguas; la UI de esta fase selecciona dos.
+- **Estado:** adoptada, implementada y probada; contrato en INVESTIGATION_SYSTEM.
+
+## D-045 — Acciones externas atómicas y diario único
+
+- **Fecha:** 2026-10-28.
+- **Tema:** confirmación de investigación e idempotencia.
+- **Decisión tomada:** motor confirma consultas/deducciones en candidato con el EffectProcessor existente, registra ID global único en executed_actions y transaction_log y valida que quede una opción elegible. No modifica cursor/visitas ni reentra al nodo.
+- **Justificación:** evitar otro estado paralelo y conservar la validación completa del historial, efectos únicos y actualización inmediata de diálogo.
+- **Consecuencias:** choice_id puede designar acción/deducción en esquema 2; ámbito de efecto investigation:<id>. Fallo revierte todo. Confirmación publica state_changed, avisos, deduction_confirmed y choices_changed, sin node_changed. La transcripción omite acciones externas, sin mensajes inventados; preview/consultas/repeticiones no mutan. ConditionEvaluator/EffectProcessor permanecen intactos.
+- **Estado:** adoptada, implementada y probada, incluido rollback por diálogo bloqueado.
+
+## D-046 — Formato de guardado 2 sin migración implícita
+
+- **Fecha:** 2026-10-28.
+- **Tema:** persistencia de investigación.
+- **Decisión tomada:** esquema narrativo 2 escribe/lee save_version 2; esquema 1 conserva formato 1. Misma envoltura y 17 campos; conclusiones derivadas de executed_actions, sin catálogos o listas persistentes duplicados.
+- **Justificación:** versionar la nueva semántica del diario y su reconstrucción sin invalidar artificialmente los casos anteriores ni prometer migradores inexistentes.
+- **Consecuencias:** versión/contenido/fingerprint exactos. Rechazo conserva memoria y originales, con respaldo compatible conforme a 06. Reconstrucción aislada revalida acciones/condiciones, no produce efectos vivos al restaurar. Algoritmo de archivos/cotas/autoguardado preservado; 2048 operaciones también incluye acciones externas.
+- **Estado:** adoptada y probada con formato 2 y regresión de formato 1.
+
+## D-047 — Sesión compartida, interfaz y aislamiento de demo
+
+- **Fecha:** 2026-10-28.
+- **Tema:** composición y acceso de desarrollo.
+- **Decisión tomada:** EvidenceManager/DeductionManager son fachadas del motor de CallController. DispatchConsole enlaza el panel existente y escucha controller_replaced; no hay otro motor/SaveManager. Nueva demo usa user://investigation_demo y botón Prueba de investigación; la anterior mantiene user://call_demo.
+- **Justificación:** expediente y conversación deben ver las mismas consecuencias; pruebas y demostraciones no deben tocar partidas oficiales.
+- **Consecuencias:** detalle/filtros/selección temporales, sin efectos ni escrituras; dos seleccionables, conclusiones consultables y cierre en solo lectura. Theme/iconos existentes y navegación fija; errores de E/S con reintento del mismo gestor. Pruebas solo user://save_tests con prefijos únicos. Desconexión/dispose al reemplazar/cerrar.
+- **Estado:** adoptada, implementada y probada en escritorio.
+
+## D-048 — Verificación de investigación y límites reales
+
+- **Fecha:** 2026-10-28.
+- **Tema:** aceptación de PROMPT 08.
+- **Decisión tomada:** tres suites nuevas, regresión intacta de motor/guardado/llamadas, cuatro tamaños de integración/navegación y 56 capturas gráficas reales inspeccionadas. Correspondencia de los 24 grupos en PROGRESS.
+- **Justificación:** verificar estado, GUI y recuperación, distinguiendo aserciones de escenarios y simulación de dispositivo.
+- **Consecuencias:** 69 comprobaciones de evidencias, 88 de deducciones y 2349 de integración base, más 1974 anteriores: 4480 de referencia sin volver a sumar resoluciones/capturas. Las variantes altas tienen dos aserciones menos por scroll. Sin prueba Android/APK/release, cortes eléctricos o rendimiento móvil. Se documentan fallos de auxiliares corregidos; no se declaran como ensayos superados las ejecuciones fallidas.
+- **Estado:** adoptada y verificada en PROMPT 08.
+
 ## Plantilla para nuevos registros
 
 - **Identificador y tema:** D-XXX — título.

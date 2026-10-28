@@ -2,11 +2,13 @@
 
 PROMPT 07 · 2026-10-28 · Godot 4.7.2 estable · demostración de desarrollo.
 
+Ampliación PROMPT 08: expediente compartido, nueva demo `investigation_demo.json` y formato 2 para su esquema 2. El recorrido/contrato original de 07 y sus resultados históricos se conservan; los cambios actuales están detallados en el apartado de investigación y [INVESTIGATION_SYSTEM.md](INVESTIGATION_SYSTEM.md).
+
 ## Acceso y alcance
 
 Abrir project.godot, ejecutar F5, pulsar **Ingresar a la central**, abrir **Llamadas**, elegir **Iniciar prueba** y después **Responder comunicación**. El rótulo DESARROLLO · PRUEBA FUERA DE CAMPAÑA distingue el contenido técnico. **Recuperar prueba** restaura el checkpoint aislado; **Reiniciar prueba** borra explícitamente solo esa demostración y vuelve a INCOMING.
 
-Las acciones de demostración están condicionadas por OS.is_debug_build(). El menú principal y Continuar no se modifican; Continuar sigue deshabilitado. No hay Caso 001 jugable, llamadas de la campaña, grabaciones, mapa funcional, despacho, deducciones o pantalla definitiva de resultados. No hay sonidos nuevos ni recursos descargados.
+Las acciones de demostración están condicionadas por OS.is_debug_build(). El menú principal y Continuar no se modifican; Continuar sigue deshabilitado. Desde 08 hay deducciones genéricas con otra demostración. No hay Caso 001 jugable, llamadas de campaña, grabaciones, mapa funcional, despacho o pantalla definitiva de resultados. No hay sonidos nuevos ni recursos descargados.
 
 ## Arquitectura y archivos
 
@@ -35,7 +37,7 @@ flowchart LR
 | [dispatch_console.gd](../../scripts/ui/dispatch_console.gd) | Conserva navegación; refleja el estado de llamada en la cabecera común |
 | [narrative_engine.gd](../../scripts/narrative/narrative_engine.gd) | Nueva proyección pura get_conversation_history; reutiliza la reconstrucción validada existente |
 
-Main, menú, navegación raíz, Theme y módulos Audio/Mapa/Expedientes permanecen sin cambios de código. La consola mantiene instancias; no se recrea la llamada al cambiar de pestaña ni al volver del menú. Sin autoloads o nuevos propietarios globales. CallsPanel posee un CallController y un adaptador SaveLifecycle hijo; el controlador posee un motor y un gestor de guardado. dispose desconecta suscripciones y desactiva autoguardado al reemplazarlo/cerrar la escena, evitando ciclos de referencias.
+Main, menú, navegación raíz, Theme y módulos Audio/Mapa permanecen sin cambios de código. En 08 Expedientes se conecta a la misma sesión. La consola mantiene instancias; no se recrea la llamada al cambiar de pestaña ni al volver del menú. Sin autoloads o nuevos propietarios globales. CallsPanel posee un CallController y un adaptador SaveLifecycle hijo; el controlador posee un motor y un gestor de guardado. dispose desconecta suscripciones y desactiva autoguardado al reemplazarlo/cerrar la escena, evitando ciclos de referencias.
 
 ## Responsabilidades
 
@@ -75,9 +77,9 @@ Se añade **get_conversation_history() -> Array** al motor. Reutiliza la reconst
 
 Se incluyen únicamente nodos estables confirmados que se publicaron para presentación y respuestas realmente elegidas. Las transiciones automáticas, ramas no visitadas, elecciones rechazadas y consumos de eventos no crean mensajes. Los consumos intercalados se reconstruyen con las revisiones del registro existente. No se adivinan diálogos a partir de la evidencia ni se recorren otras ramas.
 
-La aplicación de esta fase solo avanza al responder/elegir en Llamadas. La transcripción representa presentación lógica confirmada; no es un registro de lectura humana ni acredita que cada píxel alcanzó a dibujarse antes de una interrupción del proceso. No se agregan confirmaciones de lectura, variantes futuras o un segundo registro narrativo.
+En 07 la aplicación solo avanzaba al responder/elegir en Llamadas. En 08 consultas/deducciones externas también confirman estado, sin mover cursor o inventar mensajes. La transcripción representa presentación lógica confirmada; no es un registro de lectura humana ni acredita que cada píxel alcanzó a dibujarse antes de una interrupción del proceso. No se agregan confirmaciones de lectura, variantes futuras o un segundo registro narrativo.
 
-El esquema narrativo y **save_version 1 permanecen sin cambios**. transaction_log, visitas y consumos ya permiten reconstruir las líneas con el contenido exacto validado por fingerprint. El controlador no guarda otra copia de historia en disco. Al cargar se recuperan variables, evidencias, efectos y final mediante SaveManager, se reconstruye la presentación y se muestra el nodo/opciones vigentes. El historial se conserva entre pestañas y entre menú/consola; no hay llamada nueva al volver.
+La demo original conserva esquema narrativo y **save_version 1**. La nueva investigación usa esquema/formato 2 con semántica explícita de acciones externas. transaction_log, visitas y consumos permiten reconstruir las líneas con contenido exacto validado por fingerprint. El controlador no guarda otra copia de historia en disco. Al cargar se recuperan variables, evidencias, efectos y final mediante SaveManager, se reconstruye la presentación y se muestra el nodo/opciones vigentes. El historial se conserva entre pestañas y entre menú/consola; no hay llamada nueva al volver.
 
 La vista usa controles persistentes para el prefijo inalterado. Actualizaciones idénticas no agregan nodos visuales. El historial y las respuestas tienen ScrollContainer separados; la barra inferior permanece accesible. Si el lector revisa mensajes antiguos, una nueva intervención conserva su desplazamiento. Al cargar un historial nuevo o seguir el final, se muestra el inicio de la intervención reciente después de que los contenedores calculen su tamaño. Leer o desplazar nunca provoca efectos narrativos.
 
@@ -85,7 +87,7 @@ La reconstrucción tiene coste proporcional al historial y usa copias/reproducci
 
 ## Guardado aislado y ciclo de vida
 
-La demostración usa únicamente **user://call_demo** y los cuatro nombres de slot_01 gestionados por SaveManager. El constructor de CallController rechaza la carpeta de producción u otras ubicaciones; para pruebas acepta subcarpetas canónicas de user://save_tests/. Los datos JSON no eligen la carpeta. Las suites usan directorios únicos por proceso/ejecución, nunca la partida de producción ni la demostración manual.
+La demostración original usa **user://call_demo**; desde 08 la investigación usa **user://investigation_demo**. Cada una conserva los cuatro nombres de slot_01 gestionados por SaveManager. El constructor de CallController rechaza la carpeta de producción u otras ubicaciones; para pruebas acepta subcarpetas canónicas de user://save_tests/. Los datos JSON no eligen la carpeta. Las suites usan directorios únicos por proceso/ejecución, nunca la partida de producción ni la demostración manual.
 
 El autoguardado se activa al responder y tras recuperar una sesión válida. Una carga no vuelve a guardar por sí sola. Si recuperar falla con sesión activa, conserva tanto la conversación como la política anterior de autoguardado. Reiniciar la demo solicita delete_save(true) en su carpeta aislada, desactiva autoguardado y vuelve a INCOMING con historial vacío; responder iniciará otra sesión.
 
@@ -162,10 +164,22 @@ Diez estados por resolución, 40 PNG con dimensiones físicas exactas, revisados
 | Fallo de guardado | [Ver](../validation/prompt_07/720x1280/save_error.png) | [Ver](../validation/prompt_07/1080x1920/save_error.png) | [Ver](../validation/prompt_07/1080x2400/save_error.png) | [Ver](../validation/prompt_07/720x1600/save_error.png) |
 | Error de contenido | [Ver](../validation/prompt_07/720x1280/load_error.png) | [Ver](../validation/prompt_07/1080x1920/load_error.png) | [Ver](../validation/prompt_07/1080x2400/load_error.png) | [Ver](../validation/prompt_07/720x1600/load_error.png) |
 
+## Investigación compartida — PROMPT 08
+
+Desde una ejecución nueva: F5 → Ingresar a la central → Llamadas → **Prueba de investigación** → Responder comunicación. La acción de desarrollo aparece solo en IDLE/ERROR sin sesión. Conserva el botón original Iniciar prueba para la demo anterior; si ya hay otra sesión, volver a ejecutar para elegir la demo de investigación. Preparar no guarda ni inicia el nodo. Para recuperar después de abrir: Prueba de investigación → Recuperar prueba, sin Responder. Reiniciar prueba actúa únicamente sobre la ranura técnica actualmente seleccionada.
+
+CallController añade INVESTIGATION_PATH (`res://data/cases/investigation_demo.json`) e INVESTIGATION_DIRECTORY (`user://investigation_demo`). Su constructor admite ambas carpetas técnicas y las rutas únicas de pruebas; sigue rechazando user://saves. CallsPanel conserva `_demo_path` y `_storage_directory` para preparar/recuperar el mismo caso. configure_development_storage(directory, save_script = null, case_path = DEMO_PATH) mantiene los argumentos anteriores; en pruebas, el botón nuevo deriva una subruta de su prefijo aislado en lugar de tocar la demo manual.
+
+La señal nueva controller_replaced(controller) permite a DispatchConsole enlazar EvidencePanel al motor/gestor reales, desconectando instancias anteriores. No se crea una segunda sesión o gestor desde Expedientes. Una deducción confirmada publica choices_changed, por lo que CallController actualiza opciones en el nodo vigente. El motor no publica node_changed ni altera visitas; la transcripción conserva exactamente sus líneas anteriores hasta una elección real. Las entradas externas del diario se reconstruyen para verificar/restaurar estado pero se omiten del historial hablado.
+
+La demo de investigación tiene esquema 2 y guardado 2; la original conserva esquema/formato 1 y datos intactos. Snapshot de 17 campos, fingerprint, temporal/respaldo, autoguardado y ciclo de vida siguen las garantías de SaveManager. También se muestran errores/reintento de E/S en Expedientes, usando el mismo gestor y sin reejecutar decisiones. Filtros/detalles/selección no se guardan ni conceden efectos. Estado final ENDED deja el expediente en consulta.
+
+La regresión original de 07 se ejecutó sin modificar sus suites (68 controlador y 402 integración base). La nueva integración de 08 verifica UI compartida, actualización de opciones sin duplicar líneas, navegación, cinco pistas/dos conclusiones recuperadas y reintento de disco. Cifras actuales y 56 capturas de 08 en [PROGRESS.md](../PROGRESS.md) e [INVESTIGATION_SYSTEM.md](INVESTIGATION_SYSTEM.md); la tabla y las 40 capturas anteriores conservan resultados históricos de 07.
+
 ## Limitaciones y preparación posterior
 
 Solo escritorio Windows/Compatibility e interacción táctil simulada. No hay APK, exportación release, teléfono Android real, medición de rendimiento, prueba de lector de pantalla, sonido o gestos físicos del dispositivo. Se comprueba la política de desarrollo desactivándola en pruebas; no se presenta como una exportación release verificada. Persisten las garantías/limitaciones de almacenamiento documentadas en [SAVE_SYSTEM.md](SAVE_SYSTEM.md).
 
-No hay llamada de campaña, árbol del Caso 001, combinación de evidencias, audio, mapa, despacho, múltiples comunicaciones simultáneas o resultados oficiales. El espacio de demostración conserva un checkpoint entre ejecuciones hasta reinicio explícito. Una actualización incompatible de sus datos puede exigir Reiniciar prueba para reemplazar ese checkpoint; nunca se elimina automáticamente al fallar la carga.
+No hay llamada de campaña, árbol del Caso 001, audio, mapa, despacho, múltiples comunicaciones simultáneas o resultados oficiales. La combinación de evidencias de 08 es genérica y técnica. El espacio de cada demostración conserva su checkpoint entre ejecuciones hasta reinicio explícito. Una actualización incompatible de sus datos puede exigir Reiniciar prueba para reemplazar ese checkpoint; nunca se elimina automáticamente al fallar la carga.
 
-El panel y el controlador pueden presentar otros casos mediante sus API y datos, pero esos casos, su validación de dominio y su conexión al flujo de producción requieren autorización. **PROMPT 07 termina aquí. PROMPT 08 no autorizado.**
+El panel y el controlador pueden presentar otros casos mediante sus API y datos, pero esos casos, su validación de dominio y su conexión al flujo de producción requieren autorización. **PROMPT 08 cerrado; PROMPT 09 no autorizado.**

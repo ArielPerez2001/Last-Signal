@@ -58,7 +58,7 @@ static func validate(snapshot: Dictionary, case_data: Dictionary) -> Dictionary:
 	for field: String in ["case_id", "content_version", "current_node", "ending_id"]:
 		if not snapshot[field] is String:
 			return failure("invalid_snapshot", "Se esperaba texto en " + field)
-	if not is_integer(snapshot.schema_version, 1, 1) or snapshot.case_id != case_data.case_id or snapshot.content_version != case_data.content_version:
+	if not is_integer(snapshot.schema_version, 1, 2) or int(snapshot.schema_version) != int(case_data.schema_version) or snapshot.case_id != case_data.case_id or snapshot.content_version != case_data.content_version:
 		return failure("incompatible_content", "El caso, su versión o el esquema narrativo no coinciden.")
 	if not snapshot.finished is bool or not snapshot.variables is Dictionary or not snapshot.visits is Dictionary:
 		return failure("invalid_snapshot", "Tipos incorrectos en variables, visitas o finalización.")

@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[node name="EvidenceCard" type="PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"TerminalPanel"
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Content"]
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Category" type="Label" parent="Content"]
+layout_mode = 2
+theme_type_variation = &"KickerLabel"
+autowrap_mode = 3
+
+[node name="Actions" type="HBoxContainer" parent="Content"]
+layout_mode = 2
+
+[node name="Detail" type="Button" parent="Content/Actions"]
+custom_minimum_size = Vector2(0, 88)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Ver detalle"
+autowrap_mode = 3
+
+[node name="Select" type="Button" parent="Content/Actions"]
+custom_minimum_size = Vector2(0, 88)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Seleccionar"
+autowrap_mode = 3

@@ -18,6 +18,8 @@ func _ready() -> void:
 	%ConsoleHeader.get_node("Content/TopRow/MenuButton").pressed.connect(back_requested.emit)
 	navigation.section_selected.connect(select_section)
 	%CallsPanel.call_presentation_changed.connect(_update_call_status)
+	%CallsPanel.controller_replaced.connect(_bind_investigation)
+	_bind_investigation(%CallsPanel.controller)
 	select_section(&"calls")
 
 
@@ -39,3 +41,7 @@ func select_section(section_id: StringName) -> void:
 func _update_call_status(view: Dictionary) -> void:
 	var labels: Dictionary = {"IDLE": "LÍNEA EN ESPERA", "INCOMING": "LLAMADA ENTRANTE", "CONNECTED": "LLAMADA ACTIVA", "ENDED": "COMUNICACIÓN FINALIZADA", "ERROR": "REVISAR COMUNICACIÓN"}
 	%ConsoleHeader.get_node("Content/Status").text = "COMUNICACIONES · " + labels[view.state]
+
+
+func _bind_investigation(controller: RefCounted) -> void:
+	%EvidencePanel.bind_engine(controller.engine, controller.saves)

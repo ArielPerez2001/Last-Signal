@@ -1,0 +1,44 @@
+{
+  "schema_version": 2,
+  "case_id": "investigation_demo",
+  "content_version": "investigation-1.0",
+  "title": "Comprobación de registros · prueba de investigación",
+  "initial_node": "inv_intro",
+  "characters": [{"id": "inv_caller", "display_name": "Interlocutor · simulación"}],
+  "variables": {"reviewed": {"type": "bool"}, "connection_found": {"type": "bool"}, "notes": {"type": "int", "min": 0, "max": 2}},
+  "initial_state": {"variables": {"reviewed": false, "connection_found": false, "notes": 0}, "evidence": []},
+  "evidence_catalog": ["inv_e01", "inv_e02", "inv_e03", "inv_e04", "inv_e05"],
+  "event_catalog": ["inv_connection", "inv_optional_note"],
+  "endings": ["inv_complete", "inv_partial"],
+  "nodes": [
+    {"id": "inv_intro", "type": "dialogue", "speaker_id": "inv_caller", "text": "Esta es una investigación de prueba, fuera de la campaña. Durante una comprobación dije que el indicador estaba encendido. Puede registrar mi testimonio y contrastarlo con los documentos de ensayo; no hay una emergencia real.", "options": [{"id": "inv_testimony", "text": "Registrar el testimonio de la comprobación.", "next": "inv_hub", "effects": [{"op": "add_to_set", "target": "evidence", "value": "inv_e01"}]}]},
+    {"id": "inv_hub", "type": "dialogue", "speaker_id": "inv_caller", "text": "Puede solicitar el acta y el registro técnico. Las fichas obtenidas aparecen en Expedientes. Relacione lo que realmente esté disponible; no necesita reunir todas las pruebas para cerrar la demostración.", "options": [
+      {"id": "inv_document", "text": "Consultar el acta de la comprobación.", "next": "inv_hub", "visible_when": {"op": "once_not_applied", "value": "inv_document"}, "effects": [{"op": "add_to_set", "target": "evidence", "value": "inv_e02"}]},
+      {"id": "inv_log", "text": "Solicitar el registro técnico de la línea.", "next": "inv_hub", "visible_when": {"op": "once_not_applied", "value": "inv_log"}, "effects": [{"op": "add_to_set", "target": "evidence", "value": "inv_e03"}]},
+      {"id": "inv_review", "text": "Verificar que el registro corresponde a esta prueba.", "next": "inv_hub", "visible_when": {"op": "all", "conditions": [{"op": "contains", "target": "evidence", "value": "inv_e03"}, {"op": "once_not_applied", "value": "inv_review"}]}, "effects": [{"op": "set", "target": "reviewed", "value": true}]},
+      {"id": "inv_repeat", "text": "Revisar de nuevo el testimonio ya registrado.", "next": "inv_hub", "effects": [{"op": "add_to_set", "target": "evidence", "value": "inv_e01"}]},
+      {"id": "inv_unlocked", "text": "Contrastar la diferencia que hemos confirmado en el expediente.", "next": "inv_summary", "visible_when": {"op": "contains", "target": "executed_actions", "value": "inv_d01"}},
+      {"id": "inv_close", "text": "Cerrar la demostración sin completar el contraste.", "next": "inv_end_partial"}
+    ]},
+    {"id": "inv_summary", "type": "dialogue", "speaker_id": "inv_caller", "text": "La conclusión está registrada: el testimonio y el acta describen estados distintos del indicador. El sistema conserva las fuentes y no decide por su cuenta cuál es verdadera. La segunda conclusión es opcional.", "options": [{"id": "inv_finish", "text": "Conservar el contraste y finalizar la prueba.", "next": "inv_end_complete"}]},
+    {"id": "inv_end_complete", "type": "ending", "ending_id": "inv_complete", "text": "Prueba finalizada con una relación justificada. Puede seguir consultando evidencias y conclusiones; el expediente ya no admite nuevos descubrimientos."},
+    {"id": "inv_end_partial", "type": "ending", "ending_id": "inv_partial", "text": "Prueba cerrada sin completar el contraste. Las evidencias obtenidas siguen disponibles para consulta."}
+  ],
+  "investigation": {
+    "evidence": [
+      {"id": "inv_e01", "title": "Testimonio del indicador", "description": "El interlocutor de la simulación declara que el indicador estaba encendido durante la comprobación. Es un testimonio registrado, no una verificación independiente. Su contenido puede compararse con otros documentos disponibles sin alterar la declaración original.", "category": "testimony", "source": "Comunicación técnica · declaración del interlocutor", "importance": "essential", "order": 1},
+      {"id": "inv_e02", "title": "Acta de la comprobación", "description": "El acta ficticia del ensayo describe el indicador como apagado durante el mismo paso de comprobación. El documento conserva lo escrito por el procedimiento de prueba; por sí solo no demuestra qué observó el interlocutor. Conviene comparar las fuentes y mantener separadas las afirmaciones de cada una. Esta ficha es contenido técnico y no pertenece a ningún archivo de la historia oficial.", "category": "document", "source": "Llamada técnica · solicitud del acta de ensayo", "importance": "essential", "related_asset": "res://assets/ui/icons/evidence.svg", "order": 2},
+      {"id": "inv_e03", "title": "Registro de la línea", "description": "El registro identifica la procedencia técnica de esta prueba. Su consulta permite solicitar dos fichas auxiliares en Expedientes. No envía unidades, no abre un mapa y no reproduce grabaciones.", "category": "record", "source": "Comunicación técnica · registro solicitado", "importance": "contextual", "order": 3},
+      {"id": "inv_e04", "title": "Transcripción de control", "description": "Representación textual de una señal ficticia utilizada durante el ensayo. El contenido menciona un código de control distinto del que figura en la ficha de comparación. No hay reproducción ni análisis de audio en esta fase.", "category": "audio", "source": "Expedientes · consulta textual de control", "importance": "optional", "order": 4},
+      {"id": "inv_e05", "title": "Diferencia entre códigos", "description": "La ficha auxiliar conserva el segundo código del ensayo. La diferencia solo tiene significado técnico dentro de esta demostración. No introduce una anomalía de la campaña ni explica ningún misterio del videojuego.", "category": "anomaly", "source": "Expedientes · ficha auxiliar de comparación", "importance": "optional", "order": 5}
+    ],
+    "actions": [
+      {"id": "inv_read_transcript", "title": "Consultar transcripción de control", "condition": {"op": "contains", "target": "evidence", "value": "inv_e03"}, "effects": [{"op": "add_to_set", "target": "evidence", "value": "inv_e04"}]},
+      {"id": "inv_read_comparison", "title": "Consultar ficha de comparación", "condition": {"op": "contains", "target": "evidence", "value": "inv_e03"}, "effects": [{"op": "add_to_set", "target": "evidence", "value": "inv_e05"}]}
+    ],
+    "deductions": [
+      {"id": "inv_d01", "title": "Fuentes en desacuerdo", "description": "El testimonio y el acta describen estados distintos del indicador en el mismo paso del ensayo. Existe una contradicción que requiere contrastar las fuentes; no se declara automáticamente verdadera una de ellas.", "required_evidence": ["inv_e01", "inv_e02"], "result_type": "VALID", "repeatable": false, "effects": [{"op": "set", "target": "connection_found", "value": true}, {"op": "add_clamped", "target": "notes", "value": 1}, {"op": "emit_event", "event_id": "inv_connection", "payload": {"purpose": "investigation_test"}, "once_key": "inv_connection_once"}], "narrative_feedback": "El testimonio contradice el acta. Puede volver a Llamadas para contrastar esta diferencia."},
+      {"id": "inv_d02", "title": "Códigos de control distintos", "description": "La transcripción y la ficha auxiliar contienen códigos diferentes. Tras verificar la procedencia del registro, puede dejarse constancia de esta diferencia adicional; es una conclusión opcional.", "required_evidence": ["inv_e04", "inv_e05"], "additional_conditions": {"op": "equals", "target": "reviewed", "value": true}, "result_type": "VALID", "repeatable": false, "effects": [{"op": "add_clamped", "target": "notes", "value": 1}, {"op": "emit_event", "event_id": "inv_optional_note", "once_key": "inv_optional_once"}], "narrative_feedback": "Se registró la diferencia adicional entre los códigos de prueba."}
+    ]
+  }
+}

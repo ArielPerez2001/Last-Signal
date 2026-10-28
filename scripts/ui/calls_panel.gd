@@ -1,6 +1,7 @@
 extends VBoxContainer
 
 signal call_presentation_changed(view: Dictionary)
+signal controller_replaced(controller: RefCounted)
 
 const Controller = preload("res://scripts/systems/call_controller.gd")
 const EntryScene = preload("res://scenes/components/calls/dialogue_entry.tscn")
@@ -13,6 +14,8 @@ var _choice_signature: Array = []
 var _input_locked: bool = false
 var _scroll_generation: int = 0
 var lifecycle: Node
+var _demo_path: String = Controller.DEMO_PATH
+var _storage_directory: String = Controller.DEMO_DIRECTORY
 
 @onready var history_scroll: ScrollContainer = $History
 @onready var choices_scroll: ScrollContainer = $Choices
@@ -29,19 +32,23 @@ func _ready() -> void:
 	start_button.pressed.connect(_prepare)
 	restore_button.pressed.connect(_restore)
 	restart_button.pressed.connect(_restart)
+	$Development/Actions/Investigation.pressed.connect(_prepare_investigation)
 	$Retry.pressed.connect(func() -> void: controller.retry_save())
 
 
-func configure_development_storage(directory: String, save_script: Script = null) -> void:
+func configure_development_storage(directory: String, save_script: Script = null, case_path: String = Controller.DEMO_PATH) -> void:
 	if controller != null:
 		controller.dispose()
 	controller = Controller.new(directory, save_script)
+	_demo_path = case_path
+	_storage_directory = directory
 	controller.presentation_changed.connect(_render)
 	if lifecycle == null:
 		lifecycle = Lifecycle.new()
 		add_child(lifecycle)
 	lifecycle.save_manager = controller.saves
 	_render(controller.get_view())
+	controller_replaced.emit(controller)
 
 
 func _exit_tree() -> void:
@@ -65,7 +72,14 @@ func set_development_enabled(enabled: bool) -> void:
 
 func _prepare() -> void:
 	if development_enabled:
-		controller.prepare_call()
+		controller.prepare_call(_demo_path)
+
+
+func _prepare_investigation() -> void:
+	if development_enabled and controller.get_view().state in ["IDLE", "ERROR"] and controller.engine.get_state_snapshot().is_empty():
+		var directory: String = _storage_directory + "_investigation" if _storage_directory.begins_with("user://save_tests/") else Controller.INVESTIGATION_DIRECTORY
+		configure_development_storage(directory, null, Controller.INVESTIGATION_PATH)
+		controller.prepare_call(_demo_path)
 
 
 func _answer() -> void:
@@ -78,7 +92,7 @@ func _answer() -> void:
 
 func _restore() -> void:
 	if development_enabled and not _input_locked:
-		controller.restore_call()
+		controller.restore_call(_demo_path)
 		_lock_until_next_turn()
 
 
@@ -123,6 +137,7 @@ func _render(view: Dictionary) -> void:
 	choices_scroll.visible = view.state == "CONNECTED"
 	$Development.visible = development_enabled
 	start_button.visible = view.state in ["IDLE", "ERROR"] and controller.engine.get_state_snapshot().is_empty()
+	$Development/Actions/Investigation.visible = start_button.visible
 	restart_button.visible = not start_button.visible
 	$Retry.visible = not view.error.is_empty() and controller.saves.get_status().data.dirty and active
 	_update_history(view.history)
