@@ -1,0 +1,22 @@
+[gd_scene format=3]
+
+[node name="DialogueEntry" type="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+mouse_filter = 2
+
+[node name="Speaker" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"SignalLabel"
+autowrap_mode = 3
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="."]
+layout_mode = 2
+autowrap_mode = 3
+mouse_filter = 2
+
+[node name="Divider" type="HSeparator" parent="."]
+layout_mode = 2
+mouse_filter = 2

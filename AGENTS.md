@@ -35,11 +35,13 @@ Trabajar mediante prompts numerados. Cada prompt autoriza únicamente su alcance
 - `scenes/core/main.tscn`: entrada y controlador de vistas; `scenes/screens/` y `scenes/components/`: interfaz; `scripts/ui/`: interacción y navegación; `assets/ui/`: Theme e iconos propios; `tests/`: auxiliares de validación. Crear otras carpetas cuando la fase autorizada necesite archivos reales.
 - `scripts/narrative/`: motor independiente de la interfaz; `data/cases/test_narrative.json`: demostración técnica no canónica; `tests/narrative/`: pruebas y fixtures, algunas inválidas deliberadamente.
 - `scripts/systems/`: SaveManager y adaptador opcional de ciclo de vida; `tests/save/`: pruebas aisladas de persistencia, sin tocar partidas reales.
+- `scripts/systems/call_controller.gd`, `scripts/ui/calls_panel.gd` y `scenes/components/calls/`: comunicaciones y presentación; `tests/calls/`: pruebas del controlador y GUI. La demo de desarrollo usa data/cases/ui_call_demo.json y user://call_demo, nunca user://saves.
 - `docs/GDD.md`: diseño y alcance; `docs/STORY_BIBLE.md`: hechos narrativos y preguntas abiertas.
 - `docs/ROADMAP.md`: fases, dependencias y aceptación; `docs/PROGRESS.md`: avance y validaciones; `docs/DECISIONS.md`: decisiones y propuestas.
 - `docs/UI_NAVIGATION.md`: flujo de interfaz, archivos, comandos y límites actuales. TECHNICAL_SETUP conserva el registro de la base de 03.
 - `docs/technical/NARRATIVE_ENGINE.md`: esquema 1, API, transacciones, eventos y límites del motor. No cambiar su formato o semántica sin documentarlo y validar las pruebas pertinentes.
 - `docs/technical/SAVE_SYSTEM.md`: formato de guardado 1, restauración, rutas user://, respaldos, autoguardado y garantías reales. Las pruebas escriben únicamente bajo user://save_tests/.
+- `docs/technical/CALL_SYSTEM.md`: acceso a la demo, ciclo visual, historial derivado, señales, integración y pruebas de llamadas.
 
 ## Verificación y cierre
 
@@ -57,5 +59,5 @@ Trabajar mediante prompts numerados. Cada prompt autoriza únicamente su alcance
 - El audio usa grabaciones y filtros simulados; no implementar procesamiento avanzado de señales ni reconocimiento de voz.
 - No realizar commits, pushes, despliegues, publicaciones, cambios remotos, operaciones con credenciales ni otros cambios externos sin autorización explícita.
 - PROMPT 03 aprueba las etapas 00–02 y autoriza exclusivamente la base técnica ya creada. Las menciones de revisión pendiente en las entregas originales del Caso 001 describen su estado al entregarse en 02; consultar su aprobación posterior en D-017 y PROGRESS.
-- PROMPT 06 aprueba 00–05 y autoriza exclusivamente persistencia local, recuperación, autoguardado y pruebas con el motor existente. El motor y el guardado siguen sin conexión al menú/consola; Continuar permanece deshabilitado y el Caso 001 no está integrado. Al cerrar 06, detenerse y esperar autorización para 07. No hacer commits ni pushes en esta fase.
-- No crear todavía llamadas jugables, interfaz de conversaciones, reproducción de audio, mapas funcionales, despacho, expedientes jugables ni deducciones. No modificar la interfaz, instalar herramientas, crear APK o configurar publicación sin autorización.
+- PROMPT 07 aprueba 00–06 y autoriza exclusivamente llamadas/conversaciones, integración con motor/guardado y demo técnica fuera de campaña, accesible solo en desarrollo. Continuar permanece deshabilitado, el guardado oficial aislado y el Caso 001 sin integrar. Al cerrar 07, detenerse y esperar autorización para 08. No hacer commits ni pushes en esta fase.
+- No crear todavía llamadas oficiales del Caso 001, reproducción de audio, mapas funcionales, despacho, expedientes jugables, deducciones o resultados definitivos. No instalar herramientas, crear APK o configurar publicación sin autorización.

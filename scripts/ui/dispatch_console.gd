@@ -17,6 +17,7 @@ var active_section: StringName = &"calls"
 func _ready() -> void:
 	%ConsoleHeader.get_node("Content/TopRow/MenuButton").pressed.connect(back_requested.emit)
 	navigation.section_selected.connect(select_section)
+	%CallsPanel.call_presentation_changed.connect(_update_call_status)
 	select_section(&"calls")
 
 
@@ -33,3 +34,8 @@ func select_section(section_id: StringName) -> void:
 		panels[panel_id].visible = panel_id == section_id
 	navigation.select_section(section_id)
 	content_scroll.scroll_vertical = 0
+
+
+func _update_call_status(view: Dictionary) -> void:
+	var labels: Dictionary = {"IDLE": "LÍNEA EN ESPERA", "INCOMING": "LLAMADA ENTRANTE", "CONNECTED": "LLAMADA ACTIVA", "ENDED": "COMUNICACIÓN FINALIZADA", "ERROR": "REVISAR COMUNICACIÓN"}
+	%ConsoleHeader.get_node("Content/Status").text = "COMUNICACIONES · " + labels[view.state]

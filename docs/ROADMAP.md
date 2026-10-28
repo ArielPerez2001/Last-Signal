@@ -2,7 +2,7 @@
 
 Actualizado: 2026-10-28. Las fases son planificación y no autorizan ejecución. Cada prompt posterior delimita el trabajo; una etapa puede requerir varios prompts.
 
-Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**. Una dependencia futura no convierte por sí sola una fase en bloqueada. Las etapas 00–06 están completadas. El motor y el guardado se verifican con JSON técnico; la interfaz anterior se conserva, Continuar sigue deshabilitado y no hay Caso 001 jugable ni autorización para 07.
+Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**. Una dependencia futura no convierte por sí sola una fase en bloqueada. Las etapas 00–07 están completadas. Llamadas presenta conversaciones de prueba con motor y guardado aislado; menú/navegación se conservan, Continuar sigue deshabilitado y no hay Caso 001 jugable ni autorización para 08.
 
 ## 00. Contexto maestro
 
@@ -58,7 +58,7 @@ Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**
 - **Dependencias:** 05 y definición de los datos persistentes.
 - **Entregables:** estado del juego, guardado versionado y carga local.
 - **Aceptación:** guardar, cerrar y recuperar un estado representativo; comportamiento documentado ante ausencia o invalidez del archivo.
-- **Estado:** completado. Formato 1 en user://, temporal verificado, respaldo válido anterior, recuperación sin sobrescribir originales, importación transaccional, autoguardado y ciclo de vida opcional. Pruebas de disco, procesos separados y regresión anteriores correctas; API, garantías y límites en [SAVE_SYSTEM.md](technical/SAVE_SYSTEM.md). Sin integración al menú/Caso 001, sin pruebas Android y sin iniciar 07.
+- **Estado:** completado. Formato 1 en user://, temporal verificado, respaldo válido anterior, recuperación sin sobrescribir originales, importación transaccional, autoguardado y ciclo de vida opcional. Pruebas de disco, procesos separados y regresión anteriores correctas; API, garantías y límites en [SAVE_SYSTEM.md](technical/SAVE_SYSTEM.md). En 07 se conecta a una demo aislada; sin integración oficial al menú/Caso 001 ni pruebas Android.
 
 ## 07. Llamadas
 
@@ -66,7 +66,7 @@ Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**
 - **Dependencias:** 04, 05 y 06.
 - **Entregables:** interfaz de llamadas y comportamiento de confianza, estrés y cooperación según el diseño aprobado.
 - **Aceptación:** opciones, cambios de información y estados coinciden con recorridos esperados y pueden persistirse.
-- **Estado:** pendiente.
+- **Estado:** completado. Controlador de cinco estados, sección Llamadas conectada al motor, opciones por ID/revisión, historial derivado y guardado aislado. Dos rutas de demostración y recuperación correctas; regresión anterior y GUI en cuatro resoluciones, con 40 capturas reales. API, acceso y límites en [CALL_SYSTEM.md](technical/CALL_SYSTEM.md). Sin campaña/Caso 001 ni implementación de 08.
 
 ## 08. Pistas y deducciones
 

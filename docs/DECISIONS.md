@@ -332,6 +332,60 @@ Los registros D-012–D-015 describen el estado de diseño al entregar 02. Su ap
 - **Consecuencias:** documentación de resultados reales en PROGRESS/SAVE_SYSTEM. Revisión gráfica de siete vistas a 720 × 1280 y regresión headless en cuatro tamaños. No se prueba corte eléctrico, disco físicamente lleno, APK, rendimiento o dispositivo Android; pruebas PS específicas del Caso 001 siguen futuras.
 - **Estado:** adoptada y verificada en PROMPT 06.
 
+## D-037 — Alcance autorizado de conversaciones
+
+- **Fecha:** 2026-10-28.
+- **Tema:** autorización de PROMPT 07.
+- **Decisión tomada:** aprobar el estado 00–06 e implementar solamente controlador/presentación de llamadas conectados al motor y guardado, demostración no canónica y pruebas de integración.
+- **Justificación:** alcance explícito del prompt; sustituye la espera de autorización al cerrar 06.
+- **Consecuencias:** Llamadas deja de ser placeholder; no se integra Caso 001, audio, mapa, despacho, deducciones o resultados oficiales. Continuar sigue deshabilitado; sin commits, pushes, instalaciones o exportaciones.
+- **Estado:** aprobada e implementada en PROMPT 07.
+
+## D-038 — Controlador visual y propiedad de sesión
+
+- **Fecha:** 2026-10-28.
+- **Tema:** arquitectura y ciclo de vida.
+- **Decisión tomada:** CallController RefCounted posee motor/gestor; CallsPanel presenta sus vistas en la instancia existente y posee SaveLifecycle opcional. Estados IDLE, INCOMING, CONNECTED, ENDED y ERROR; no añadir conexión telefónica al esquema narrativo.
+- **Justificación:** el motor sigue siendo la única autoridad narrativa y la consola ya conserva paneles entre pestañas; no hacen falta autoloads o reescribir navegación.
+- **Consecuencias:** responder inicia una sola sesión, errores con sesión válida no la destruyen, navegación no ejecuta decisiones. dispose desconecta señales y evita ciclos de referencias. Cabecera común refleja estado de llamada con un cambio mínimo.
+- **Estado:** adoptada, implementada y probada.
+
+## D-039 — Transcripción derivada de registros confirmados
+
+- **Fecha:** 2026-10-28.
+- **Tema:** historial y reanudación.
+- **Decisión tomada:** añadir get_conversation_history al motor reutilizando su reconstrucción aislada de 06; proyectar nodos estables y elecciones reales con ID de visita/revisión.
+- **Justificación:** el snapshot existente permite reconstruir contenido exacto con consumos intercalados; guardar otra copia introduciría otra fuente de verdad.
+- **Consecuencias:** no cambian esquemas ni save_version 1. Transiciones, ramas no visitadas, rechazos y consumos no producen líneas. El registro acredita presentación lógica confirmada, no lectura humana o dibujo completo antes de una interrupción. No se repiten efectos en la sesión viva.
+- **Estado:** adoptada, implementada y probada.
+
+## D-040 — Demostración de desarrollo y separación de partidas
+
+- **Fecha:** 2026-10-28.
+- **Tema:** contenido/acceso y seguridad de datos de prueba.
+- **Decisión tomada:** crear ui_call_demo.json sin historia oficial, con interlocutor desconocido, operador técnico, condiciones, evidencia y dos desenlaces. Acciones solo visibles/habilitadas en desarrollo; usar user://call_demo y pruebas únicas bajo user://save_tests/.
+- **Justificación:** el caso de núcleo de 05 no cubría todos los participantes/textos largos de la prueba visual. El usuario exige evitar mezclar campaña y demostración.
+- **Consecuencias:** constructor rechaza carpeta de producción. El menú queda intacto; Reiniciar prueba solicita explícitamente borrado de los archivos de esa ranura y no de otras partidas. No hay rechazo de llamada con consecuencias o nuevas misiones oficiales.
+- **Estado:** adoptada, implementada y probada.
+
+## D-041 — Presentación, entrada y desplazamiento
+
+- **Fecha:** 2026-10-28.
+- **Tema:** legibilidad e interacción.
+- **Decisión tomada:** reutilizar Theme; transcripción numerada sin globos, respuestas multilínea de mínimo 88 unidades lógicas, dos áreas de scroll y navegación inferior fija. Bloquear repeticiones del turno y gestos dobles clasificados por Godot; enviar ID/revisión al motor.
+- **Justificación:** preservar identidad y lectura móvil sin temporizadores narrativos ni duplicar condiciones. Conservar el punto del lector cuando consulta mensajes antiguos.
+- **Consecuencias:** condiciones bloqueadas muestran motivo textual; historial nuevo revela intervención actual tras layout, actualizaciones idénticas no duplican controles. Errores de disco permiten reintentar sin reejecutar elección; detalles en API y logs de desarrollo. Sin estadísticas internas o sonidos nuevos.
+- **Estado:** adoptada, implementada y probada en escritorio.
+
+## D-042 — Evidencia reproducible de integración
+
+- **Fecha:** 2026-10-28.
+- **Tema:** validación de PROMPT 07.
+- **Decisión tomada:** dos suites nuevas de controlador/GUI con mouse/toque simulado, rutas aisladas, recuperación y errores; conservar las cuatro suites previas y ejecutar navegación/arranque y captura gráfica en cuatro tamaños.
+- **Justificación:** demostrar integración real además de apariencia, sin confundir desktop/headless con Android.
+- **Consecuencias:** 68 comprobaciones de controlador y 402 de integración base, junto con 1504 anteriores; 40 capturas gráficas inspeccionadas. Cifras de otras proporciones/capturas registradas por ejecución. No se acredita Android físico, exportación release, rendimiento móvil o accesibilidad de lector de pantalla.
+- **Estado:** adoptada y verificada en PROMPT 07.
+
 ## Plantilla para nuevos registros
 
 - **Identificador y tema:** D-XXX — título.

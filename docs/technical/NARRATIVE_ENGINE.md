@@ -4,7 +4,9 @@ PROMPT 05 · 2026-10-27 · Godot `4.7.2.stable.official.ed1daf0bf` · Esquema ca
 
 Integración añadida en PROMPT 06 · 2026-10-28: validación e importación transaccional de snapshots para el [sistema de guardado](SAVE_SYSTEM.md). Se conserva el esquema narrativo 1 y la API anterior.
 
-El motor interpreta casos JSON, mantiene una sesión temporal y entrega vistas y señales independientes de Godot Control. No se instancia desde el menú ni modifica la consola. El único contenido ejecutable de demostración es [test_narrative.json](../../data/cases/test_narrative.json), una prueba técnica ajena a la historia oficial. El Caso 001 sigue siendo documentación de diseño, sin integrar.
+Integración PROMPT 07 · 2026-10-28: [llamadas de desarrollo](CALL_SYSTEM.md) conectadas mediante API. Se añade get_conversation_history sin cambiar esquema o estado persistente.
+
+El motor interpreta casos JSON, mantiene una sesión temporal y entrega vistas y señales independientes de Godot Control. En 07, Llamadas posee un controlador que lo usa al iniciar o recuperar expresamente una demo de desarrollo; no se inicia narrativa al abrir el menú. [test_narrative.json](../../data/cases/test_narrative.json) conserva la prueba de núcleo y [ui_call_demo.json](../../data/cases/ui_call_demo.json) añade prueba visual fuera de campaña. El Caso 001 sigue siendo documentación de diseño, sin integrar.
 
 ## Responsabilidades y archivos
 
@@ -239,6 +241,7 @@ var narrative = Narrative.new()
 | `is_busy() -> bool` | Consulta del límite de ejecución/notificación para consumidores de persistencia |
 | `validate_state_snapshot(snapshot) -> Dictionary` | Validación completa sin modificar sesión/diagnósticos, mediante estructura y reconstrucción aislada del historial |
 | `restore_state_snapshot(snapshot) -> bool` | Sustitución completa después de validar; fallo conserva sesión y emite diagnóstico |
+| `get_conversation_history() -> Array` | Copias de nodos estables publicados y respuestas confirmadas, en orden; vacío sin sesión. Reutiliza reconstrucción aislada, sin mutar estado/diagnósticos ni emitir eventos vivos |
 
 Solo se permiten rutas de archivo `.json`, con prefijo res:// y ya canónicas. Se rechazan user://, rutas del sistema, barras invertidas o segmentos de navegación. Esta autorización permite leer recursos JSON del proyecto; el efecto narrativo no puede abrir archivos.
 
@@ -265,6 +268,8 @@ PROMPT 06 añade importación explícita: se validan tipos, referencias y regist
 La señal nueva session_restored(snapshot) se emite seguida de node_changed y choices_changed. No se emiten state_changed, evidence_registered, event_requested ni case_finished por restaurar. Los eventos pendientes siguen disponibles para consulta y consumo explícito. Las mutaciones reentrantes permanecen bloqueadas.
 
 El núcleo no escribe partidas: SaveManager administra esos archivos según [SAVE_SYSTEM.md](SAVE_SYSTEM.md). No hay migración automática. Límites de importación/guardado: 2048 operaciones confirmadas, JSON de profundidad 32 y 250000 valores, números finitos seguros y, en archivos, 4 MiB. Son límites explícitos, no promesas de rendimiento móvil.
+
+En 07 la misma reconstrucción puede proyectar transcripción: nodos dialogue/ending con texto y elecciones reales, con ID por visita/revisión. Las transiciones automáticas y los consumos de eventos no generan intervenciones. Se conservan las mismas comprobaciones completas de snapshot; no se añade otro historial al archivo ni se cambia save_version. La proyección representa presentación lógica confirmada, no confirmación de lectura humana; el controlador solo permite decisiones de esta demo desde su interacción autorizada.
 
 ## Política de errores y límites estáticos
 
@@ -321,8 +326,8 @@ Evidencias gráficas de regresión: [Menú](../validation/prompt_05/720x1280/men
 
 ## Limitaciones e integraciones posteriores
 
-El guardado en disco existe desde 06 como servicio separado, probado con contenido técnico. No hay visualización de conversaciones, deducciones, analizador, despacho, servicios ni Caso 001 jugable. El motor queda fuera del flujo normal del jugador; F5 continúa abriendo exactamente el menú de 04.
+El guardado en disco existe desde 06 como servicio separado. En 07 hay visualización de conversaciones con demo aislada accesible solo en desarrollo; no hay deducciones, analizador, despacho, servicios ni Caso 001 jugable. F5 conserva el menú de 04 y no inicia una sesión por sí solo.
 
-06 integra persistencia por API; 07 presentará las vistas de nodo/opciones y enviará revisión al elegir; 08 añadirá reglas visuales de evidencia/deducción; 09 y 10 consumirán solicitudes de audio/mapa mediante contratos autorizados; 11–12 integrarán y comprobarán el caso y sus tres resultados. Las implementaciones de 07 en adelante requieren autorización posterior.
+06 integra persistencia y 07 presenta nodo/opciones, envía ID/revisión al elegir y reconstruye historial; 08 añadirá reglas visuales de evidencia/deducción; 09 y 10 consumirán solicitudes de audio/mapa mediante contratos autorizados; 11–12 integrarán y comprobarán el caso y sus tres resultados. Las implementaciones de 08 en adelante requieren autorización posterior.
 
-No se exportó APK ni se probó el motor en dispositivo Android real. La evidencia gráfica de 05 descrita arriba conserva su alcance histórico; los nuevos ensayos de persistencia y regresión de 06 se registran en [PROGRESS.md](../PROGRESS.md). **PROMPT 07 no está autorizado.**
+No se exportó APK ni se probó el motor en dispositivo Android real. La evidencia gráfica de 05 descrita arriba conserva su alcance histórico; los nuevos ensayos de persistencia, llamadas y regresión se registran en [PROGRESS.md](../PROGRESS.md). **PROMPT 08 no está autorizado.**

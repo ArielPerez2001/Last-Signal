@@ -2,6 +2,8 @@
 
 PROMPT 06 · 2026-10-28 · Godot 4.7.2 estable · formato de guardado 1.
 
+Integración PROMPT 07: [CallController/CallsPanel](CALL_SYSTEM.md) utilizan el servicio sin modificar código de guardado, estructura o versiones. La demo usa user://call_demo y las pruebas user://save_tests; user://saves sigue reservado para producción. Su transcripción se deriva de transaction_log/visitas/consumos, sin campos nuevos.
+
 ## Objetivo y alcance
 
 Conservar una sesión lógica completa, recuperarla offline y seguir sin repetir consecuencias. El sistema se integra con el [motor narrativo](NARRATIVE_ENGINE.md) mediante API; no conoce escenas de la consola ni necesita Llamadas. El flujo normal del juego conserva su menú: Continuar sigue deshabilitado. El Caso 001 y las mecánicas de fases posteriores no se integran aquí.
@@ -213,4 +215,4 @@ El detalle de los 20 grupos de aceptación, incidencias corregidas y limitacione
 
 Sin APK, dispositivo real, corte de energía, llenado físico del disco ni prueba de rendimiento Android. Los errores de escritura/renombrado se inyectan en rutas aisladas, junto con un fallo real de carpeta obstruida; no se provoca daño al almacenamiento del usuario. No se promete durabilidad absoluta ni compatibilidad con versiones futuras desconocidas.
 
-F5 sigue abriendo menú y consola sin sesión narrativa; no crea partidas de producción. La futura interfaz deberá cargar contenido conocido, mostrar errores y origen de recuperación, confirmar nueva partida/borrado y decidir si reintenta o sale ante fallo de guardado. Continuar permanece deshabilitado y no se añade administración de ranuras. **PROMPT 07 no se inicia.**
+F5 sigue abriendo menú sin sesión narrativa ni partidas de producción. En 07 Llamadas permite iniciar/recuperar/reiniciar una demo solo en desarrollo, con SaveLifecycle conectado al mismo gestor y aviso/reintento de escritura. Cargar no reescribe originales y reiniciar elimina únicamente los archivos de ranura de esa demo mediante delete_save(true), sin borrar directorios o archivos ajenos. La interfaz oficial futura deberá confirmar reemplazos/borrados y decidir su salida ante fallos. Continuar permanece deshabilitado, no hay administración de ranuras ni Caso 001 integrado. **PROMPT 08 no se inicia.**

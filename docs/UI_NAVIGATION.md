@@ -1,5 +1,7 @@
 # Última Señal — Interfaz y navegación del PROMPT 04
 
+Actualización de referencia al cerrar PROMPT 07 (2026-10-28): se conservan menú, consola y sus instancias; Llamadas sustituye su placeholder por una demostración de desarrollo conectada al motor y guardado aislado. Audio/Mapa/Expedientes y Continuar siguen sin funcionalidades de campaña. Consultar [CALL_SYSTEM.md](technical/CALL_SYSTEM.md) para el estado actual y acceso; el resto de este documento conserva el registro histórico de 04.
+
 Fecha: 2026-10-27. Estado: completado en escritorio con Godot 4.7.2 estable. El usuario aprobó 00–03 y autorizó únicamente una interfaz navegable. No existe todavía una partida ni un caso ejecutable.
 
 ## Integración conservada

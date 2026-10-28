@@ -2,7 +2,7 @@
 
 ## Estado actual
 
-Actualizado: 2026-10-28, fecha local del usuario. **Etapa 06 completada: estado, guardado y recuperación local verificados en Godot 4.7.2 estable, en escritorio Windows.** El usuario aprobó 00–05 al enviar PROMPT 06. Motor y persistencia solo se integran por API con contenido técnico aislado; interfaz anterior igual, Continuar deshabilitado y Caso 001 sin integrar. Trabajo detenido; PROMPT 07 no autorizado.
+Actualizado: 2026-10-28, fecha local del usuario. **Etapa 07 completada: Llamadas presenta conversaciones interactivas de desarrollo conectadas al motor y guardado aislado, verificadas en Godot 4.7.2 estable sobre Windows.** El usuario aprobó 00–06 al enviar PROMPT 07. Menú/navegación conservados, Continuar deshabilitado y Caso 001 sin integrar. Trabajo detenido; PROMPT 08 no autorizado.
 
 ## Etapas completadas
 
@@ -13,8 +13,9 @@ Actualizado: 2026-10-28, fecha local del usuario. **Etapa 06 completada: estado,
 - **04 — Navegación e interfaz base:** menú, consola, cuatro paneles reutilizables, pantallas informativas y regreso; configuración conservada, cuatro resoluciones verificadas y 28 capturas inspeccionadas.
 - **05 — Motor narrativo:** carga/validación JSON, estado temporal, condiciones, efectos, transacciones, eventos, transiciones, finales y reinicio. Caso técnico de seis nodos y dos desenlaces, sin conexión a la consola.
 - **06 — Estado y guardado:** JSON versionado en user://, validación completa, respaldo, recuperación transaccional, importación sin duplicar consecuencias, autoguardado y adaptador opcional de ciclo de vida. Pruebas aisladas con procesos separados, sin activar funciones del menú.
+- **07 — Llamadas:** controlador de cinco estados, conversación y opciones reales desde JSON/motor, transcripción derivada, demo de desarrollo con dos desenlaces, recuperación y autoguardado aislados. Interacción GUI y 40 capturas reales en cuatro tamaños.
 
-Las etapas 07–23 y las subfases 19.1–19.4 permanecen pendientes. El estado detallado y la aceptación de cada etapa están en [ROADMAP.md](ROADMAP.md). Los estados de revisión pendiente en las entregas originales de 02 describen su situación al entregarse, anterior a la aprobación de PROMPT 03.
+Las etapas 08–23 y las subfases 19.1–19.4 permanecen pendientes. El estado detallado y la aceptación de cada etapa están en [ROADMAP.md](ROADMAP.md). Los estados de revisión pendiente en las entregas originales de 02 describen su situación al entregarse, anterior a la aprobación de PROMPT 03.
 
 ## Cambios de fase 01 — 2026-10-27
 
@@ -224,6 +225,54 @@ Incidencias resueltas: metadatos mal tipados podían comparar Array con String y
 
 Limitaciones de evidencia: no se probaron Android, APK, permisos físicos, corte de energía, disco lleno real, terminación abrupta durante un rename ni rendimiento móvil. Los fallos de E/S son inyectados y una obstrucción real aislada; no se dañó almacenamiento del usuario. Las notificaciones Android se simularon por sus constantes en escritorio. Las pruebas PS01–PS13 del Caso 001 siguen futuras: no se integró su contenido ni sus recursos.
 
+## Cambios de fase 07 — 2026-10-28
+
+- Revisados PROMPT 07, instrucciones, documentos obligatorios y código real de Main, menú, consola, Llamadas, navegación, motor, persistencia, datos y pruebas. Git estaba limpio y sincronizado al iniciar; no hay instrucciones anidadas aplicables. La nueva autorización permite conversaciones con demo técnica, no Caso 001 ni 08.
+- Creado CallController RefCounted con IDLE/INCOMING/CONNECTED/ENDED/ERROR, comandos/resultados, coordinación de señales y disposición explícita. La consola conserva instancias, así que no se reescribe navegación raíz ni se añaden autoloads.
+- Reutilizada la ruta/instancia calls_panel.tscn: sustituido su placeholder por encabezado CENTRAL 07, identificación, estado, transcripción, respuestas, contexto y acciones de desarrollo. Creados calls_panel.gd, dialogue_choice.gd y dos escenas reutilizables de intervención/respuesta. Theme, paleta y tipografía existentes conservados.
+- Ampliado únicamente el contrato del motor con get_conversation_history, reutilizando su reconstrucción de validación para proyectar nodos estables y respuestas confirmadas. No cambia NarrativeSessionState, esquema narrativo o save_version 1; no se añaden campos de historial duplicados ni se ejecutan efectos en la sesión viva al consultar.
+- Creado ui_call_demo.json, no canónico: interlocutor desconocido, operador técnico, tres diálogos, diez opciones, una transición, una evidencia, un evento técnico y dos finales. El caso técnico de 05 y toda la narrativa oficial permanecen intactos.
+- Demostración accesible desde Llamadas solo en desarrollo: Iniciar prueba, Responder, Recuperar prueba y Reiniciar prueba. user://call_demo está separado de user://saves; las pruebas solo usan directorios únicos user://save_tests. Continuar no se activa.
+- SaveManager y SaveLifecycle se reutilizan sin cambios de código. Fallos mantienen sesión/transcripción y permiten reintentar. El adaptador de ciclo de vida queda conectado al gestor de Llamadas; ocultar una pestaña no destruye sesión. Reinicio explícito borra solo archivos de la ranura técnica.
+- Ajustados únicamente expansión vertical de Panels y texto de estado de cabecera en dispatch_console para reflejar la comunicación. Audio/Mapa/Expedientes siguen vacíos y no se modifican sus escenas/scripts. Main, menú, navegación raíz y configuración conservan sus archivos.
+- Creadas dos suites en tests/calls y los UID de los cinco scripts nuevos. Añadido [CALL_SYSTEM.md](technical/CALL_SYSTEM.md) y 40 PNG en docs/validation/prompt_07. Actualizados AGENTS, GDD (solo estado técnico), UI_NAVIGATION, NARRATIVE_ENGINE, SAVE_SYSTEM, ROADMAP, DECISIONS y este progreso. Decisiones D-037–D-042.
+- No hay modificaciones a STORY_BIBLE, documentos del Caso 001, reporte Word, Theme/iconos, project.godot, algoritmos de guardado ni pruebas anteriores. Sin commits, pushes, credenciales, instalaciones, servicios externos, audio nuevo o exportaciones.
+
+## Validaciones de fase 07
+
+Motor real: `4.7.2.stable.official.ed1daf0bf`; Windows, Compatibility/OpenGL 3.3.0, Intel UHD Graphics. Todas las ejecuciones finales indicadas terminaron con salida 0; sin errores de script, fugas o errores críticos pendientes en los recorridos aprobados. Los diagnósticos CALL_DIAGNOSTIC de las pruebas negativas son resultados esperados del controlador, no fallos del proceso.
+
+| Prueba de PROMPT 07 | Resultado ejecutado |
+| --- | --- |
+| 01–03 Inicialización/entrante/responder | IDLE sin sesión; preparar no aplica entradas ni guarda; Responder inicia una sola sesión y muestra CONNECTED |
+| 04–07 Elecciones/rechazo/doble pulsación/condiciones | ID/revisión al motor; opciones ocultas/bloqueadas rechazadas; estado e historial intactos ante rechazo; doble activación del mismo turno y gestos clasificados de mouse/toque no avanzan dos veces |
+| 08 Historial | Orden, autor y texto de elecciones reales; IDs por visita/revisión; consultas y consumos no crean mensajes, ramas no visitadas y transición no aparecen; copias independientes |
+| 09 Cambio de sección | Audio/Mapa/Expedientes/Llamadas y menú/consola conservan snapshot, historial y controles de transcripción, sin nueva llamada o efecto |
+| 10–11 Finalización/reinicio | Dos rutas reales a demo_complete/demo_partial; final bloquea decisiones y se notifica una vez; reinicio explícito limpia historial/checkpoints técnicos y vuelve a INCOMING |
+| 12–14 Guardado/restauración/final | Autoguardado confirmado, recuperación en controlador nuevo con estado/historial exactos; sesión respondida vuelve CONNECTED, finalizada vuelve ENDED. No se repiten evidencias, efectos o eventos; se revela intervención actual al recuperar |
+| 15 Aislamiento | Constructor rechaza user://saves; demo en user://call_demo; suites en directorios únicos user://save_tests; política de desarrollo desactivada impide lanzar desde panel |
+| 16 Regresión narrativa | Suites intactas PASS: test_narrative_engine 151 y test_narrative_validation 334 comprobaciones |
+| 17 Regresión de guardado | Suites intactas PASS: test_save_manager 114 y test_save_validation 905 comprobaciones, incluidos procesos separados |
+| 18 Navegación anterior | Bootstrap y navigation_smoke PASS headless en cuatro resoluciones. Instancias estables: 129 nodos antes/después del flujo de navegación sin iniciar demo |
+| Controlador nuevo | test_call_controller PASS, 68 comprobaciones; incluye recuperación fallida conservando sesión/política y fallo de escritura con reintento |
+| GUI headless | test_call_integration PASS: 402 comprobaciones en 720×1280/1080×1920 y 400 en 1080×2400/720×1600 |
+| GUI gráfica | PASS: 452 comprobaciones en 720×1280/1080×1920 y 450 en 1080×2400/720×1600; 50 de cada ejecución corresponden a diez capturas verificadas |
+| Total principal de referencia | 1974 aserciones = 1504 de las cuatro suites anteriores + 68 de controlador + 402 de integración base. No se presentan repeticiones de resolución/captura como escenarios nuevos |
+| Textos/entrada/scroll | Mouse y toque simulados, respuestas largas sin elipsis, motivo de bloqueo visible, historial largo desplazable y lectura antigua sin salto al agregar intervención. Respuestas y reintento accesibles sobre barra fija |
+| Errores visibles | Archivo inexistente muestra ERROR y permite preparar de nuevo; fallo de disco muestra reintento conservando CONNECTED; recuperación fallida no borra memoria ni desactiva definitivamente el autoguardado anterior |
+| Importación/arranque | Importación headless y arranque normal headless/gráfico correctos; F5 abre menú, no inicia demo ni crea partida oficial |
+| Revisión visual | 40 PNG reales de tamaño físico exacto: diez estados por resolución, inspeccionados; controles y separación legibles, sin desbordamiento horizontal o superposición, contenido largo consultable por scroll |
+| Integridad final | 193 archivos no vacíos fuera de .git/.godot, 164 enlaces locales y 82 referencias resolubles a recursos, sin ausencias inesperadas; literales de archivos inexistentes excluidos solo en sus pruebas negativas |
+| Alcance conservado | 127 de los 139 archivos iniciales conservan SHA-256 idéntico; doce modificados dentro del alcance y 54 nuevos, incluidos cinco scripts con UID, dos escenas, JSON, documentación y 40 capturas |
+
+Las diferencias de dos aserciones entre proporciones corresponden a controles internos de scroll visibles solo cuando hacen falta; no se retiran requisitos. La prueba de acceso de desarrollo comprueba la política desactivada en escritorio; no equivale a exportar una compilación release.
+
+Procedimientos completos y matriz de las 40 capturas en [CALL_SYSTEM.md](technical/CALL_SYSTEM.md). Muestras 720×1280: [Entrante](validation/prompt_07/720x1280/incoming.png), [Conectada](validation/prompt_07/720x1280/connected.png), [Opciones condicionadas](validation/prompt_07/720x1280/conditional.png), [Recuperada](validation/prompt_07/720x1280/restored.png), [Final](validation/prompt_07/720x1280/ended.png) y [Fallo de guardado](validation/prompt_07/720x1280/save_error.png).
+
+Incidencias resueltas: las referencias cruzadas de señales mantenían controlador/gestor vivos al salir; dispose y la desconexión de pruebas/escena eliminaron las fugas. Una prueba usaba is_enabled inexistente en Button: se corrigió a la propiedad disabled. Se preserva la política de autoguardado después de una restauración fallida y se bloquean reentradas desde presentation_changed. La cabecera común todavía indicaba línea en espera durante una conversación: ahora deriva el estado visual real. Se compactaron contexto/separaciones y se sustituyen herramientas de desarrollo por reintento cuando falla disco, manteniendo controles accesibles. Al reconstruir historial nuevo, el rango antiguo de un scroll oculto podía impedir mostrar la intervención reciente: se reconoce historial vacío como seguimiento nuevo y se espera el layout antes de posicionar. Las pruebas finales verifican esos comportamientos sin retirar aserciones.
+
+Pruebas pendientes/no ejecutadas: Android físico, APK/exportación, compilación release real, gestos/interrupciones de dispositivo, lector de pantalla y rendimiento móvil. Las notificaciones y toques son simulaciones de escritorio. Las escenas de resultados oficiales, audios, expedientes/deducciones, mapa y todos los recorridos del Caso 001 siguen sin implementación.
+
 ## Problemas conocidos y pendientes
 
 - La carpeta ya tiene repositorio Git local y origin configurado por autorización posterior del usuario. La futura publicación de otros cambios sigue requiriendo autorización explícita.
@@ -233,12 +282,13 @@ Limitaciones de evidencia: no se probaron Android, APK, permisos físicos, corte
 - No hay contradicciones detectadas entre MVP y campaña. PROMPT 02 confirma incendio y clausura en 1981; sus fechas exactas siguen propuestas. Su relación causal con el incidente general sigue abierta.
 - El objetivo de 8–15 minutos del Caso 001 sigue siendo una estimación sin pruebas de personas reales. El núcleo genérico y su persistencia están probados en 05–06; su integración con el contenido oficial y sus invariantes específicas siguen pendientes.
 - Android sigue pendiente: no hay APK, exportación, SDK validado, plantillas de exportación verificadas ni prueba en dispositivo real. Las capturas son de escritorio y no demuestran zonas seguras o rendimiento móvil.
-- Menú y navegación siguen funcionando y sus módulos permanecen vacíos. Existen motor y persistencia por API con datos técnicos de prueba, pero no llamadas jugables, reproducción de audio, mapa funcional, expedientes, deducciones, datos oficiales del Caso 001 ni Continuar activado.
+- Menú y navegación siguen funcionando; Llamadas ofrece conversaciones técnicas solo en desarrollo. Audio/Mapa/Expedientes permanecen vacíos. No hay llamadas oficiales del Caso 001, reproducción de audio, mapa funcional, expedientes, deducciones ni Continuar activado.
 - Los márgenes seguros Android tienen adaptación por API, pendiente de probar en dispositivo. Retroceso gestual/físico, densidad táctil real, lector de pantalla y rendimiento móvil permanecen pendientes. No hay APK ni pruebas en teléfono.
 - Créditos carece todavía de autoría confirmada y Configuración no permite ajustar preferencias; ambas limitaciones son visibles en la interfaz.
 - El validador no demuestra todas las combinaciones de condiciones. Una carga estructuralmente válida puede tener un inicio bloqueado: start_case informa el error sin sesión parcial. Las elecciones fallidas conservan su estado anterior. Los contratos de variantes de texto y resolución específica del caso siguen pendientes de integración autorizada.
-- El guardado 1 exige contenido/fingerprint exactos y no incluye migraciones. Usa I/O síncrona, límites documentados y bloqueos de hilo principal dentro de un proceso; no hay garantía de atomicidad universal, durabilidad eléctrica o coordinación entre procesos externos. La UI futura debe decidir cómo informar/reintentar, confirmar reemplazo y gestionar salida; no se implementa aquí.
+- El guardado 1 exige contenido/fingerprint exactos y no incluye migraciones. Usa I/O síncrona, límites documentados y bloqueos de hilo principal dentro de un proceso; no hay garantía de atomicidad universal, durabilidad eléctrica o coordinación entre procesos externos. La demo ya informa/reintenta; las decisiones de reemplazo y salida de la interfaz oficial siguen futuras.
+- La transcripción deriva presentación lógica confirmada, no acredita lectura humana o dibujo completo antes de una interrupción. Su reconstrucción y los controles crecen con el historial; no se ha medido rendimiento móvil. La demostración está limitada y el guardado conserva sus cotas de 06.
 
 ## Próxima etapa autorizable
 
-**07 — Llamadas**, únicamente después de recibir el siguiente prompt con autorización explícita. La persistencia está disponible por API y probada de forma aislada; el flujo del jugador todavía conserva la interfaz vacía de 04. Esta fase 06 termina aquí. Al reanudar, consultar primero [AGENTS.md](../AGENTS.md), [NARRATIVE_ENGINE.md](technical/NARRATIVE_ENGINE.md), [SAVE_SYSTEM.md](technical/SAVE_SYSTEM.md) y los documentos pertinentes.
+**08 — Pistas y deducciones**, únicamente después de recibir el siguiente prompt con autorización explícita. Llamadas está conectada mediante una demostración fuera de campaña y el resto de sistemas de investigación siguen pendientes. Esta fase 07 termina aquí. Al reanudar, consultar primero [AGENTS.md](../AGENTS.md), [CALL_SYSTEM.md](technical/CALL_SYSTEM.md), [NARRATIVE_ENGINE.md](technical/NARRATIVE_ENGINE.md), [SAVE_SYSTEM.md](technical/SAVE_SYSTEM.md) y los documentos pertinentes.

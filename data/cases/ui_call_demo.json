@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "case_id": "ui_call_demo",
+  "content_version": "ui-demo-1.0",
+  "title": "Demostración técnica de comunicaciones · fuera de la campaña",
+  "initial_node": "demo_n01",
+  "characters": [
+    {"id": "demo_unknown", "display_name": "Número desconocido"},
+    {"id": "demo_operator", "display_name": "Operador · prueba"}
+  ],
+  "variables": {"confirmed": {"type": "bool"}, "signal": {"type": "int", "min": 0, "max": 2}},
+  "initial_state": {"variables": {"confirmed": false, "signal": 0}, "evidence": []},
+  "evidence_catalog": ["demo_record"],
+  "event_catalog": ["demo_checked"],
+  "endings": ["demo_complete", "demo_partial"],
+  "nodes": [
+    {
+      "id": "demo_n01", "type": "dialogue", "speaker_id": "demo_unknown",
+      "text": "Esta es una comunicación de prueba. No hay una emergencia real. Recibo la señal de la central, pero necesito confirmar que podemos entendernos. ¿Me escucha con claridad?",
+      "options": [
+        {"id": "demo_confirm", "text": "Central al habla. Le escucho; vamos a comprobar la comunicación paso a paso.", "next": "demo_n02", "effects": [{"op": "set", "target": "confirmed", "value": true}, {"op": "add_clamped", "target": "signal", "value": 1}]},
+        {"id": "demo_wait", "text": "La recepción es irregular. Continuaremos la prueba sin confirmar todavía la señal.", "next": "demo_n02"},
+        {"id": "demo_hidden", "text": "Usar el registro técnico anterior", "next": "demo_n03", "visible_when": {"op": "contains", "target": "evidence", "value": "demo_record"}}
+      ]
+    },
+    {
+      "id": "demo_n02", "type": "dialogue", "speaker_id": "demo_unknown",
+      "text": "He recibido su respuesta. El sistema ha registrado una evidencia técnica de esta comunicación; no pertenece a ningún expediente de la campaña.\n\nLa señal contiene algunos cortes. Podemos comprobarla otra vez o continuar con el estado actual. Ninguna pausa de lectura hará avanzar la prueba. Si necesita revisar lo que hemos dicho, puede desplazarse por la transcripción y regresar a las respuestas cuando esté listo. Cambiar a otra sección de la consola tampoco selecciona ninguna respuesta ni inicia otra comunicación.",
+      "entry_effects": [{"op": "add_to_set", "target": "evidence", "value": "demo_record"}],
+      "options": [
+        {"id": "demo_adjust", "text": "Repita la confirmación. Mantendré la línea abierta mientras comprobamos que la señal llega completa.", "next": "demo_n02", "visible_when": {"op": "once_not_applied", "value": "demo_adjust"}, "effects": [{"op": "set", "target": "confirmed", "value": true}, {"op": "add_clamped", "target": "signal", "value": 1}]},
+        {"id": "demo_ready", "text": "Confirmación recibida. Dejaremos constancia de que la comprobación de comunicación fue satisfactoria.", "next": "demo_n03", "enabled_when": {"op": "equals", "target": "confirmed", "value": true}, "disabled_reason": "Primero confirme la comunicación o solicite repetir la comprobación.", "effects": [{"op": "emit_event", "event_id": "demo_checked", "payload": {"purpose": "ui_test"}, "once_key": "demo_checked_once"}]},
+        {"id": "demo_move", "text": "Continuemos sin confirmar la comprobación.", "next": "demo_n03"},
+        {"id": "demo_review", "text": "Mantenga la línea. Voy a releer la transcripción antes de decidir; esta consulta no confirma todavía la comunicación.", "next": "demo_n02", "visible_when": {"op": "once_not_applied", "value": "demo_review"}},
+        {"id": "demo_note", "text": "Anotado. La demostración continuará con los datos que ya tenemos.", "next": "demo_n03"}
+      ]
+    },
+    {"id": "demo_n03", "type": "dialogue", "speaker_id": "demo_operator", "text": "La central conserva la transcripción y las decisiones confirmadas. Podemos cerrar esta comunicación técnica. El resultado solo describe esta prueba; no evalúa una emergencia real.", "options": [{"id": "demo_finish", "text": "Cerrar la comunicación y conservar el resultado de la prueba.", "next": "demo_transition"}, {"id": "demo_close_partial", "text": "Cerrar la prueba sin confirmación final.", "next": "demo_end_partial"}]},
+    {"id": "demo_transition", "type": "transition", "condition": {"op": "equals", "target": "confirmed", "value": true}, "next": "demo_end_complete", "fallback_next": "demo_end_partial"},
+    {"id": "demo_end_complete", "type": "ending", "ending_id": "demo_complete", "text": "Comunicación de prueba finalizada con confirmación. La transcripción queda disponible para consulta."},
+    {"id": "demo_end_partial", "type": "ending", "ending_id": "demo_partial", "text": "Comunicación de prueba finalizada sin confirmación completa. La transcripción queda disponible para consulta."}
+  ]
+}

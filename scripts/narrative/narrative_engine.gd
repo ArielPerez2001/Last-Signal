@@ -204,6 +204,16 @@ func is_busy() -> bool:
 
 
 func validate_state_snapshot(snapshot: Dictionary) -> Dictionary:
+	return _validate_snapshot(snapshot, false)
+
+
+func get_conversation_history() -> Array:
+	if _state == null:
+		return []
+	return _validate_snapshot(get_state_snapshot(), true).get("history", []).duplicate(true)
+
+
+func _validate_snapshot(snapshot: Dictionary, include_history: bool) -> Dictionary:
 	var validation: Dictionary = StateValidator.validate(snapshot, _case)
 	if not validation.ok:
 		return validation
@@ -214,6 +224,9 @@ func validate_state_snapshot(snapshot: Dictionary) -> Dictionary:
 	replay._nodes = _nodes.duplicate(true)
 	if not replay.start_case():
 		return StateValidator.failure("invalid_history", "El contenido no permite reconstruir el inicio.")
+	var history: Array = []
+	if include_history:
+		_append_transcript_node(history, replay)
 	var consumed_index: int = 0
 	for entry: Dictionary in candidate.transaction_log:
 		while replay.get_state_snapshot().revision < entry.revision:
@@ -221,15 +234,32 @@ func validate_state_snapshot(snapshot: Dictionary) -> Dictionary:
 				return StateValidator.failure("invalid_history", "El historial de consumo de eventos es inconsistente.")
 			consumed_index += 1
 		var before: Dictionary = replay.get_state_snapshot()
+		var chosen_text: String = ""
+		if include_history and _nodes.has(entry.node_id):
+			for option: Dictionary in _nodes[entry.node_id].get("options", []):
+				if option.id == entry.choice_id:
+					chosen_text = option.text
 		if before.revision != entry.revision or before.current_node != entry.node_id or not replay.select_choice(entry.choice_id, entry.revision):
 			return StateValidator.failure("invalid_history", "Una decisión del historial no es válida para su nodo o revisión.")
+		if include_history:
+			history.append({"id": "choice:" + str(entry.revision), "kind": "choice", "speaker": "Operador", "text": chosen_text, "node_id": entry.node_id, "choice_id": entry.choice_id})
+			_append_transcript_node(history, replay)
 	while consumed_index < candidate.consumed_events.size():
 		if not replay.consume_event(candidate.consumed_events[consumed_index]):
 			return StateValidator.failure("invalid_history", "El registro contiene un evento desconocido o ya consumido.")
 		consumed_index += 1
 	if replay.get_state_snapshot() != candidate:
 		return StateValidator.failure("inconsistent_snapshot", "El estado, sus referencias o sus efectos no coinciden con el historial confirmado.")
-	return {"ok": true, "code": "valid_snapshot", "message": "Estado completo validado contra el contenido.", "data": candidate.duplicate(true)}
+	var result: Dictionary = {"ok": true, "code": "valid_snapshot", "message": "Estado completo validado contra el contenido.", "data": candidate.duplicate(true)}
+	if include_history:
+		result.history = history
+	return result
+
+
+func _append_transcript_node(history: Array, replay) -> void:
+	var node: Dictionary = replay.get_current_node()
+	if not node.text.is_empty():
+		history.append({"id": "node:" + str(replay.get_state_snapshot().visit_serial), "kind": "node", "speaker": node.get("speaker_name", "Central"), "text": node.text, "node_id": node.id})
 
 
 func restore_state_snapshot(snapshot: Dictionary) -> bool:
