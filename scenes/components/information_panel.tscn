@@ -1,0 +1,47 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/information_panel.gd" id="1_script"]
+
+[node name="InformationPanel" type="ScrollContainer"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+follow_focus = true
+script = ExtResource("1_script")
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 28
+
+[node name="Project" type="Label" parent="Content"]
+layout_mode = 2
+theme_type_variation = &"KickerLabel"
+text = "ÚLTIMA SEÑAL / INFORMACIÓN"
+autowrap_mode = 3
+
+[node name="InformationTitle" type="Label" parent="Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+autowrap_mode = 3
+
+[node name="Panel" type="PanelContainer" parent="Content"]
+layout_mode = 2
+theme_type_variation = &"TerminalPanel"
+
+[node name="InformationBody" type="Label" parent="Content/Panel"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Space" type="Control" parent="Content"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="InformationBack" type="Button" parent="Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+text = "Volver al menú"

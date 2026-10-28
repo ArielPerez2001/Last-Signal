@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/components/module_placeholder.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/evidence.svg" id="2_icon"]
+
+[node name="EvidencePanel" instance=ExtResource("1_base")]
+heading = "ARCHIVO DE INVESTIGACIÓN"
+state_text = "No hay expedientes activos"
+preview_text = "ESPACIO PARA PRUEBAS Y DOCUMENTOS"
+availability_text = "La consulta de expedientes y las deducciones se habilitarán más adelante."
+module_icon = ExtResource("2_icon")

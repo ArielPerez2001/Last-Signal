@@ -1,0 +1,93 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1_script"]
+
+[node name="MainMenu" type="ScrollContainer"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+follow_focus = true
+script = ExtResource("1_script")
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 24
+
+[node name="Environment" type="Label" parent="Content"]
+layout_mode = 2
+theme_type_variation = &"KickerLabel"
+text = "PUERTO UMBRAL\nCENTRAL DE COMUNICACIONES · 1998"
+autowrap_mode = 3
+
+[node name="TopSpace" type="Control" parent="Content"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Branding" type="VBoxContainer" parent="Content"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Content/Branding"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"DisplayLabel"
+text = "ÚLTIMA SEÑAL"
+autowrap_mode = 3
+
+[node name="Tagline" type="Label" parent="Content/Branding"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "Cada llamada deja una huella"
+autowrap_mode = 3
+
+[node name="Divider" type="HSeparator" parent="Content"]
+layout_mode = 2
+
+[node name="Actions" type="VBoxContainer" parent="Content"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="EnterButton" type="Button" parent="Content/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "Ingresar a la central"
+
+[node name="ContinueButton" type="Button" parent="Content/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+disabled = true
+text = "Continuar"
+tooltip_text = "No disponible: todavía no hay partidas cargables."
+
+[node name="SettingsButton" type="Button" parent="Content/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+text = "Configuración"
+
+[node name="CreditsButton" type="Button" parent="Content/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+text = "Créditos"
+
+[node name="Unavailable" type="Label" parent="Content"]
+layout_mode = 2
+theme_type_variation = &"KickerLabel"
+text = "Continuar no disponible · Sin partidas cargables"
+autowrap_mode = 3
+
+[node name="BottomSpace" type="Control" parent="Content"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Version" type="Label" parent="Content"]
+layout_mode = 2
+theme_type_variation = &"AccentLabel"
+text = "PROTOTIPO DE INTERFAZ"
+autowrap_mode = 3

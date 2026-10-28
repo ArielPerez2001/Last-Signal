@@ -1,0 +1,52 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/module_placeholder.gd" id="1_script"]
+
+[node name="ModulePlaceholder" type="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 24
+script = ExtResource("1_script")
+
+[node name="ModuleHeading" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"KickerLabel"
+autowrap_mode = 3
+
+[node name="ModuleState" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+autowrap_mode = 3
+
+[node name="Preview" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+theme_type_variation = &"StatusPanel"
+
+[node name="Content" type="VBoxContainer" parent="Preview"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="ModuleIcon" type="TextureRect" parent="Preview/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+modulate = Color(0.6039, 0.6784, 0.6431, 1)
+
+[node name="PreviewText" type="Label" parent="Preview/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"KickerLabel"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Availability" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+autowrap_mode = 3

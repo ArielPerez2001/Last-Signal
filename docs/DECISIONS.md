@@ -1,0 +1,289 @@
+# ÚLTIMA SEÑAL — Registro de decisiones
+
+Las fechas indican el registro documental, no una fecha histórica de aprobación que no conste. Fuentes iniciales: PROMPT 00 y PROMPT 01.
+
+Estados usados: **aprobada** (requisito del usuario), **adoptada para esta fase** (organización documental dentro de la autorización), **diseñada para revisión** (contenido elaborado bajo PROMPT 02 sin aprobación editorial definitiva), **propuesta** y **pendiente de decisión**. Ningún registro documental autoriza por sí solo implementar la fase siguiente.
+
+## D-001 — Desarrollo por fases autorizadas
+
+- **Fecha:** 2026-10-27.
+- **Tema:** método de trabajo y límites.
+- **Decisión tomada:** trabajar por prompts numerados; consultar instrucciones y documentación, limitar cambios al alcance, verificar, documentar, informar y detenerse.
+- **Justificación:** continuidad entre sesiones y control del usuario sobre alcance y producto; PROMPT 00 y 01.
+- **Consecuencias:** el roadmap no autoriza fases; cambios narrativos o de requisitos requieren autorización. Commits, pushes, publicaciones y cambios externos también la requieren explícitamente.
+- **Estado:** aprobada.
+
+## D-002 — Plataforma y base tecnológica
+
+- **Fecha:** 2026-10-27.
+- **Tema:** tecnologías del juego.
+- **Decisión tomada:** Android como plataforma principal, Godot 4.x y GDScript; 2D, vertical, español, un jugador y offline.
+- **Justificación:** requisitos del contexto maestro.
+- **Consecuencias:** interfaz y recursos adecuados para móvil; no se necesita backend. La versión estable concreta del motor permanece abierta en D-008.
+- **Estado:** aprobada.
+
+## D-003 — Límite del MVP
+
+- **Fecha:** 2026-10-27.
+- **Tema:** alcance del primer juego ejecutable.
+- **Decisión tomada:** construir solo el Caso 001, «La habitación 304», con los sistemas mínimos descritos en GDD, tres resultados y guardado local.
+- **Justificación:** validar la experiencia investigativa con alcance acotado, conforme a PROMPT 00.
+- **Consecuencias:** la campaña de quince casos es expansión posterior. Se excluyen inicialmente multijugador, servidores, IA generativa en tiempo real, publicidad, compras integradas, doblaje completo y 3D.
+- **Estado:** aprobada.
+
+## D-004 — Principios de arquitectura
+
+- **Fecha:** 2026-10-27.
+- **Tema:** modularidad, contenido y persistencia.
+- **Decisión tomada:** preferir escenas reutilizables, interfaz desacoplada, contenido estructurado preferentemente JSON, validación de referencias y condiciones, estado centralizado y guardado local versionado.
+- **Justificación:** mantenibilidad, reutilización entre casos y complejidad media indicada por el usuario.
+- **Consecuencias:** definir esquemas y módulos en fases técnicas autorizadas; evitar complejidad y dependencias sin necesidad justificada.
+- **Estado:** aprobada como principios; detalles de implementación pendientes.
+
+## D-005 — Investigación y análisis de audio
+
+- **Fecha:** 2026-10-27.
+- **Tema:** experiencia y complejidad de sistemas.
+- **Decisión tomada:** exigir observación y conexión de pruebas; usar grabaciones predefinidas, fragmentos y filtros simulados con alternativas textuales. La tensión avanza por eventos y acciones concretas, sin presión permanente.
+- **Justificación:** priorizar decisiones razonadas y accesibilidad conforme al contexto maestro.
+- **Consecuencias:** no implementar procesamiento avanzado de señales ni reconocimiento de voz; definir condiciones y consecuencias por caso.
+- **Estado:** aprobada.
+
+## D-006 — Continuidad y dirección artística
+
+- **Fecha:** 2026-10-27.
+- **Tema:** hechos narrativos y presentación.
+- **Decisión tomada:** conservar Puerto Umbral en 1998, incidente de 1981, Estación Nadir, Proyecto ECO y personajes aprobados; comenzar desde investigación criminal creíble y avanzar gradualmente hacia lo inexplicable. Estética de finales de los noventa con tonos oscuros, verde petróleo y ámbar.
+- **Justificación:** identidad definida en PROMPT 00.
+- **Consecuencias:** registrar los vacíos como abiertos; no inventar causas, biografías o resultados. La coincidencia aritmética del año de clausura del hotel no establece causalidad narrativa.
+- **Estado:** aprobada.
+
+## D-007 — Organización documental inicial
+
+- **Fecha:** 2026-10-27.
+- **Tema:** persistencia entre sesiones.
+- **Decisión tomada:** usar `AGENTS.md` en la raíz y `GDD.md`, `STORY_BIBLE.md`, `ROADMAP.md`, `PROGRESS.md` y `DECISIONS.md` en `docs/`.
+- **Justificación:** entregables expresamente solicitados en PROMPT 01; carpeta inicial vacía sin estructura equivalente.
+- **Consecuencias:** consultar y mantener documentos pertinentes en las fases siguientes. No crear aún la estructura de Godot ni inicializar Git.
+- **Estado:** adoptada para esta fase.
+
+## D-008 — Selección de versión del motor
+
+- **Fecha:** 2026-10-27.
+- **Tema:** versión estable concreta de Godot 4.x.
+- **Decisión tomada:** inicialmente pendiente; resuelta en la fase 03 con Godot 4.7.2 estable, según D-018.
+- **Justificación:** el contexto maestro la deja explícitamente por definir.
+- **Consecuencias:** no instalar motor ni herramientas ni fijar compatibilidad específica en esta fase.
+- **Estado:** resuelta por D-018 al ejecutar PROMPT 03; se conserva el registro de su situación inicial.
+
+## D-009 — Público y accesibilidad adicional
+
+- **Fecha:** 2026-10-27.
+- **Tema:** destinatarios y mejoras de interfaz.
+- **Decisión tomada:** se propone dirigir el juego a personas interesadas en misterio narrativo e investigación razonada en móvil, y considerar texto ajustable, información que no dependa solo del color y volúmenes independientes.
+- **Justificación:** precisar el público solicitado en GDD y ampliar la comodidad de lectura e interacción móvil.
+- **Consecuencias:** requieren aprobación antes de convertirse en requisitos. No fijan edad objetivo, clasificación, controles definitivos ni alcance adicional implementado.
+- **Estado:** propuesta.
+
+## D-010 — Modelo comercial
+
+- **Fecha:** 2026-10-27.
+- **Tema:** monetización y distribución.
+- **Decisión tomada:** modelo y canal sin definir; se conservan las etapas futuras 20–22 del roadmap.
+- **Justificación:** PROMPT 01 las pide como planificación; PROMPT 00 excluye publicidad y compras integradas del MVP.
+- **Consecuencias:** ninguna integración comercial ni operación de publicación está autorizada; cualquier decisión posterior debe respetar el alcance o registrar su modificación aprobada.
+- **Estado:** pendiente de decisión.
+
+## D-011 — Alcance específico del PROMPT 02
+
+- **Fecha:** 2026-10-27.
+- **Tema:** autorización de diseño y premisa ampliada.
+- **Decisión tomada:** diseñar documentalmente todo el Caso 001 en seis etapas, con guion, reglas, modelo de datos y pruebas. Se incorporan los requisitos explícitos Hotel Mirador, llamada a las 02:17, golpes en la puerta y clausura tras incendio de 1981; objetivo estimado de 8–15 minutos de primera partida.
+- **Justificación:** autorización y requisitos directos del PROMPT 02, posteriores al estado inicial documentado en 01.
+- **Consecuencias:** se actualiza la restricción temporal de AGENTS para permitir este diseño; continúan prohibidos código, escenas, recursos, instalaciones y comienzo de 03. La duración deberá medirse después.
+- **Estado:** aprobada como alcance y premisa del usuario; no supone aprobación de todos los detalles elaborados.
+
+## D-012 — Identidad, fechas y localización del caso
+
+- **Fecha:** 2026-10-27.
+- **Tema:** continuidad local necesaria para el guion.
+- **Decisión tomada:** proponer a Clara Salcedo como interlocutora, Inés Duarte como jefa de R1, Frente Costero y Paseo del Faro 18 como ubicación. La consola recibe el 14/11/1998 y el recibo y fuego se sitúan el 14/11/1981.
+- **Justificación:** concretar las fuentes y mantener diecisiete años exactos; identificar personajes, mapa y registros sin diseñar otros casos.
+- **Consecuencias:** se conserva incertidumbre sobre la naturaleza de Clara y su destino. No se fija la fecha exacta del incidente general de Nadir ni se lo equipara al incendio del hotel. El usuario puede revisar nombres y fechas antes de su aprobación editorial.
+- **Estado:** diseñada para revisión.
+
+## D-013 — Peligro, deducciones y tres resultados
+
+- **Fecha:** 2026-10-27.
+- **Tema:** investigación justa y consecuencias.
+- **Decisión tomada:** el peligro comunicado es humo en el pasillo; golpes y voz se reinterpretan como aviso de bomberos. Plano y unidad verifican una ruta posterior. El resultado combina plan, deducción de amenaza, posición de R1 y cooperación derivada de confianza/estrés.
+- **Justificación:** hacer necesarias varias fuentes y evitar que la última respuesta o una pista final secreta determinen por sí solas el resultado.
+- **Consecuencias:** A registra salida comunicada; B refugio sin evacuación confirmada; C pérdida de contacto tras apertura peligrosa con vínculo deteriorado. Q02 cambia la instrucción genérica por una indicación precisa, de modo que confirmar la relación tiene una consecuencia concreta. No se verifica muerte, rescate físico en 1998 ni modificación del pasado.
+- **Estado:** diseñada para revisión.
+
+## D-014 — Pista N-4 y límite de la revelación
+
+- **Fecha:** 2026-10-27.
+- **Tema:** conexión con el misterio central.
+- **Decisión tomada:** conservar la cabecera N-4 antes de la decisión final y proponer un anexo del 10/11/1981 que menciona Estación Nadir / Proyecto ECO. Una deducción opcional relaciona ambas fuentes.
+- **Justificación:** ofrecer una pista persistente en los tres resultados y recompensar investigación adicional sin revelar el fenómeno.
+- **Consecuencias:** solo se afirma coincidencia documental; no se establece causa del fuego, propósito de ECO ni intervención de La Voz. Omitir el anexo o la deducción no bloquea A. La revisión editorial de esta conexión sigue pendiente.
+- **Estado:** diseñada para revisión.
+
+## D-015 — Estado mínimo, eventos y persistencia
+
+- **Fecha:** 2026-10-27.
+- **Tema:** contrato técnico del caso.
+- **Decisión tomada:** nueve campos persistentes de caso, cooperación derivada, dos grabaciones con transcripciones, una unidad con dos destinos y cuatro deducciones. Los únicos avances críticos son contrastar fechas y transmitir el plan; la recepción de partes es explícita. Guardado propuesto transaccional con instantánea de resolución y claves idempotentes.
+- **Justificación:** complejidad media, ausencia de penalización por lectura y prevención de duplicaciones o estados incoherentes.
+- **Consecuencias:** lectura, consultas y combinaciones incorrectas no avanzan peligro; se puede corregir despacho o plan antes de transmitir. El diseño declara contratos y ejemplos en Markdown, sin archivos de datos funcionales ni sistemas ejecutables.
+- **Estado:** diseñada para revisión; implementación pendiente de sus fases autorizadas.
+
+## D-016 — Estado real de la fase documental
+
+- **Fecha:** 2026-10-27.
+- **Tema:** aceptación y evidencia de validación.
+- **Decisión tomada:** dar por elaborados y revisados documentalmente los tres entregables de PROMPT 02; conservar la etapa 02 en proceso hasta la revisión editorial del usuario exigida por su criterio de aceptación existente.
+- **Justificación:** distinguir trabajo documental realizado, revisión del producto y pruebas reales aún imposibles sin implementación.
+- **Consecuencias:** las trazas A/B/C, el grafo y las condiciones pueden revisarse en documentos. Guardado, audio, interfaz, duración y Android siguen sin pruebas ejecutables. No se cambia el criterio de aceptación para declarar una aprobación inexistente ni se inicia 03.
+- **Estado:** adoptada para esta fase.
+
+## Actualización de decisiones al iniciar PROMPT 03
+
+Los registros D-012–D-015 describen el estado de diseño al entregar 02. Su aprobación editorial posterior consta en D-017. D-016 conserva la revisión pendiente histórica, resuelta por esa misma aprobación.
+
+## D-017 — Aprobación de las etapas previas y autorización técnica
+
+- **Fecha:** 2026-10-27.
+- **Tema:** continuidad de autorización y seguimiento.
+- **Decisión tomada:** registrar la aprobación expresa de los PROMPTS 00, 01 y 02 y la autorización para crear y verificar exclusivamente la base técnica de 03.
+- **Justificación:** el usuario declara en PROMPT 03 que las etapas previas están aprobadas y que comienza formalmente la programación con alcance limitado.
+- **Consecuencias:** la etapa 02 pasa a completada. Las restricciones de AGENTS que aún prohibían iniciar 03 y las menciones de revisión pendiente se actualizan como estado, sin reescribir el Caso 001. No se autoriza 04 ni se amplía el MVP. Se resuelve la condición de revisión pendiente registrada en D-016.
+- **Estado:** aprobada por el usuario mediante PROMPT 03.
+
+## D-018 — Motor y configuración base verificados
+
+- **Fecha:** 2026-10-27.
+- **Tema:** entorno técnico y compatibilidad.
+- **Decisión tomada:** utilizar la instalación existente de Godot `4.7.2.stable.official.ed1daf0bf`, Compatibility en escritorio y móvil, lienzo 720 × 1280, `canvas_items`, `expand`, Portrait y español. Ventana inicial de escritorio de 360 × 640 para depuración.
+- **Justificación:** coincide con la versión preferida; los valores admitidos se verificaron por introspección en el propio motor y el arranque gráfico confirmó Compatibility/OpenGL.
+- **Consecuencias:** no requiere instalaciones, cambios de versión ni recursos externos. Denominación interna `ultima_senal` para el directorio local del motor, sin identificador Android comercial ni sistema de guardado. Resuelve D-008. Pruebas Android siguen pendientes.
+- **Estado:** adoptada y verificada dentro de PROMPT 03.
+
+## D-019 — Entrada mínima y Theme compartido
+
+- **Fecha:** 2026-10-27.
+- **Tema:** estructura, interfaz y límites de implementación.
+- **Decisión tomada:** `main.tscn` declarativa con raíz Control, contenedores y anclajes; un Theme reutilizable con fondo oscuro, verde petróleo y ámbar; fuente incorporada. Crear solo carpetas con archivos necesarios y excluir documentación de la importación del motor.
+- **Justificación:** pantalla mínima de inicialización solicitada, adaptable y coherente con el GDD, sin anticipar la biblioteca de componentes ni sistemas narrativos.
+- **Consecuencias:** no hay script en la escena, botones, menú completo ni mecánicas. Las futuras carpetas de scripts/datos se crearán con contenido real autorizado. `.gitignore` excluye cachés y exportaciones, conserva fuentes y UID; no se inicializa Git.
+- **Estado:** adoptada e implementada dentro de PROMPT 03.
+
+## D-020 — Evidencia de arranque y límites de plataforma
+
+- **Fecha:** 2026-10-27.
+- **Tema:** validación reproducible.
+- **Decisión tomada:** conservar un auxiliar `tests/bootstrap_smoke.gd`, tres capturas reales y los comandos en TECHNICAL_SETUP. Verificar explícitamente dimensiones de Window y lienzo, además de recursos, textos y ausencia de funcionalidades anticipadas.
+- **Justificación:** una primera invocación headless mostró ventana ficticia de 64 × 64; no bastaba confiar en `--resolution` ni en la ausencia de errores para acreditar adaptabilidad.
+- **Consecuencias:** el auxiliar fija el tamaño solicitado y lo comprueba. Pasaron importación, arranque normal, tres pruebas headless y tres gráficas en 720 × 1280, 1080 × 1920 y 1080 × 2400. Las imágenes fueron inspeccionadas; estos resultados de Windows no acreditan Android, APK o dispositivo real.
+- **Estado:** adoptada y verificada dentro de PROMPT 03.
+
+## D-021 — Autorización de la interfaz base
+
+- **Fecha:** 2026-10-27.
+- **Tema:** alcance del PROMPT 04.
+- **Decisión tomada:** registrar la aprobación de 00–03 y construir únicamente menú, consola, cuatro secciones vacías y navegación funcional, reutilizando el proyecto existente.
+- **Justificación:** autorización expresa de PROMPT 04, que sustituye la espera de autorización registrada al cerrar 03.
+- **Consecuencias:** se conserva la configuración de Godot y el diseño del Caso 001; no se inicia una partida ni se implementan mecánicas, guardado, audio o mapas funcionales. PROMPT 05 sigue sin autorización.
+- **Estado:** aprobada por el usuario mediante PROMPT 04.
+
+## D-022 — Vistas persistentes y navegación local
+
+- **Fecha:** 2026-10-27.
+- **Tema:** estructura de interfaz.
+- **Decisión tomada:** mantener main.tscn como raíz Control, con menú, consola y pantalla informativa reutilizable. Instanciar una vez los cuatro paneles de consola y cambiar su visibilidad; scripts limitados a interacción y presentación.
+- **Justificación:** evitar duplicaciones y una arquitectura global excesiva para cuatro pestañas.
+- **Consecuencias:** sin autoloads, pila de escenas ni estado de juego; al ingresar se abre Llamadas. Configuración y Créditos comparten una pantalla que regresa al menú y restaura foco. Cambios inmediatos, sin transiciones que retrasen la navegación.
+- **Estado:** adoptada e implementada en PROMPT 04.
+
+## D-023 — Estilo y accesibilidad de navegación
+
+- **Fecha:** 2026-10-27.
+- **Tema:** presentación y uso táctil/teclado.
+- **Decisión tomada:** ampliar el Theme existente con la paleta de PROMPT 04, botones grandes, foco visible, iconos propios y marca textual ACTIVA. Continuar permanece deshabilitado; paneles vacíos explican disponibilidad. Añadir scroll vertical y margen seguro compartido.
+- **Justificación:** identidad nocturna de comunicaciones y requisitos explícitos de no depender solo del color o iconos.
+- **Consecuencias:** la distinción de estados por texto y forma pasa a ser requisito aprobado en 04; el tamaño de texto ajustable y volúmenes independientes de D-009 siguen sin implementarse. No se descargan recursos. La adaptación Android está programada, pero su verificación nativa queda pendiente; no equivale a prueba en teléfono.
+- **Estado:** adoptada e implementada; requisito de accesibilidad autorizado por PROMPT 04.
+
+## D-024 — Verificación de navegación y regresión
+
+- **Fecha:** 2026-10-27.
+- **Tema:** pruebas reproducibles y límites de evidencia.
+- **Decisión tomada:** conservar las comprobaciones de configuración de bootstrap, actualizar su expectativa de arranque al menú y añadir navigation_smoke para clics, teclado, toque simulado, retroceso, scroll y ausencia de duplicaciones. Revisar siete vistas en cuatro resoluciones con capturas reales.
+- **Justificación:** el cambio autorizado introduce interacción y vuelve obsoletas las aserciones de pantalla estática y ausencia de botones de 03; ver dibujos o emitir señales directamente no acredita el recorrido GUI.
+- **Consecuencias:** las pruebas finales pasan con 106 nodos descendientes estables y 28 capturas inspeccionadas. Se corrigen el alcance de una constante del auxiliar, el ciclo de foco y la secuencia de inyección de eventos. La simulación de toque y de retroceso en escritorio no acredita hardware Android, recortes seguros o gesto físico.
+- **Estado:** adoptada y verificada en PROMPT 04.
+
+## D-025 — Alcance autorizado del motor narrativo
+
+- **Fecha:** 2026-10-27.
+- **Tema:** autorización de PROMPT 05.
+- **Decisión tomada:** registrar la aprobación de 00–04 e implementar únicamente núcleo narrativo independiente, sesión temporal, JSON técnico y pruebas automatizadas aisladas.
+- **Justificación:** alcance explícito del nuevo prompt, que sustituye la espera de autorización al cerrar 04.
+- **Consecuencias:** la interfaz normal no se modifica ni conecta al motor; el Caso 001 sigue sin archivo funcional. No se autoriza persistencia ni ninguna implementación de 06–12.
+- **Estado:** aprobada mediante PROMPT 05.
+
+## D-026 — Esquema canónico 1 y correspondencia con preproducción
+
+- **Fecha:** 2026-10-27.
+- **Tema:** formato de contenido y validación.
+- **Decisión tomada:** adoptar schema_version 1 con case_id, content_version, title, initial_node, initial_state, declaraciones de variables/catálogos y nodos dialogue, transition y ending. Mantener los significados de condiciones y efectos aprobados y documentar sus nombres canónicos y alias.
+- **Justificación:** concretar el formato requerido por PROMPT 05 sin improvisar reglas del Caso 001. Se conservan all/any, visible_when/enabled_when, límites, claves únicas y aliases at_least/at_most.
+- **Consecuencias:** id/entry_node de caso se representan por case_id/initial_node. Avance y terminación genéricos se expresan con destinos/nodos, no con ejecución de métodos desde JSON. Campos futuros de audio, despacho, variantes visuales y resolución específica K02 no se importan silenciosamente. Las adaptaciones y límites se detallan en NARRATIVE_ENGINE; ningún documento del caso se reescribe.
+- **Estado:** adoptada e implementada dentro de PROMPT 05.
+
+## D-027 — Sesión temporal transaccional e idempotencia
+
+- **Fecha:** 2026-10-27.
+- **Tema:** ejecución y consistencia de estado.
+- **Decisión tomada:** procesar cada operación sobre una copia y publicar solo al alcanzar un nodo estable válido. Usar registros por visita/efecto, once_key de sesión, ID de acciones y revisión opcional al seleccionar. Exponer únicamente snapshots y vistas separados del estado interno.
+- **Justificación:** impedir efectos por consultas, duplicados por vistas obsoletas, eventos parciales y corrupción por errores de transición.
+- **Consecuencias:** errores revierten cursor, variables, evidencias, eventos y registros del candidato. Reentradas legítimas tienen otra visita; efectos globalmente únicos requieren clave o condición de acción. Revisiones e ID de evento son locales a cada sesión; reiniciar limpia registros. No hay escritura ni restauración de partidas.
+- **Estado:** adoptada, implementada y probada en PROMPT 05.
+
+## D-028 — Contrato seguro de eventos y ejecución automática
+
+- **Fecha:** 2026-10-27.
+- **Tema:** integración futura sin dependencias gráficas.
+- **Decisión tomada:** usar seis componentes RefCounted, señales de carga/nodo/opciones/estado/evidencia/evento/final/error y solicitudes de evento registradas hasta confirmación explícita. Limitar a 64 transiciones consecutivas y condiciones de profundidad 32.
+- **Justificación:** núcleo reutilizable sin autoloads, escena obligatoria, código dinámico o simulación de sistemas que aún no existen.
+- **Consecuencias:** un evento sin consumidor sigue pendiente; confirmarlo no demuestra despacho o reproducción. Mutaciones reentrantes durante señales se rechazan. La validación detecta estructuras y rutas, sin resolver todas las condiciones; los fallos restantes se controlan en ejecución.
+- **Estado:** adoptada, implementada y probada en PROMPT 05.
+
+## D-029 — Evidencia de pruebas y conservación de interfaz
+
+- **Fecha:** 2026-10-27.
+- **Tema:** aceptación de fase 05.
+- **Decisión tomada:** verificar el núcleo mediante dos suites SceneTree sin plugins externos, un caso técnico y seis fixtures; conservar las pruebas anteriores y ejecutar regresión de navegación y arranque.
+- **Justificación:** cubrir las 17 pruebas solicitadas, errores de autoría, rollback, determinismo, consumo de eventos y ausencia de regresión visual.
+- **Consecuencias:** pasan 151 comprobaciones del motor y 334 de validación, 485 en total. Bootstrap/navegación pasan headless en cuatro resoluciones; se revisan siete capturas gráficas nuevas a 720 × 1280. Las otras tres resoluciones no se revisan gráficamente de nuevo en 05. Android y persistencia siguen pendientes de sus fases.
+- **Estado:** adoptada y verificada dentro de PROMPT 05.
+
+## D-030 — Repositorio remoto autorizado
+
+- **Fecha:** 2026-10-27.
+- **Tema:** versionado y subida del proyecto existente.
+- **Decisión tomada:** inicializar Git local con rama main, configurar origin como https://github.com/ArielPerez2001/Last-Signal.git y preparar el primer commit para su subida, conforme a la petición explícita del usuario posterior a PROMPT 05.
+- **Justificación:** conservar en el repositorio indicado el proyecto y sus entregables actuales. El remoto se comprobó vacío antes de inicializar; no hay historial que sustituir.
+- **Consecuencias:** incluir fuentes, documentación, pruebas y capturas; respetar .gitignore y excluir caché/credenciales/exports. Usar push normal, sin force. No se modifica el juego ni se inicia PROMPT 06; no se autoriza publicar cambios futuros automáticamente.
+- **Estado:** inicialización y commit local realizados; push pendiente por HTTP 403 para arpe22. No se forzó ni completó la subida.
+
+## Plantilla para nuevos registros
+
+- **Identificador y tema:** D-XXX — título.
+- **Fecha:** AAAA-MM-DD, fecha local del usuario.
+- **Tema:** arquitectura, diseño o producto.
+- **Decisión tomada:** contenido y fuente de autorización, o asunto todavía abierto.
+- **Justificación:** motivo y evidencia disponible.
+- **Consecuencias:** efectos, dependencias y documentos afectados.
+- **Estado:** aprobado, propuesto, pendiente o sustituido, según corresponda; enlazar el registro que lo sustituya si aplica.

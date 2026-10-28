@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "case_id": "test_narrative",
+  "content_version": "test-1.0",
+  "title": "Prueba técnica independiente de la historia oficial",
+  "initial_node": "test_n01",
+  "characters": [{"id": "test_system", "display_name": "Sistema de pruebas"}],
+  "variables": {
+    "signal": {"type": "int", "min": 0, "max": 2},
+    "prepared": {"type": "bool"}
+  },
+  "initial_state": {"variables": {"signal": 0, "prepared": false}, "evidence": []},
+  "evidence_catalog": ["test_e01"],
+  "event_catalog": ["test_ready"],
+  "endings": ["test_success", "test_partial"],
+  "nodes": [
+    {
+      "id": "test_n01", "type": "dialogue", "speaker_id": "test_system",
+      "text": "Prueba técnica. Prepare la señal o continúe sin prepararla.",
+      "options": [
+        {
+          "id": "test_prepare", "text": "Preparar señal", "next": "test_n02",
+          "effects": [
+            {"op": "add_clamped", "target": "signal", "value": 1},
+            {"op": "set", "target": "prepared", "value": true},
+            {"op": "emit_event", "event_id": "test_ready", "payload": {"purpose": "technical"}, "once_key": "test_notify_once"}
+          ]
+        },
+        {"id": "test_skip", "text": "Continuar sin preparación", "next": "test_n02"},
+        {
+          "id": "test_hidden", "text": "Usar un registro previo", "next": "test_n03",
+          "visible_when": {"op": "contains", "target": "evidence", "value": "test_e01"}
+        }
+      ]
+    },
+    {
+      "id": "test_n02", "type": "dialogue", "speaker_id": "test_system",
+      "text": "Se registró una evidencia técnica. Puede ajustar la señal o comprobar su preparación.",
+      "entry_effects": [{"op": "add_to_set", "target": "evidence", "value": "test_e01"}],
+      "options": [
+        {
+          "id": "test_adjust", "text": "Ajustar señal", "next": "test_n02",
+          "effects": [
+            {"op": "add_clamped", "target": "signal", "value": 1},
+            {"op": "set", "target": "prepared", "value": true},
+            {"op": "emit_event", "event_id": "test_ready", "payload": {"purpose": "technical"}, "once_key": "test_notify_once"}
+          ]
+        },
+        {
+          "id": "test_continue", "text": "Confirmar preparación", "next": "test_n03",
+          "enabled_when": {"op": "all", "conditions": [
+            {"op": "greater_or_equal", "target": "signal", "value": 1},
+            {"op": "equals", "target": "prepared", "value": true},
+            {"op": "contains", "target": "evidence", "value": "test_e01"}
+          ]},
+          "disabled_reason": "Primero ajuste la señal y confirme el registro."
+        },
+        {"id": "test_leave", "text": "Continuar sin confirmar", "next": "test_n03"}
+      ]
+    },
+    {
+      "id": "test_n03", "type": "dialogue", "speaker_id": "test_system",
+      "text": "Finalice la prueba. La transición automática comprobará la preparación.",
+      "options": [
+        {"id": "test_finish", "text": "Finalizar según el estado", "next": "test_transition"},
+        {"id": "test_cancel", "text": "Cerrar sin confirmación", "next": "test_end_partial"}
+      ]
+    },
+    {
+      "id": "test_transition", "type": "transition",
+      "condition": {"op": "equals", "target": "prepared", "value": true},
+      "next": "test_end_success", "fallback_next": "test_end_partial"
+    },
+    {"id": "test_end_success", "type": "ending", "ending_id": "test_success", "text": "Prueba técnica completada con preparación."},
+    {"id": "test_end_partial", "type": "ending", "ending_id": "test_partial", "text": "Prueba técnica cerrada sin confirmación."}
+  ]
+}

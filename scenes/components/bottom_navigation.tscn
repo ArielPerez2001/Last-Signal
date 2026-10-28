@@ -1,0 +1,202 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/bottom_navigation.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/calls.svg" id="2_icon"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/audio.svg" id="3_icon"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/map.svg" id="4_icon"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/evidence.svg" id="5_icon"]
+
+[sub_resource type="ButtonGroup" id="Tabs"]
+
+[node name="BottomNavigation" type="HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+script = ExtResource("1_script")
+
+[node name="CallsButton" type="Button" parent="."]
+custom_minimum_size = Vector2(0, 112)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"NavigationButton"
+toggle_mode = true
+button_group = SubResource("Tabs")
+tooltip_text = "Llamadas"
+focus_neighbor_left = NodePath("../EvidenceButton")
+focus_neighbor_right = NodePath("../AudioButton")
+
+[node name="Content" type="VBoxContainer" parent="CallsButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 3
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="CallsButton/Content"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("2_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Caption" type="Label" parent="CallsButton/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 22
+text = "Llamadas"
+horizontal_alignment = 1
+
+[node name="ActiveMarker" type="Label" parent="CallsButton/Content"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"SignalLabel"
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+
+[node name="AudioButton" type="Button" parent="."]
+custom_minimum_size = Vector2(0, 112)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"NavigationButton"
+toggle_mode = true
+button_group = SubResource("Tabs")
+tooltip_text = "Audio"
+focus_neighbor_left = NodePath("../CallsButton")
+focus_neighbor_right = NodePath("../MapButton")
+
+[node name="Content" type="VBoxContainer" parent="AudioButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 3
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="AudioButton/Content"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Caption" type="Label" parent="AudioButton/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 22
+text = "Audio"
+horizontal_alignment = 1
+
+[node name="ActiveMarker" type="Label" parent="AudioButton/Content"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"SignalLabel"
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+
+[node name="MapButton" type="Button" parent="."]
+custom_minimum_size = Vector2(0, 112)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"NavigationButton"
+toggle_mode = true
+button_group = SubResource("Tabs")
+tooltip_text = "Mapa"
+focus_neighbor_left = NodePath("../AudioButton")
+focus_neighbor_right = NodePath("../EvidenceButton")
+
+[node name="Content" type="VBoxContainer" parent="MapButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 3
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="MapButton/Content"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("4_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Caption" type="Label" parent="MapButton/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 22
+text = "Mapa"
+horizontal_alignment = 1
+
+[node name="ActiveMarker" type="Label" parent="MapButton/Content"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"SignalLabel"
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+
+[node name="EvidenceButton" type="Button" parent="."]
+custom_minimum_size = Vector2(0, 112)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"NavigationButton"
+toggle_mode = true
+button_group = SubResource("Tabs")
+tooltip_text = "Expedientes"
+focus_neighbor_left = NodePath("../MapButton")
+focus_neighbor_right = NodePath("../CallsButton")
+
+[node name="Content" type="VBoxContainer" parent="EvidenceButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 3
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="EvidenceButton/Content"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("5_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Caption" type="Label" parent="EvidenceButton/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 22
+text = "Expedientes"
+horizontal_alignment = 1
+
+[node name="ActiveMarker" type="Label" parent="EvidenceButton/Content"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"SignalLabel"
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1

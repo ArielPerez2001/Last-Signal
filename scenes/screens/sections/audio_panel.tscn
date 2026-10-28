@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/components/module_placeholder.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/audio.svg" id="2_icon"]
+
+[node name="AudioPanel" instance=ExtResource("1_base")]
+heading = "ANÁLISIS DE SEÑAL"
+state_text = "Sin grabaciones disponibles"
+preview_text = "ESPACIO PARA ONDA DE AUDIO"
+availability_text = "La reproducción y los filtros se habilitarán en una etapa posterior."
+module_icon = ExtResource("2_icon")

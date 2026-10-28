@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "case_id": "test_edges",
+  "content_version": "test-1.0",
+  "title": "Pruebas de reentrada y errores transaccionales",
+  "initial_node": "edge_entry",
+  "characters": [{"id": "edge_system", "display_name": "Prueba"}],
+  "variables": {
+    "count": {"type": "int", "min": 0, "max": 2},
+    "flag": {"type": "bool"},
+    "mode": {"type": "string", "allowed_values": ["idle", "ready"]}
+  },
+  "initial_state": {"variables": {"count": 0, "flag": false, "mode": "idle"}, "evidence": []},
+  "evidence_catalog": [],
+  "event_catalog": ["edge_done"],
+  "endings": ["edge_end"],
+  "nodes": [
+    {
+      "id": "edge_entry", "type": "dialogue", "speaker_id": "edge_system", "text": "Prueba de condiciones y reentrada.",
+      "entry_effects": [{"op": "add_clamped", "target": "count", "value": 1, "once_key": "edge_entry_once"}],
+      "options": [
+        {
+          "id": "edge_once", "text": "Preparar una vez", "next": "edge_entry",
+          "visible_when": {"op": "once_not_applied", "value": "edge_once"},
+          "effects": [{"op": "set", "target": "mode", "value": "ready"}, {"op": "add_clamped", "target": "count", "value": 1}]
+        },
+        {
+          "id": "edge_mark", "text": "Registrar marca", "next": "edge_entry",
+          "enabled_when": {"op": "once_not_applied", "value": "edge_marker"}, "disabled_reason": "Marca ya registrada.",
+          "effects": [{"op": "mark_once", "value": "edge_marker"}]
+        },
+        {"id": "edge_dead", "text": "Intentar diálogo bloqueado", "next": "edge_blocked", "effects": [{"op": "set", "target": "mode", "value": "idle"}]},
+        {"id": "edge_guard", "text": "Intentar transición bloqueada", "next": "edge_transition"},
+        {"id": "edge_finish", "text": "Finalizar", "next": "edge_finish_node"}
+      ]
+    },
+    {
+      "id": "edge_blocked", "type": "dialogue", "speaker_id": "edge_system", "text": "Sin salida habilitada para este estado.",
+      "options": [{"id": "edge_locked", "text": "Bloqueado", "next": "edge_finish_node", "enabled_when": {"op": "equals", "target": "flag", "value": true}, "disabled_reason": "Flag inactivo."}]
+    },
+    {"id": "edge_transition", "type": "transition", "condition": {"op": "equals", "target": "flag", "value": true}, "next": "edge_finish_node"},
+    {
+      "id": "edge_finish_node", "type": "ending", "ending_id": "edge_end",
+      "entry_effects": [{"op": "emit_event", "event_id": "edge_done", "payload": {"values": [1, true, "done"]}}]
+    }
+  ]
+}

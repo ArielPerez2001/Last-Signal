@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "case_id": "test_cycle",
+  "content_version": "test-1.0",
+  "title": "Ciclo automático de prueba",
+  "initial_node": "cycle_entry",
+  "characters": [{"id": "cycle_system", "display_name": "Prueba"}],
+  "variables": {"repeat_loop": {"type": "bool"}, "count": {"type": "int", "min": 0, "max": 3}},
+  "initial_state": {"variables": {"repeat_loop": true, "count": 0}, "evidence": []},
+  "evidence_catalog": ["cycle_e01"],
+  "event_catalog": ["cycle_event"],
+  "endings": ["cycle_end"],
+  "nodes": [
+    {
+      "id": "cycle_entry", "type": "dialogue", "speaker_id": "cycle_system", "text": "Prueba de rollback.",
+      "options": [
+        {
+          "id": "cycle_start", "text": "Intentar ciclo", "next": "cycle_loop",
+          "effects": [
+            {"op": "add_clamped", "target": "count", "value": 1},
+            {"op": "add_to_set", "target": "evidence", "value": "cycle_e01"},
+            {"op": "emit_event", "event_id": "cycle_event", "payload": {"test": true}}
+          ]
+        },
+        {"id": "cycle_safe", "text": "Finalizar", "next": "cycle_finish"}
+      ]
+    },
+    {"id": "cycle_loop", "type": "transition", "condition": {"op": "equals", "target": "repeat_loop", "value": true}, "next": "cycle_loop", "fallback_next": "cycle_finish"},
+    {"id": "cycle_finish", "type": "ending", "ending_id": "cycle_end"}
+  ]
+}

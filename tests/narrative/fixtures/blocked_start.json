@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "case_id": "blocked_start",
+  "content_version": "test-1.0",
+  "title": "Inicio con condición no satisfecha",
+  "initial_node": "blocked_transition",
+  "characters": [],
+  "variables": {"flag": {"type": "bool"}},
+  "initial_state": {"variables": {"flag": false}, "evidence": []},
+  "evidence_catalog": [],
+  "event_catalog": [],
+  "endings": ["blocked_end"],
+  "nodes": [
+    {"id": "blocked_transition", "type": "transition", "condition": {"op": "equals", "target": "flag", "value": true}, "next": "blocked_end_node"},
+    {"id": "blocked_end_node", "type": "ending", "ending_id": "blocked_end"}
+  ]
+}

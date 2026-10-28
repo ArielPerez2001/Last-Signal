@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Theme" path="res://assets/ui/base_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scripts/ui/navigation_controller.gd" id="2_navigation"]
+[ext_resource type="Script" path="res://scripts/ui/safe_area.gd" id="3_safe"]
+[ext_resource type="PackedScene" path="res://scenes/screens/main_menu.tscn" id="4_menu"]
+[ext_resource type="PackedScene" path="res://scenes/screens/dispatch_console.tscn" id="5_console"]
+[ext_resource type="PackedScene" path="res://scenes/components/information_panel.tscn" id="6_information"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_navigation")
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"BackgroundPanel"
+
+[node name="SafeArea" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_safe")
+
+[node name="MainMenu" parent="SafeArea" instance=ExtResource("4_menu")]
+layout_mode = 2
+
+[node name="DispatchConsole" parent="SafeArea" instance=ExtResource("5_console")]
+visible = false
+layout_mode = 2
+
+[node name="InformationPanel" parent="SafeArea" instance=ExtResource("6_information")]
+visible = false
+layout_mode = 2
