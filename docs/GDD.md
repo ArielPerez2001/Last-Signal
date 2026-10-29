@@ -1,6 +1,6 @@
 # ÚLTIMA SEÑAL — Documento de diseño
 
-Fecha de registro: 2026-10-27. Actualización técnica: 2026-10-28, PROMPT 08. Estado: diseño del Caso 001 aprobado; base técnica, navegación, motor/guardado, conversaciones e investigación con demos de desarrollo implementados. Caso 001 sin integrar.
+Fecha de registro: 2026-10-27. Actualización técnica: 2026-10-28, PROMPT 10. Estado: diseño del Caso 001 aprobado; base técnica, navegación, motor/guardado, conversaciones, investigación, grabaciones y mapa/despacho con demos de desarrollo implementados. Caso 001 sin integrar; 09B pospuesto intencionalmente y no bloquea 11.
 
 ## 1. Identidad y concepto aprobados
 
@@ -73,7 +73,7 @@ Preferir escenas reutilizables, interfaces separadas de la lógica narrativa, ca
 
 El código deberá ser legible, mantenible, modular y apropiado para Godot, con tipado de GDScript cuando resulte útil. Evitar sistemas excesivamente complejos y dependencias externas innecesarias. Optimizar recursos para Android y facilitar pruebas reproducibles.
 
-La base de carpetas, la escena de entrada y el Theme se documentan en [TECHNICAL_SETUP.md](TECHNICAL_SETUP.md). El proyecto ofrece menú, consola, motor narrativo y guardado local; Llamadas y Expedientes comparten una investigación técnica aislada con evidencias y deducciones. Audio/Mapa siguen como secciones informativas vacías. El flujo base consta en [UI_NAVIGATION.md](UI_NAVIGATION.md), conversaciones en [CALL_SYSTEM.md](technical/CALL_SYSTEM.md) e investigación en [INVESTIGATION_SYSTEM.md](technical/INVESTIGATION_SYSTEM.md). Los módulos y contenido oficiales se implementarán al autorizar sus fases.
+La base de carpetas, la escena de entrada y el Theme se documentan en [TECHNICAL_SETUP.md](TECHNICAL_SETUP.md). Menú, consola y cuatro módulos comparten motor/guardado en demos técnicas aisladas. Mapa permite consultar, confirmar asignaciones y recibir partes sin tiempo real; no define la ciudad canónica o el despacho oficial R1. Contratos en [UI_NAVIGATION.md](UI_NAVIGATION.md), [CALL_SYSTEM.md](technical/CALL_SYSTEM.md), [INVESTIGATION_SYSTEM.md](technical/INVESTIGATION_SYSTEM.md), [AUDIO_ANALYZER.md](technical/AUDIO_ANALYZER.md) y [MAP_DISPATCH_SYSTEM.md](technical/MAP_DISPATCH_SYSTEM.md). El contenido oficial espera su autorización.
 
 ## 7. Alcance del MVP
 

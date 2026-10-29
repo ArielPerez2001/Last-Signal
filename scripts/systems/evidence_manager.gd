@@ -48,6 +48,15 @@ func get_available_actions() -> Array:
 	return _engine.get_investigation_actions()
 
 
+func discover_from_audio(rule_id: String, playback_proof: Dictionary, expected_revision: int = -1) -> Dictionary:
+	return _engine.register_audio_observation(rule_id, playback_proof, expected_revision)
+
+
+static func process_dispatch_event(narrative: RefCounted, command: Dictionary, expected_revision: int = -1) -> Dictionary:
+	# The engine owns the atomic resource transition and evidence effects.
+	return narrative.process_dispatch(command, expected_revision)
+
+
 func _project(record: Dictionary) -> Dictionary:
 	var path: String = record.get("related_asset", "")
 	var available: bool = not path.is_empty() and ResourceLoader.exists(path, "Texture2D")

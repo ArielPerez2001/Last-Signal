@@ -1,0 +1,697 @@
+{
+  "schema_version": 4,
+  "case_id": "dispatch_demo",
+  "content_version": "dispatch-1.0",
+  "title": "Despacho de prueba · fuera de campaña",
+  "initial_node": "dsp_intro",
+  "characters": [
+    {
+      "id": "dsp_caller",
+      "display_name": "Central · simulación"
+    }
+  ],
+  "variables": {
+    "reported": {
+      "type": "bool"
+    },
+    "port_reported": {
+      "type": "bool"
+    },
+    "alarm_verified": {
+      "type": "bool"
+    },
+    "false_alarm": {
+      "type": "bool"
+    },
+    "port_done": {
+      "type": "bool"
+    },
+    "medical_done": {
+      "type": "bool"
+    },
+    "dsp_med_status": {
+      "type": "string",
+      "allowed_values": [
+        "REPORTED",
+        "ASSIGNED",
+        "RESOLVED",
+        "CLOSED"
+      ]
+    },
+    "dsp_alarm_status": {
+      "type": "string",
+      "allowed_values": [
+        "REPORTED",
+        "ASSIGNED",
+        "RESOLVED",
+        "CLOSED"
+      ]
+    },
+    "dsp_port_status": {
+      "type": "string",
+      "allowed_values": [
+        "REPORTED",
+        "ASSIGNED",
+        "RESOLVED",
+        "CLOSED"
+      ]
+    },
+    "patrol_01_status": {
+      "type": "string",
+      "allowed_values": [
+        "AVAILABLE",
+        "ASSIGNED",
+        "BUSY",
+        "UNAVAILABLE"
+      ]
+    },
+    "patrol_01_assignment": {
+      "type": "string",
+      "allowed_values": [
+        "",
+        "dsp_med",
+        "dsp_alarm",
+        "dsp_port"
+      ]
+    },
+    "ambulance_01_status": {
+      "type": "string",
+      "allowed_values": [
+        "AVAILABLE",
+        "ASSIGNED",
+        "BUSY",
+        "UNAVAILABLE"
+      ]
+    },
+    "ambulance_01_assignment": {
+      "type": "string",
+      "allowed_values": [
+        "",
+        "dsp_med",
+        "dsp_alarm",
+        "dsp_port"
+      ]
+    }
+  },
+  "initial_state": {
+    "variables": {
+      "reported": false,
+      "port_reported": false,
+      "alarm_verified": false,
+      "false_alarm": false,
+      "port_done": false,
+      "medical_done": false,
+      "dsp_med_status": "REPORTED",
+      "dsp_alarm_status": "REPORTED",
+      "dsp_port_status": "REPORTED",
+      "patrol_01_status": "AVAILABLE",
+      "patrol_01_assignment": "",
+      "ambulance_01_status": "AVAILABLE",
+      "ambulance_01_assignment": ""
+    },
+    "evidence": []
+  },
+  "evidence_catalog": [
+    "dsp_med_report",
+    "dsp_alarm_report",
+    "dsp_port_report"
+  ],
+  "event_catalog": [
+    "dsp_sent",
+    "dsp_update"
+  ],
+  "endings": [
+    "dsp_complete",
+    "dsp_partial"
+  ],
+  "audio_analysis": {
+    "recordings": [],
+    "discovery_rules": []
+  },
+  "investigation": {
+    "evidence": [
+      {
+        "id": "dsp_med_report",
+        "title": "Parte de atención de ensayo",
+        "description": "La ambulancia confirmó la atención prevista en la instalación ficticia.",
+        "category": "record",
+        "source": "Intervención técnica · dsp_med",
+        "importance": "contextual",
+        "order": 0
+      },
+      {
+        "id": "dsp_alarm_report",
+        "title": "Sensor en modo de ensayo",
+        "description": "La patrulla confirmó que el sensor urbano correspondía a una prueba; estuvo ocupada hasta cerrar su intervención.",
+        "category": "record",
+        "source": "Intervención técnica · dsp_alarm",
+        "importance": "contextual",
+        "order": 1
+      },
+      {
+        "id": "dsp_port_report",
+        "title": "Acceso portuario confirmado",
+        "description": "El parte de patrulla confirma el acceso técnico señalado en el aviso ficticio.",
+        "category": "record",
+        "source": "Intervención técnica · dsp_port",
+        "importance": "contextual",
+        "order": 2
+      }
+    ],
+    "actions": [],
+    "deductions": []
+  },
+  "operations": {
+    "map_id": "dsp_test_map",
+    "title": "Puerto Umbral · plano de ensayo no canónico",
+    "districts": [
+      {
+        "id": "dsp_a",
+        "name": "Sector de ensayo A",
+        "bounds": [
+          0.02,
+          0.05,
+          0.44,
+          0.38
+        ]
+      },
+      {
+        "id": "dsp_b",
+        "name": "Sector de ensayo B",
+        "bounds": [
+          0.52,
+          0.05,
+          0.46,
+          0.38
+        ]
+      },
+      {
+        "id": "dsp_c",
+        "name": "Sector de ensayo C",
+        "bounds": [
+          0.15,
+          0.55,
+          0.8,
+          0.4
+        ]
+      }
+    ],
+    "locations": [
+      {
+        "id": "dsp_building",
+        "name": "Instalación de prueba",
+        "district_id": "dsp_a",
+        "description": "Edificio ficticio de ejercicios. Un aviso de atención sanitaria requiere la ambulancia, sin representar una emergencia real.",
+        "position": [
+          0.23,
+          0.28
+        ],
+        "visible_when": {
+          "op": "always"
+        },
+        "information": [
+          {
+            "condition": {
+              "op": "always"
+            },
+            "text": "El aviso identifica expresamente necesidad de atención sanitaria."
+          }
+        ]
+      },
+      {
+        "id": "dsp_urban",
+        "name": "Plaza de ensayo",
+        "district_id": "dsp_b",
+        "description": "Zona urbana ficticia con un aviso de sensor. El registro indica que puede estar en modo de ensayo; la comunicación permite verificarlo antes de ocupar una patrulla.",
+        "position": [
+          0.73,
+          0.28
+        ],
+        "visible_when": {
+          "op": "always"
+        },
+        "information": [
+          {
+            "condition": {
+              "op": "equals",
+              "target": "alarm_verified",
+              "value": true
+            },
+            "text": "Comprobación previa: sensor de prueba; no necesita despacho. La patrulla puede reservarse para otro aviso."
+          }
+        ]
+      },
+      {
+        "id": "dsp_dock",
+        "name": "Muelle de práctica",
+        "district_id": "dsp_c",
+        "description": "Zona portuaria de la simulación. El nuevo aviso solicita comprobación presencial de acceso, compatible con patrulla.",
+        "position": [
+          0.66,
+          0.78
+        ],
+        "visible_when": {
+          "op": "equals",
+          "target": "port_reported",
+          "value": true
+        },
+        "information": [
+          {
+            "condition": {
+              "op": "always"
+            },
+            "text": "Comprobar el acceso mediante un parte explícito; no hay desplazamiento en tiempo real."
+          }
+        ]
+      }
+    ],
+    "units": [
+      {
+        "unit_id": "patrol_01",
+        "display_name": "PATROL_01 · Patrulla de prueba",
+        "unit_type": "PATROL",
+        "initial_status": "AVAILABLE",
+        "status_variable": "patrol_01_status",
+        "assignment_variable": "patrol_01_assignment"
+      },
+      {
+        "unit_id": "ambulance_01",
+        "display_name": "AMBULANCE_01 · Ambulancia de prueba",
+        "unit_type": "AMBULANCE",
+        "initial_status": "AVAILABLE",
+        "status_variable": "ambulance_01_status",
+        "assignment_variable": "ambulance_01_assignment"
+      }
+    ],
+    "incidents": [
+      {
+        "id": "dsp_med",
+        "title": "Atención en instalación",
+        "description": "Aviso sanitario de ensayo. Se requiere ambulancia; una patrulla no sustituye atención sanitaria.",
+        "location_id": "dsp_building",
+        "incident_type": "medical",
+        "priority": "HIGH",
+        "initial_status": "REPORTED",
+        "status_variable": "dsp_med_status",
+        "required_unit_types": [
+          "AMBULANCE"
+        ],
+        "unlock_conditions": {
+          "op": "equals",
+          "target": "reported",
+          "value": true
+        },
+        "activate_conditions": {
+          "op": "always"
+        },
+        "dispatch_event": "dsp_sent"
+      },
+      {
+        "id": "dsp_alarm",
+        "title": "Aviso del sensor urbano",
+        "description": "El sensor podría estar en modo de ensayo. Puede verificar la información desde Llamadas antes de asignar una patrulla.",
+        "location_id": "dsp_urban",
+        "incident_type": "alarm",
+        "priority": "LOW",
+        "initial_status": "REPORTED",
+        "status_variable": "dsp_alarm_status",
+        "required_unit_types": [
+          "PATROL"
+        ],
+        "unlock_conditions": {
+          "op": "equals",
+          "target": "reported",
+          "value": true
+        },
+        "activate_conditions": {
+          "op": "equals",
+          "target": "alarm_verified",
+          "value": false
+        },
+        "dispatch_event": "dsp_sent"
+      },
+      {
+        "id": "dsp_port",
+        "title": "Comprobación de acceso",
+        "description": "Aviso de comprobación en el muelle ficticio. Necesita patrulla; si está ocupada habrá que completar y liberar su intervención anterior.",
+        "location_id": "dsp_dock",
+        "incident_type": "access",
+        "priority": "MEDIUM",
+        "initial_status": "REPORTED",
+        "status_variable": "dsp_port_status",
+        "required_unit_types": [
+          "PATROL"
+        ],
+        "unlock_conditions": {
+          "op": "equals",
+          "target": "port_reported",
+          "value": true
+        },
+        "activate_conditions": {
+          "op": "always"
+        },
+        "dispatch_event": "dsp_sent"
+      }
+    ],
+    "event_rules": [
+      {
+        "id": "dsp_med_arrive",
+        "label": "Recibir llegada · Atención en instalación",
+        "result_text": "La unidad confirma llegada y permanece ocupada atendiendo el aviso.",
+        "stage": "arrive",
+        "unit_id": "ambulance_01",
+        "incident_id": "dsp_med",
+        "from_unit_status": "ASSIGNED",
+        "to_unit_status": "BUSY",
+        "from_incident_status": "ASSIGNED",
+        "to_incident_status": "ASSIGNED",
+        "condition": {
+          "op": "always"
+        },
+        "effects": [
+          {
+            "op": "emit_event",
+            "event_id": "dsp_update"
+          }
+        ]
+      },
+      {
+        "id": "dsp_med_resolve",
+        "label": "Recibir resultado · Atención en instalación",
+        "result_text": "Parte registrado en Expedientes. La unidad sigue ocupada hasta que confirme su liberación.",
+        "stage": "resolve",
+        "unit_id": "ambulance_01",
+        "incident_id": "dsp_med",
+        "from_unit_status": "BUSY",
+        "to_unit_status": "BUSY",
+        "from_incident_status": "ASSIGNED",
+        "to_incident_status": "RESOLVED",
+        "condition": {
+          "op": "always"
+        },
+        "effects": [
+          {
+            "op": "emit_event",
+            "event_id": "dsp_update"
+          },
+          {
+            "op": "add_to_set",
+            "target": "evidence",
+            "value": "dsp_med_report"
+          },
+          {
+            "op": "set",
+            "target": "medical_done",
+            "value": true
+          }
+        ]
+      },
+      {
+        "id": "dsp_med_release",
+        "label": "Finalizar intervención y liberar · Atención en instalación",
+        "result_text": "Intervención finalizada y unidad disponible para un nuevo incidente.",
+        "stage": "release",
+        "unit_id": "ambulance_01",
+        "incident_id": "dsp_med",
+        "from_unit_status": "BUSY",
+        "to_unit_status": "AVAILABLE",
+        "from_incident_status": "RESOLVED",
+        "to_incident_status": "RESOLVED",
+        "condition": {
+          "op": "always"
+        },
+        "effects": [
+          {
+            "op": "emit_event",
+            "event_id": "dsp_update"
+          }
+        ]
+      },
+      {
+        "id": "dsp_alarm_arrive",
+        "label": "Recibir llegada · Aviso del sensor urbano",
+        "result_text": "La patrulla confirma un sensor en modo de ensayo. La asignación era válida, pero ocupó un recurso que podía reservarse verificando antes el aviso. Complete el parte para liberarla.",
+        "stage": "arrive",
+        "unit_id": "patrol_01",
+        "incident_id": "dsp_alarm",
+        "from_unit_status": "ASSIGNED",
+        "to_unit_status": "BUSY",
+        "from_incident_status": "ASSIGNED",
+        "to_incident_status": "ASSIGNED",
+        "condition": {
+          "op": "always"
+        },
+        "effects": [
+          {
+            "op": "emit_event",
+            "event_id": "dsp_update"
+          },
+          {
+            "op": "set",
+            "target": "false_alarm",
+            "value": true
+          }
+        ]
+      },
+      {
+        "id": "dsp_alarm_resolve",
+        "label": "Recibir resultado · Aviso del sensor urbano",
+        "result_text": "Parte registrado en Expedientes. La unidad sigue ocupada hasta que confirme su liberación.",
+        "stage": "resolve",
+        "unit_id": "patrol_01",
+        "incident_id": "dsp_alarm",
+        "from_unit_status": "BUSY",
+        "to_unit_status": "BUSY",
+        "from_incident_status": "ASSIGNED",
+        "to_incident_status": "CLOSED",
+        "condition": {
+          "op": "always"
+        },
+        "effects": [
+          {
+            "op": "emit_event",
+            "event_id": "dsp_update"
+          },
+          {
+            "op": "add_to_set",
+            "target": "evidence",
+            "value": "dsp_alarm_report"
+          }
+        ]
+      },
+      {
+        "id": "dsp_alarm_release",
+        "label": "Finalizar intervención y liberar · Aviso del sensor urbano",
+        "result_text": "Intervención finalizada y unidad disponible para un nuevo incidente.",
+        "stage": "release",
+        "unit_id": "patrol_01",
+        "incident_id": "dsp_alarm",
+        "from_unit_status": "BUSY",
+        "to_unit_status": "AVAILABLE",
+        "from_incident_status": "CLOSED",
+        "to_incident_status": "CLOSED",
+        "condition": {
+          "op": "always"
+        },
+        "effects": [
+          {
+            "op": "emit_event",
+            "event_id": "dsp_update"
+          }
+        ]
+      },
+      {
+        "id": "dsp_port_arrive",
+        "label": "Recibir llegada · Comprobación de acceso",
+        "result_text": "La unidad confirma llegada y permanece ocupada atendiendo el aviso.",
+        "stage": "arrive",
+        "unit_id": "patrol_01",
+        "incident_id": "dsp_port",
+        "from_unit_status": "ASSIGNED",
+        "to_unit_status": "BUSY",
+        "from_incident_status": "ASSIGNED",
+        "to_incident_status": "ASSIGNED",
+        "condition": {
+          "op": "always"
+        },
+        "effects": [
+          {
+            "op": "emit_event",
+            "event_id": "dsp_update"
+          }
+        ]
+      },
+      {
+        "id": "dsp_port_resolve",
+        "label": "Recibir resultado · Comprobación de acceso",
+        "result_text": "Parte registrado en Expedientes. La unidad sigue ocupada hasta que confirme su liberación.",
+        "stage": "resolve",
+        "unit_id": "patrol_01",
+        "incident_id": "dsp_port",
+        "from_unit_status": "BUSY",
+        "to_unit_status": "BUSY",
+        "from_incident_status": "ASSIGNED",
+        "to_incident_status": "RESOLVED",
+        "condition": {
+          "op": "always"
+        },
+        "effects": [
+          {
+            "op": "emit_event",
+            "event_id": "dsp_update"
+          },
+          {
+            "op": "add_to_set",
+            "target": "evidence",
+            "value": "dsp_port_report"
+          },
+          {
+            "op": "set",
+            "target": "port_done",
+            "value": true
+          }
+        ]
+      },
+      {
+        "id": "dsp_port_release",
+        "label": "Finalizar intervención y liberar · Comprobación de acceso",
+        "result_text": "Intervención finalizada y unidad disponible para un nuevo incidente.",
+        "stage": "release",
+        "unit_id": "patrol_01",
+        "incident_id": "dsp_port",
+        "from_unit_status": "BUSY",
+        "to_unit_status": "AVAILABLE",
+        "from_incident_status": "RESOLVED",
+        "to_incident_status": "RESOLVED",
+        "condition": {
+          "op": "always"
+        },
+        "effects": [
+          {
+            "op": "emit_event",
+            "event_id": "dsp_update"
+          }
+        ]
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "id": "dsp_intro",
+      "type": "dialogue",
+      "speaker_id": "dsp_caller",
+      "text": "Simulación fuera de campaña. Hay un aviso sanitario y otro de sensor urbano. El sensor podría ser de ensayo: puede comprobarlo antes de ocupar la patrulla. La información de las fichas indica qué tipo de unidad corresponde.",
+      "options": [
+        {
+          "id": "dsp_report",
+          "text": "Registrar los avisos de prueba.",
+          "next": "dsp_hub",
+          "effects": [
+            {
+              "op": "set",
+              "target": "reported",
+              "value": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dsp_hub",
+      "type": "dialogue",
+      "speaker_id": "dsp_caller",
+      "text": "Puede consultar Mapa y confirmar asignaciones. Cada llegada, resultado y liberación se recibe por una acción explícita; leer y cambiar de pestaña no avanza la intervención.",
+      "options": [
+        {
+          "id": "dsp_verify",
+          "text": "Comprobar si el sensor urbano está en modo de ensayo.",
+          "next": "dsp_hub",
+          "visible_when": {
+            "op": "once_not_applied",
+            "value": "dsp_verify"
+          },
+          "effects": [
+            {
+              "op": "set",
+              "target": "alarm_verified",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "dsp_new_port",
+          "text": "Registrar un nuevo aviso de acceso portuario.",
+          "next": "dsp_hub",
+          "visible_when": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "once_not_applied",
+                "value": "dsp_new_port"
+              },
+              {
+                "op": "any",
+                "conditions": [
+                  {
+                    "op": "contains",
+                    "target": "executed_actions",
+                    "value": "dsp_verify"
+                  },
+                  {
+                    "op": "contains",
+                    "target": "executed_actions",
+                    "value": "assign_patrol_01_to_dsp_alarm"
+                  }
+                ]
+              }
+            ]
+          },
+          "effects": [
+            {
+              "op": "set",
+              "target": "port_reported",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "dsp_followup",
+          "text": "Consultar el resultado portuario confirmado.",
+          "next": "dsp_hub",
+          "visible_when": {
+            "op": "equals",
+            "target": "port_done",
+            "value": true
+          }
+        },
+        {
+          "id": "dsp_finish",
+          "text": "Cerrar la demostración con el parte portuario.",
+          "next": "dsp_end",
+          "visible_when": {
+            "op": "contains",
+            "target": "executed_actions",
+            "value": "dsp_port_release"
+          }
+        },
+        {
+          "id": "dsp_close",
+          "text": "Cerrar la demostración con el estado actual.",
+          "next": "dsp_partial_end"
+        }
+      ]
+    },
+    {
+      "id": "dsp_end",
+      "type": "ending",
+      "ending_id": "dsp_complete",
+      "text": "Simulación cerrada. Las asignaciones y partes confirmados permanecen consultables."
+    },
+    {
+      "id": "dsp_partial_end",
+      "type": "ending",
+      "ending_id": "dsp_partial",
+      "text": "Simulación cerrada sin completar todas las intervenciones. Los recursos conservan su estado registrado; cerrar no los libera."
+    }
+  ]
+}

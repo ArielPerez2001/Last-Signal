@@ -1,11 +1,160 @@
 [gd_scene load_steps=3 format=3]
 
-[ext_resource type="PackedScene" path="res://scenes/components/module_placeholder.tscn" id="1_base"]
-[ext_resource type="Texture2D" path="res://assets/ui/icons/audio.svg" id="2_icon"]
+[ext_resource type="Script" path="res://scripts/ui/audio_panel.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/ui/audio_waveform.gd" id="2_wave"]
 
-[node name="AudioPanel" instance=ExtResource("1_base")]
-heading = "ANÁLISIS DE SEÑAL"
-state_text = "Sin grabaciones disponibles"
-preview_text = "ESPACIO PARA ONDA DE AUDIO"
-availability_text = "La reproducción y los filtros se habilitarán en una etapa posterior."
-module_icon = ExtResource("2_icon")
+[node name="AudioPanel" type="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 16
+script = ExtResource("1_script")
+
+[node name="Heading" type="Label" parent="."]
+layout_mode = 2
+text = "ANÁLISIS DE SEÑAL"
+theme_type_variation = &"KickerLabel"
+autowrap_mode = 3
+
+[node name="Status" type="Label" parent="."]
+layout_mode = 2
+text = "Sin grabación seleccionada"
+theme_type_variation = &"SignalLabel"
+autowrap_mode = 3
+
+[node name="Empty" type="Label" parent="."]
+layout_mode = 2
+text = "No hay grabaciones disponibles para analizar"
+autowrap_mode = 3
+
+[node name="Feedback" type="Label" parent="."]
+layout_mode = 2
+visible = false
+theme_type_variation = &"AccentLabel"
+autowrap_mode = 3
+
+[node name="SaveNotice" type="Label" parent="."]
+layout_mode = 2
+visible = false
+theme_type_variation = &"AccentLabel"
+autowrap_mode = 3
+
+[node name="RetrySave" type="Button" parent="."]
+layout_mode = 2
+visible = false
+custom_minimum_size = Vector2(0, 88)
+text = "Reintentar guardado"
+
+[node name="Recordings" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Player" type="VBoxContainer" parent="."]
+layout_mode = 2
+visible = false
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="Player"]
+layout_mode = 2
+theme_type_variation = &"HeadingLabel"
+autowrap_mode = 3
+
+[node name="Description" type="Label" parent="Player"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+autowrap_mode = 3
+
+[node name="Wave" type="Control" parent="Player"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 104)
+script = ExtResource("2_wave")
+
+[node name="WaveNote" type="Label" parent="Player"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+autowrap_mode = 3
+
+[node name="Time" type="Label" parent="Player"]
+layout_mode = 2
+theme_type_variation = &"SignalLabel"
+autowrap_mode = 3
+
+[node name="Progress" type="HSlider" parent="Player"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 88)
+step = 0.1
+focus_mode = 2
+
+[node name="Transport" type="HFlowContainer" parent="Player"]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
+
+[node name="Play" type="Button" parent="Player/Transport"]
+layout_mode = 2
+custom_minimum_size = Vector2(180, 88)
+size_flags_horizontal = 3
+text = "Reproducir / reanudar"
+autowrap_mode = 3
+
+[node name="Pause" type="Button" parent="Player/Transport"]
+layout_mode = 2
+custom_minimum_size = Vector2(180, 88)
+size_flags_horizontal = 3
+text = "Pausar"
+autowrap_mode = 3
+
+[node name="Stop" type="Button" parent="Player/Transport"]
+layout_mode = 2
+custom_minimum_size = Vector2(180, 88)
+size_flags_horizontal = 3
+text = "Detener"
+autowrap_mode = 3
+
+[node name="Replay" type="Button" parent="Player/Transport"]
+layout_mode = 2
+custom_minimum_size = Vector2(180, 88)
+size_flags_horizontal = 3
+text = "Repetir desde el inicio"
+autowrap_mode = 3
+
+[node name="Full" type="Button" parent="Player/Transport"]
+layout_mode = 2
+custom_minimum_size = Vector2(180, 88)
+size_flags_horizontal = 3
+text = "Grabación completa"
+autowrap_mode = 3
+
+[node name="FiltersHeading" type="Label" parent="Player"]
+layout_mode = 2
+text = "MEZCLAS PREPARADAS · FILTROS SIMULADOS"
+theme_type_variation = &"KickerLabel"
+autowrap_mode = 3
+
+[node name="Filters" type="HFlowContainer" parent="Player"]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
+
+[node name="SegmentsHeading" type="Label" parent="Player"]
+layout_mode = 2
+text = "INTERVALOS DE INVESTIGACIÓN"
+theme_type_variation = &"KickerLabel"
+autowrap_mode = 3
+
+[node name="Segments" type="VBoxContainer" parent="Player"]
+layout_mode = 2
+
+[node name="Accessible" type="Label" parent="Player"]
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Observation" type="Label" parent="Player"]
+layout_mode = 2
+theme_type_variation = &"SignalLabel"
+autowrap_mode = 3
+
+[node name="Register" type="Button" parent="Player"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 88)
+theme_type_variation = &"PrimaryButton"
+text = "Registrar observación"
+autowrap_mode = 3

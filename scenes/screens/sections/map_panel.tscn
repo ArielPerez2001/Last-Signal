@@ -1,11 +1,124 @@
 [gd_scene load_steps=3 format=3]
 
-[ext_resource type="PackedScene" path="res://scenes/components/module_placeholder.tscn" id="1_base"]
-[ext_resource type="Texture2D" path="res://assets/ui/icons/map.svg" id="2_icon"]
+[ext_resource type="Script" path="res://scripts/ui/map_panel.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/ui/map_canvas.gd" id="2"]
 
-[node name="MapPanel" instance=ExtResource("1_base")]
-heading = "MAPA OPERATIVO"
-state_text = "Sin incidentes activos"
-preview_text = "PUERTO UMBRAL\nVista cartográfica pendiente"
-availability_text = "El mapa y el despacho de unidades todavía no están disponibles."
-module_icon = ExtResource("2_icon")
+[node name="MapPanel" type="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("1")
+theme_override_constants/separation = 16
+
+[node name="Heading" type="Label" parent="."]
+layout_mode = 2
+text = "MAPA OPERATIVO"
+autowrap_mode = 3
+theme_type_variation = &"KickerLabel"
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 2
+text = "Sin mapa operativo activo"
+autowrap_mode = 3
+theme_type_variation = &"HeadingLabel"
+
+[node name="Notice" type="Label" parent="."]
+layout_mode = 2
+text = "No hay incidentes conocidos."
+autowrap_mode = 3
+theme_type_variation = &"MutedLabel"
+
+[node name="Canvas" type="Control" parent="."]
+layout_mode = 2
+visible = false
+custom_minimum_size = Vector2(0, 430)
+script = ExtResource("2")
+
+[node name="LocationsHeading" type="Label" parent="."]
+layout_mode = 2
+text = "UBICACIONES CONOCIDAS"
+autowrap_mode = 3
+theme_type_variation = &"KickerLabel"
+
+[node name="Locations" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Location" type="Label" parent="."]
+layout_mode = 2
+text = "Seleccione una ubicación conocida."
+autowrap_mode = 3
+
+[node name="IncidentsHeading" type="Label" parent="."]
+layout_mode = 2
+text = "INCIDENTES DE LA UBICACIÓN"
+autowrap_mode = 3
+theme_type_variation = &"KickerLabel"
+
+[node name="Incidents" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Incident" type="Label" parent="."]
+layout_mode = 2
+text = "Seleccione un incidente conocido."
+autowrap_mode = 3
+
+[node name="UnitsHeading" type="Label" parent="."]
+layout_mode = 2
+text = "RECURSOS OPERATIVOS"
+autowrap_mode = 3
+theme_type_variation = &"KickerLabel"
+
+[node name="Units" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Review" type="Button" parent="."]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 88)
+text = "Revisar asignación"
+disabled = true
+
+[node name="Confirmation" type="VBoxContainer" parent="."]
+layout_mode = 2
+visible = false
+
+[node name="Text" type="Label" parent="Confirmation"]
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Confirm" type="Button" parent="Confirmation"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 88)
+text = "Confirmar despacho"
+autowrap_mode = 3
+
+[node name="Cancel" type="Button" parent="Confirmation"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 88)
+text = "Cancelar asignación"
+autowrap_mode = 3
+
+[node name="Feedback" type="Label" parent="."]
+layout_mode = 2
+visible = false
+theme_type_variation = &"AccentLabel"
+autowrap_mode = 3
+
+[node name="SaveNotice" type="Label" parent="."]
+layout_mode = 2
+visible = false
+theme_type_variation = &"AccentLabel"
+autowrap_mode = 3
+
+[node name="Retry" type="Button" parent="."]
+layout_mode = 2
+visible = false
+custom_minimum_size = Vector2(0, 88)
+text = "Reintentar guardado"
+
+[node name="EventsHeading" type="Label" parent="."]
+layout_mode = 2
+text = "PARTES DISPONIBLES · AVANCE NARRATIVO"
+autowrap_mode = 3
+theme_type_variation = &"KickerLabel"
+
+[node name="Events" type="VBoxContainer" parent="."]
+layout_mode = 2

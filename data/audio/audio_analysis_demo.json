@@ -1,0 +1,359 @@
+{
+  "schema_version": 3,
+  "case_id": "audio_analysis_demo",
+  "content_version": "audio-1.0",
+  "title": "Ensayo de análisis · fuera de campaña",
+  "initial_node": "aud_intro",
+  "characters": [
+    {
+      "id": "aud_operator",
+      "display_name": "Operador · simulación"
+    }
+  ],
+  "variables": {
+    "recording_unlocked": {
+      "type": "bool"
+    }
+  },
+  "initial_state": {
+    "variables": {
+      "recording_unlocked": false
+    },
+    "evidence": []
+  },
+  "evidence_catalog": [
+    "aud_reference",
+    "aud_pulses",
+    "aud_marker"
+  ],
+  "event_catalog": [
+    "aud_observation"
+  ],
+  "endings": [
+    "aud_complete",
+    "aud_partial"
+  ],
+  "nodes": [
+    {
+      "id": "aud_intro",
+      "type": "dialogue",
+      "speaker_id": "aud_operator",
+      "text": "Comprobación técnica fuera de campaña. Puedo habilitar una señal sintética y registrar el patrón de referencia: tres pulsos. No hay personas ni una emergencia real en esta grabación.",
+      "options": [
+        {
+          "id": "aud_unlock",
+          "text": "Habilitar la grabación y registrar el patrón de referencia.",
+          "next": "aud_hub",
+          "effects": [
+            {
+              "op": "set",
+              "target": "recording_unlocked",
+              "value": true
+            },
+            {
+              "op": "add_to_set",
+              "target": "evidence",
+              "value": "aud_reference"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aud_hub",
+      "type": "dialogue",
+      "speaker_id": "aud_operator",
+      "text": "La grabación está disponible en Audio. Examine los intervalos y filtros, consulte la información textual equivalente y registre las observaciones justificadas. Después puede contrastar una pista sonora con la referencia en Expedientes.",
+      "options": [
+        {
+          "id": "aud_finish",
+          "text": "Cerrar la prueba con el contraste registrado.",
+          "next": "aud_end_complete",
+          "visible_when": {
+            "op": "contains",
+            "target": "executed_actions",
+            "value": "aud_d01"
+          }
+        },
+        {
+          "id": "aud_close",
+          "text": "Cerrar la demostración sin completar el contraste.",
+          "next": "aud_end_partial"
+        }
+      ]
+    },
+    {
+      "id": "aud_end_complete",
+      "type": "ending",
+      "ending_id": "aud_complete",
+      "text": "Ensayo cerrado: la referencia coincide con el patrón observado. Las fuentes permanecen consultables."
+    },
+    {
+      "id": "aud_end_partial",
+      "type": "ending",
+      "ending_id": "aud_partial",
+      "text": "Ensayo cerrado con las observaciones obtenidas hasta este momento."
+    }
+  ],
+  "investigation": {
+    "evidence": [
+      {
+        "id": "aud_reference",
+        "title": "Referencia del ensayo",
+        "description": "La referencia técnica declara tres pulsos iguales en el intervalo central. Debe contrastarse con una observación de la señal.",
+        "category": "document",
+        "source": "Comunicación técnica · referencia del ensayo",
+        "importance": "essential",
+        "order": 1
+      },
+      {
+        "id": "aud_pulses",
+        "title": "Tres pulsos ambientales",
+        "description": "En el intervalo central de la mezcla Ambiente se distingue un patrón regular de tres pulsos. El examen sonoro y su descripción textual corresponden a la misma fuente.",
+        "category": "audio",
+        "source": "Ensayo de línea · intervalo 00:04–00:08 · Ambiente",
+        "importance": "essential",
+        "order": 2
+      },
+      {
+        "id": "aud_marker",
+        "title": "Marcador electrónico ascendente",
+        "description": "La mezcla Voces presenta dos tonos de prueba, grave y agudo, en el cierre. Es una observación opcional; no es una voz humana ni una anomalía oficial.",
+        "category": "audio",
+        "source": "Ensayo de línea · intervalo 00:08–00:12 · Voces sintéticas",
+        "importance": "optional",
+        "order": 3
+      }
+    ],
+    "actions": [],
+    "deductions": [
+      {
+        "id": "aud_d01",
+        "title": "Patrón de referencia confirmado",
+        "description": "La referencia de tres pulsos coincide con el patrón examinado en Ambiente. Esta conclusión solo certifica el ensayo técnico.",
+        "required_evidence": [
+          "aud_reference",
+          "aud_pulses"
+        ],
+        "result_type": "VALID",
+        "repeatable": false,
+        "effects": [],
+        "narrative_feedback": "La observación sonora coincide con la referencia. Puede cerrar el ensayo desde Llamadas."
+      }
+    ]
+  },
+  "audio_analysis": {
+    "recordings": [
+      {
+        "recording_id": "aud_recording_01",
+        "title": "Ensayo de línea · señal técnica",
+        "description": "Grabación sintética de doce segundos, fuera de campaña. Los filtros son mezclas preparadas de la misma línea temporal; Voces contiene un marcador electrónico, sin voz humana.",
+        "case_id": "audio_analysis_demo",
+        "unlocked_by": {
+          "op": "equals",
+          "target": "recording_unlocked",
+          "value": true
+        },
+        "duration": 12,
+        "waveform": [
+          0.2395,
+          0.2385,
+          0.2383,
+          0.2392,
+          0.239,
+          0.2388,
+          0.239,
+          0.238,
+          0.238,
+          0.2391,
+          0.2385,
+          0.2384,
+          0.239,
+          0.2378,
+          0.2393,
+          0.2382,
+          0.2387,
+          0.2395,
+          0.2396,
+          0.2387,
+          0.2392,
+          0.237,
+          0.2394,
+          0.2396,
+          0.2383,
+          0.238,
+          0.2395,
+          0.2387,
+          0.2385,
+          0.2385,
+          0.239,
+          0.2396,
+          0.2387,
+          0.2387,
+          0.2378,
+          0.2374,
+          0.2399,
+          0.2373,
+          0.2381,
+          0.2394,
+          0.2366,
+          0.2391,
+          0.2396,
+          0.238,
+          0.2382,
+          0.3553,
+          0.3512,
+          0.2408,
+          0.2352,
+          0.2371,
+          0.238,
+          0.2393,
+          0.3517,
+          0.3458,
+          0.2393,
+          0.2387,
+          0.2389,
+          0.2395,
+          0.2387,
+          0.35,
+          0.3551,
+          0.2396,
+          0.2373,
+          0.2383,
+          0.2394,
+          0.2374,
+          0.2386,
+          0.2391,
+          0.238,
+          0.2371,
+          0.2394,
+          0.2395,
+          0.2378,
+          0.2391,
+          0.239,
+          0.2385,
+          0.2389,
+          0.2383,
+          0.2372,
+          0.2391,
+          0.2387,
+          0.2392,
+          0.239,
+          0.239,
+          0.2397,
+          0.2756,
+          0.3466,
+          0.3391,
+          0.2789,
+          0.2369,
+          0.2394,
+          0.2382,
+          0.2395,
+          0.2585,
+          0.3479,
+          0.3324,
+          0.2871,
+          0.239,
+          0.2364,
+          0.2398,
+          0.2396,
+          0.2393,
+          0.2372,
+          0.2389,
+          0.2376,
+          0.2389,
+          0.2395,
+          0.2376,
+          0.2376,
+          0.2387,
+          0.2382,
+          0.2371,
+          0.2349,
+          0.2367,
+          0.2397,
+          0.239,
+          0.2396,
+          0.2373,
+          0.237,
+          0.2372
+        ],
+        "variants": [
+          {
+            "filter_id": "original",
+            "label": "Original",
+            "audio_path": "res://assets/audio/demo/demo_original.wav",
+            "available": true
+          },
+          {
+            "filter_id": "ambiente",
+            "label": "Ambiente",
+            "audio_path": "res://assets/audio/demo/demo_ambiente.wav",
+            "available": true
+          },
+          {
+            "filter_id": "voces",
+            "label": "Voces · marcador sintético",
+            "audio_path": "res://assets/audio/demo/demo_voces.wav",
+            "available": true
+          }
+        ],
+        "segments": [
+          {
+            "segment_id": "aud_s01",
+            "start_time": 0,
+            "end_time": 4,
+            "title": "Inicio de línea · 00:00–00:04",
+            "accessible_information": {
+              "original": "Un zumbido estable y ruido uniforme abren la señal.",
+              "ambiente": "Fondo estable, sin patrón de pulsos en este intervalo.",
+              "voces": "Fondo tenue. No hay palabras ni marcador en este intervalo."
+            }
+          },
+          {
+            "segment_id": "aud_s02",
+            "start_time": 4,
+            "end_time": 8,
+            "title": "Intervalo central · 00:04–00:08",
+            "accessible_information": {
+              "original": "Tres pulsos breves quedan parcialmente cubiertos por el ruido.",
+              "ambiente": "Se distinguen tres pulsos de igual altura, separados regularmente. El texto describe la misma señal disponible al oído.",
+              "voces": "Fondo tenue, sin marcador electrónico en este intervalo."
+            }
+          },
+          {
+            "segment_id": "aud_s03",
+            "start_time": 8,
+            "end_time": 12,
+            "title": "Cierre de señal · 00:08–00:12",
+            "accessible_information": {
+              "original": "Dos tonos electrónicos están mezclados con el zumbido y el ruido.",
+              "ambiente": "Fondo estable; no aparece aquí el patrón triple central.",
+              "voces": "Marcador sintético de prueba: dos tonos, primero grave y después agudo. No representa voz ni palabras de una persona."
+            }
+          }
+        ]
+      }
+    ],
+    "discovery_rules": [
+      {
+        "id": "aud_rule_pulses",
+        "recording_id": "aud_recording_01",
+        "evidence_id": "aud_pulses",
+        "segment_id": "aud_s02",
+        "filter_id": "ambiente",
+        "min_listen_seconds": 3,
+        "once_only": true,
+        "event_id": "aud_observation"
+      },
+      {
+        "id": "aud_rule_marker",
+        "recording_id": "aud_recording_01",
+        "evidence_id": "aud_marker",
+        "segment_id": "aud_s03",
+        "filter_id": "voces",
+        "min_listen_seconds": 3,
+        "once_only": true
+      }
+    ]
+  }
+}

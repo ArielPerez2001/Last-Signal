@@ -33,6 +33,8 @@ func _ready() -> void:
 	restore_button.pressed.connect(_restore)
 	restart_button.pressed.connect(_restart)
 	$Development/Actions/Investigation.pressed.connect(_prepare_investigation)
+	$Development/Actions/Audio.pressed.connect(_prepare_audio)
+	$Development/Actions/Dispatch.pressed.connect(_prepare_dispatch)
 	$Retry.pressed.connect(func() -> void: controller.retry_save())
 
 
@@ -90,6 +92,20 @@ func _answer() -> void:
 	_lock_until_next_turn()
 
 
+func _prepare_dispatch() -> void:
+	if development_enabled and controller.get_view().state in ["IDLE", "ERROR"] and controller.engine.get_state_snapshot().is_empty():
+		var directory: String = _storage_directory + "_dispatch" if _storage_directory.begins_with("user://save_tests/") else Controller.DISPATCH_DIRECTORY
+		configure_development_storage(directory, null, Controller.DISPATCH_PATH)
+		controller.prepare_call(_demo_path)
+
+
+func _prepare_audio() -> void:
+	if development_enabled and controller.get_view().state in ["IDLE", "ERROR"] and controller.engine.get_state_snapshot().is_empty():
+		var directory: String = _storage_directory + "_audio" if _storage_directory.begins_with("user://save_tests/") else Controller.AUDIO_DIRECTORY
+		configure_development_storage(directory, null, Controller.AUDIO_PATH)
+		controller.prepare_call(_demo_path)
+
+
 func _restore() -> void:
 	if development_enabled and not _input_locked:
 		controller.restore_call(_demo_path)
@@ -138,6 +154,8 @@ func _render(view: Dictionary) -> void:
 	$Development.visible = development_enabled
 	start_button.visible = view.state in ["IDLE", "ERROR"] and controller.engine.get_state_snapshot().is_empty()
 	$Development/Actions/Investigation.visible = start_button.visible
+	$Development/Actions/Audio.visible = start_button.visible
+	$Development/Actions/Dispatch.visible = start_button.visible
 	restart_button.visible = not start_button.visible
 	$Retry.visible = not view.error.is_empty() and controller.saves.get_status().data.dirty and active
 	_update_history(view.history)

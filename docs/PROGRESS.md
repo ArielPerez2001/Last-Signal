@@ -2,9 +2,9 @@
 
 ## Estado actual
 
-Actualizado: 2026-10-28, fecha local del usuario. **Etapa 08 completada: Expedientes muestra evidencias, detalles y deducciones reales de una demo de investigación compartida con Llamadas y guardado aislado, verificada en Godot 4.7.2 estable sobre Windows.** El usuario aprobó 00–07 al enviar PROMPT 08. Menú/navegación conservados, Continuar deshabilitado y Caso 001 sin integrar. Trabajo detenido; PROMPT 09 requiere autorización explícita. Sin commits ni pushes en 08.
+Actualizado: 2026-10-28. **PROMPT 10 completado: Mapa operativo técnico con incidentes, patrulla/ambulancia, confirmación, partes narrativos, evidencias y recuperación de recursos ocupados.** Godot 4.7.2 estable / Windows / Compatibility. Cuatro módulos conservados, Continuar deshabilitado y Caso 001 sin integrar. 09B pospuesto intencionalmente y no bloquea 11. Trabajo detenido; no iniciar 11 sin autorización explícita. Sin commits/pushes en 10; cambios locales de 09A preservados. Android físico sigue pendiente.
 
-Autorización posterior al cierre de 08 — 2026-10-28: el usuario solicita «Directo a github», autorizando commit de esta entrega y push directo a main de ArielPerez2001/Last-Signal. Esta autorización de publicación sustituye la restricción anterior solo para esta entrega; no inicia PROMPT 09 ni amplía funcionalidades.
+Publicación anterior de 08 — 2026-10-28: el usuario solicitó «Directo a github», autorizando commit/push de aquella entrega a main de ArielPerez2001/Last-Signal, realizado en cc13c237731b039d2c9b373bc3613fd2170ba986. La autorización se limita a 08; no se extiende a 09A o funcionalidades posteriores.
 
 ## Etapas completadas
 
@@ -17,8 +17,10 @@ Autorización posterior al cierre de 08 — 2026-10-28: el usuario solicita «Di
 - **06 — Estado y guardado:** JSON versionado en user://, validación completa, respaldo, recuperación transaccional, importación sin duplicar consecuencias, autoguardado y adaptador opcional de ciclo de vida. Pruebas aisladas con procesos separados, sin activar funciones del menú.
 - **07 — Llamadas:** controlador de cinco estados, conversación y opciones reales desde JSON/motor, transcripción derivada, demo de desarrollo con dos desenlaces, recuperación y autoguardado aislados. Interacción GUI y 40 capturas reales en cuatro tamaños.
 - **08 — Evidencias, expedientes y deducciones:** catálogo esquema 2, cinco categorías, fichas descubiertas, filtro/detalle/procedencia, selección de dos y conclusiones por reglas declarativas. Confirmación atómica e idempotente, diálogo actualizado sin reentrada y guardado 2 con lectores legacy 1 conservados. Demo separada de cinco pistas/dos conclusiones; 24 grupos verificados y 56 capturas reales en cuatro tamaños.
+- **09A — Analizador de grabaciones:** catálogo esquema 3, un reproductor físico, tres WAV propios/mezclas alineadas, tres segmentos, texto equivalente, dos observaciones y deducción. Guardado 3 con comprobante mínimo, sin duplicar estado y conservando 1/2. Cuatro suites nuevas, regresión intacta y 48 capturas reales en cuatro tamaños. Sin locuciones de llamadas.
+- **10 — Mapa y despacho:** catálogo esquema 4, tres ubicaciones/sectores técnicos, tres incidentes y dos unidades. Confirmación explícita, asignaciones exclusivas y llegada/resultado/liberación por partes. Estado central enum, consecuencias/evidencias atómicas, guardado 4 y lectores 1/2/3. Tres suites, regresión previa y 48 capturas reales en cuatro tamaños; no integra Caso 001.
 
-Las etapas 09–23 y las subfases 19.1–19.4 permanecen pendientes. El estado detallado y la aceptación de cada etapa están en [ROADMAP.md](ROADMAP.md). Los estados de revisión pendiente en las entregas originales de 02 describen su situación al entregarse, anterior a la aprobación de PROMPT 03. Los registros de 01–07 conservan su alcance histórico al entregarse; los cambios posteriores se detallan por fase.
+00–08, 09A y 10 completados; 09B pospuesto, 11–23 y 19.1–19.4 pendientes. 09 figura en proceso solo por esa división; no bloquea 11 ni autoriza su ejecución. Aceptación en [ROADMAP.md](ROADMAP.md). Registros anteriores conservan el alcance histórico de su entrega; las ampliaciones se detallan por fase. El diseño de 02 fue aprobado en 03.
 
 ## Cambios de fase 01 — 2026-10-27
 
@@ -359,6 +361,173 @@ Incidencias corregidas: el chequeo de versiones contra un array de enteros recha
 
 Pruebas no ejecutadas: Android físico, APK/exportación release, gestos físicos/interrupciones reales, accesibilidad con lector de pantalla, rendimiento móvil, corte eléctrico y llenado físico de disco. Fallos de E/S, notificaciones y toque son simulados en escritorio. La compatibilidad release se comprueba únicamente por política de desarrollo, sin exportar. No se ejecutaron pruebas oficiales del Caso 001, que sigue documental. Los resultados de 07 y anteriores conservan sus evidencias históricas; no se atribuyen a los escenarios nuevos.
 
+## Cambios de PROMPT 09A — 2026-10-28
+
+- Revisados AGENTS/documentación obligatoria, diseño/especificación oficial y código real de AudioPanel, motor/estado, guardado, llamadas/investigación y pruebas. No faltan módulos/documentos requeridos; Audio era un placeholder. Repositorio inicialmente limpio en cc13c237731b039d2c9b373bc3613fd2170ba986. Conservados hashes SHA-256 de 265 archivos para verificar alcance; no hay commits/pushes en esta fase.
+- PROMPT 09A autoriza grabaciones y reemplaza la restricción temporal de audio de 08. Se conserva explícitamente la diferencia con T04/T05 del Caso 001: el diseño oficial otorga por consulta/transcripción inmediata, mientras la demo de 09A exige examen del intervalo. No se modifica historia, guion, fichas o reglas oficiales; reconciliación de integración futura bajo autorización.
+- Añadidos AudioCatalogValidator, AudioAnalysisManager y AudioPlaybackController; el último posee un único AudioStreamPlayer con polifonía uno. Catálogo de grabaciones/variantes/segmentos/reglas, disponibilidad con ConditionEvaluator existente, tipos/rutas/recursos/tolerancia de duración, contexto válido y registros únicos. UI no evalúa reglas ni administra otro inventario.
+- Transporte real Play/Pause/Resume/Stop/Replay/Seek, selección de intervalo y grabación completa diferenciados. Filtros preparados Original/Ambiente/Voces mantienen línea temporal y pausa; tolerancia de longitud 80 ms. Variantes ausentes se deshabilitan sin sustituirlas; todas ausentes producen error controlado. Salir de Audio, ocultar consola o suspender/perder foco pausa y conserva posición; volver no reanuda.
+- Nueva demo no canónica data/audio/audio_analysis_demo.json: cuatro nodos, tres opciones, referencia documental, una grabación de doce segundos/tres variantes/tres intervalos, pista sonora principal/opcional y deducción técnica que desbloquea cierre. Datos de prueba fuera de la campaña y de los ejemplos anteriores. user://audio_analysis_demo separado de producción y otras demos; pruebas solo user://save_tests.
+- Generados tres WAV locales con biblioteca estándar de Python: PCM mono 22050 Hz/16 bit, 264600 muestras por variante. Original mezcla ruido/zumbido/pulsos/marcador; Ambiente destaca tres pulsos y Voces dos tonos sintéticos sin habla humana. Generador reproducible con semilla fija, sin TTS/API/descargas/dependencias. Onda de 120 picos reales del Original, etiquetada como precalculada y ajena a reglas de descubrimiento.
+- Descubrimiento requiere tres segundos reales examinados de un intervalo de cuatro con filtro correcto. Se cualifica desde avance físico, no por abrir, elegir filtro o esperar con audio detenido; seek/cambio de variante reinician escucha parcial. Texto equivalente disponible durante el mismo examen, sin requerir oído fino. Registrar usa EvidenceManager y candidato atómico del motor; repetir no altera revisión/señales/guardado.
+- Esquema narrativo 3 añade audio_analysis al contenido exacto del caso. Guardado 3 añade analysis de cuatro campos solo a entradas sonoras del diario: recording_id/segment_id/filter_id/listened_ms. Mismos ocho campos de envoltura/17 de sesión; desbloqueos, evidencias y reglas confirmadas derivados del estado existente. Lectores/escritores 1/2 conservados, sin migración automática. Reconstrucción aislada valida comprobantes/condiciones/consumos antes de importar sin consecuencias nuevas.
+- AudioPanel reutiliza su escena y Theme, agrega transporte/filtros/intervalos/textos/onda/slider/observaciones/avisos. DispatchConsole enlaza Audio y Expedientes al motor/gestor reales; CallsPanel añade Prueba de análisis de audio solo en desarrollo y recuerda caso/ruta al recuperar. No se introduce voz en llamadas ni se recrea la sesión al navegar. Aviso/reintento de E/S usa el mismo gestor.
+- Nuevos documentos/contratos en [AUDIO_ANALYZER.md](technical/AUDIO_ANALYZER.md), NARRATIVE_ENGINE, SAVE_SYSTEM, INVESTIGATION_SYSTEM y nota en CALL_SYSTEM. Actualizados AGENTS, GDD (solo estado), UI_NAVIGATION, ROADMAP y este registro. Decisiones D-049–D-055. 48 capturas gráficas reales guardadas en docs/validation/prompt_09a.
+
+### Archivos de la entrega 09A
+
+| Tipo | Archivos |
+| --- | --- |
+| Nuevos servicios | scripts/systems/audio_catalog_validator.gd, audio_analysis_manager.gd, audio_playback_controller.gd y sus UID |
+| Nueva UI | scripts/ui/audio_panel.gd, audio_waveform.gd y sus UID |
+| Nuevos datos/recursos | data/audio/audio_analysis_demo.json; assets/audio/demo/demo_original.wav, demo_ambiente.wav, demo_voces.wav y sus .import |
+| Nuevas pruebas | tests/audio/test_audio_catalog.gd, test_audio_analysis.gd, test_audio_playback.gd, test_audio_integration.gd y UID; generate_demo_audio.py |
+| Nueva documentación/evidencia | docs/technical/AUDIO_ANALYZER.md y 48 PNG en docs/validation/prompt_09a, doce por resolución |
+| Código/escenas modificados | scenes/screens/sections/audio_panel.tscn y calls_panel.tscn; scripts/narrative/narrative_engine.gd, narrative_validator.gd, narrative_state_validator.gd; scripts/systems/save_manager.gd, evidence_manager.gd, call_controller.gd; scripts/ui/calls_panel.gd y dispatch_console.gd |
+| Documentos modificados | AGENTS.md; docs/GDD.md, UI_NAVIGATION.md, PROGRESS.md, ROADMAP.md, DECISIONS.md; docs/technical/NARRATIVE_ENGINE.md, SAVE_SYSTEM.md, INVESTIGATION_SYSTEM.md y CALL_SYSTEM.md |
+
+## Validaciones de PROMPT 09A
+
+Godot 4.7.2.stable.official.ed1daf0bf; Windows/Compatibility, OpenGL 3.3.0 sobre Intel UHD Graphics. Todos los resultados finales PASS indicados terminaron con salida 0, sin errores de script/fugas reportados. Los CALL_DIAGNOSTIC negativos de las regresiones siguen siendo fallos inyectados o rechazos esperados, no fallos del proceso.
+
+| Grupo solicitado | Resultado realmente ejecutado |
+| --- | --- |
+| 01 Carga válida | Caso esquema 3, una grabación/tres WAV/tres segmentos/dos reglas válidos |
+| 02 Datos inválidos | Campos/tipos, IDs duplicados, referencias, rutas, tiempos, duración incompatible y efectos arbitrarios rechazados; la sesión no se sustituye |
+| 03 Disponibilidad | Grabación bloqueada ausente de lista/detalle; select_recording/set_filter/play_segment/register_observation no eluden bloqueo ni alteran estado |
+| 04 Desbloqueo | aud_unlock actualiza variable; Audio muestra la grabación desde el estado compartido |
+| 05 Filtros | Resuelve los tres AudioStreamWAV reales, doce segundos; cambiar en PLAYING conserva posición y continuidad, en PAUSED conserva pausa |
+| 06 Variante ausente | Advertencia de catálogo, filtro desconocido rechazado conservando posición y todos los WAV ausentes producen ERROR físico sin tocar investigación |
+| 07 Segmentos | Intervalos correctos; selección inicia desde su inicio y se detiene al final del intervalo |
+| 08 Segmento inválido | ID inexistente rechazado sin mover posición o cambiar estado narrativo |
+| 09 Descubrimiento válido | Audio real Ambiente/s02 y Voces/s03 cualifica tras examen; Registrar incorpora pistas principal/opcional |
+| 10 Descubrimiento inválido | Abrir, filtro aislado, combinación equivocada, escucha corta o seek al final no permite obtener evidencia; sin penalización |
+| 11 Duplicados | Repetir observación devuelve ALREADY_DISCOVERED, con snapshot/revisión/escrituras/eventos intactos |
+| 12 Integración narrativa | Una decisión real desbloquea grabación sin iniciar otro motor/llamada |
+| 13 Expedientes | EvidenceManager y tarjetas reales muestran pista sonora y procedencia; no hay inventario paralelo |
+| 14 Deducciones | aud_reference + aud_pulses confirma aud_d01 mediante la UI/servicio existentes; desbloquea respuesta sin inventar línea hablada |
+| 15 Guardado | Documento real formato/esquema 3, session de 17 campos, comprobante mínimo en diario, sin PCM/posición por frame |
+| 16 Restauración | Instancias nuevas recuperan evidencia/observaciones/deducción e historial exactos, sin señales de descubrimiento/eventos nuevos; player detenido |
+| 17 Pestañas | Abandonar pausa; mantiene contexto/posición y examen en memoria; volver no reanuda; notificación de pausa de aplicación comprobada |
+| 18 Determinismo | Misma secuencia produce snapshot idéntico con listened_ms canónico; restauración rechaza comprobantes cortos/ajenos/ausentes y versiones incompatibles |
+| 19 Regresión | Nueve suites anteriores intactas PASS: narrativa 151/334, guardado 114/905, llamadas 68/402, evidencias 69, deducciones 88 e investigación 2349 |
+| 20 Integridad general | Bootstrap y navegación PASS headless en cuatro tamaños; menú y cuatro secciones conservados, 167 nodos estables antes/después de navegación vacía |
+
+### Resultados y evidencia de reproducción
+
+| Suite/comprobación | Resultado final |
+| --- | --- |
+| test_audio_catalog | PASS, 70 aserciones |
+| test_audio_analysis | PASS, 58 aserciones; reproducción simulada solo para lógica, sin afirmar salida audible |
+| test_audio_playback | PASS, 11 aserciones con AudioStreamPlayer real/WASAPI, cambio activo/pausado, seek finito/acotado y clear |
+| GUI audio headless 720×1280 / 1080×1920 | PASS, 1675 aserciones por ejecución; Dummy procesa PCM, no prueba altavoces |
+| GUI audio headless 1080×2400 / 720×1600 | PASS, 1673 aserciones por ejecución |
+| GUI audio gráfica 720×1280 / 1080×1920 | PASS, 1736 aserciones por ejecución, incluidas doce capturas y salida PCM |
+| GUI audio gráfica 1080×2400 / 720×1600 | PASS, 1734 aserciones por ejecución |
+| Regresión principal previa | PASS, 4480 aserciones en nueve suites sin modificar sus archivos |
+| Total principal de referencia | 6294 = 4480 + 70 + 58 + 11 + 1675, sin volver a sumar resoluciones/capturas como escenarios independientes |
+| Driver real | WASAPI, dispositivo Default; 96768 frames PCM capturados por ejecución gráfica final, pico aproximado 0.26855 en tres sondeos |
+| Transporte comprobado | Play/pausa/reanudar/stop/replay/seek por mouse y toque, cambio de filtro activo/pausado, fin de segmento distinto de grabación completa, sin solapamiento; buscar al final no concede pista |
+| Capturas | 48 PNG de dimensiones físicas exactas, doce estados por resolución, inspeccionados; listas/textos largos desplazables, filtros/tiempos legibles y navegación fija accesible |
+| Importación/arranque | Importación y bootstrap correctos; pruebas gráficas usan el renderer real, sin recursos descargados o herramientas instaladas |
+| Integridad documental/recursos | 340 archivos no vacíos fuera de .git/.godot; 274 enlaces Markdown locales y 134 referencias resolubles a recursos. Nueve referencias de ausencia/ruta insegura excluidas solo en sus pruebas negativas identificadas. PCM verificado: tres archivos mono/16 bit/22050 Hz/264600 muestras |
+| Integridad de alcance | 245 de los 265 archivos iniciales conservan SHA-256 idéntico; 20 modificados y 75 nuevos (48 capturas y 27 archivos de fuente/datos/WAV/importación/documentación). Historia/Caso 001, project.godot, Theme/iconos y pruebas anteriores intactos; HEAD permanece cc13c237731b039d2c9b373bc3613fd2170ba986 |
+
+Las 60 aserciones de captura y una de PCM sobre driver no Dummy explican el incremento gráfico. Las proporciones altas tienen dos aserciones menos por controles internos de scroll visibles; no se omiten requisitos. Contadores son aserciones, no ese número de escenarios independientes. La captura PCM acredita mezcla de audio real del motor sobre WASAPI, no que una persona la escuchó. **Comprobación por escucha humana pendiente.** No se presenta headless como salida audible física.
+
+Doce estados: empty, locked, available, player, paused, segment, qualified, registered, evidence, restored, optional y ended. Muestras: [reproductor](validation/prompt_09a/720x1280/player.png), [segmento](validation/prompt_09a/720x1280/segment.png), [observación lista](validation/prompt_09a/720x1280/qualified.png), [expediente](validation/prompt_09a/720x1280/evidence.png) y [restaurada](validation/prompt_09a/720x1280/restored.png). Matriz de tamaños, recorrido de F5, comandos de las cuatro suites y generador en [AUDIO_ANALYZER.md](technical/AUDIO_ANALYZER.md); regresiones reproducibles en los documentos de cada sistema.
+
+Incidencias corregidas durante desarrollo: un comprobante nuevo añadido por acceso de propiedad generaba clave StringName no admitida por el contrato JSON estricto; se usa clave String explícita. listened_ms parseado como float integral aún no se normalizaba al validar, impidiendo comparar el temporal releído; se añadió validación/normalización numérica estricta antes del replay. La barra HSlider no respondía al ScreenTouch directo al viewport aunque funcionaba con mouse; AudioPanel maneja toque/arrastre local y confirma al soltar, conservando teclado/mouse. Se endurecieron tipos de elementos de catálogo, ocultación de reglas no cualificadas y caché de amplitudes/contexto para no resolver recursos por frame. Las ejecuciones fallidas se corrigieron y no se cuentan como PASS.
+
+Pendientes/no ejecutados: Android físico/APK/release, gestos/interrupciones/auriculares reales, latencia auditiva de dispositivo, lector de pantalla, zonas seguras y perfil de rendimiento móvil. No se llena físicamente disco ni se corta energía. Fallos de E/S anteriores/notificaciones/toques son simulaciones controladas. La información textual equivalente es del mismo examen, sin sincronización de locuciones. Caso 001, sus audios/T04/T05 específicos, voces de llamadas, 09B y mapa/despacho permanecen sin implementar.
+
+## Cambios de PROMPT 10 — 2026-10-28
+
+- Consultados documentos obligatorios y módulos reales. No existe una clase NavigationController: la navegación está en dispatch_console.gd y bottom_navigation.gd y se reutiliza. MapPanel era placeholder. 340 archivos iniciales con hashes conservados; había cambios locales de 09A, que no se descartan ni publican. HEAD permanece cc13c237731b039d2c9b373bc3613fd2170ba986.
+- PROMPT 10 aprueba las fases previas indicadas y autoriza mapa/despacho; 09B está pospuesto y no bloquea 11. Demo separada de R1, lugares, incidentes y guion del Caso 001; no se fija geografía canónica nueva ni se crean bomberos.
+- Creados MapManager, DispatchManager, DispatchRules y DispatchCatalogValidator. Catálogo operations del esquema 4: seis campos de colección/identidad más título; distritos/ubicaciones normalizadas, unidades, incidentes y reglas de partes. Validación de campos/tipos/ID/referencias/condiciones, prioridades, enums/bindings y transiciones; sin expresiones o servicios nuevos.
+- Estados/asignaciones en variables enum existentes de la sesión, sin diccionarios persistentes paralelos. HIDDEN/ACTIVE derivados de condiciones; bindings exclusivos protegidos contra set authored. Asignación valida compatibilidad/visibilidad/disponibilidad; partes exigen unidad/incidente coincidentes y fase exacta. Resultado no libera implícitamente; liberar no reabre el incidente.
+- Reutilizada la transacción externa del motor para estados operativos y consecuencias como un candidato único. Efectos mediante EffectProcessor existente; partes/evidencias por puente EvidenceManager. Nueva revisión/diario después de confirmar, sin reiniciar llamada, cursor, visitas o líneas habladas. Duplicados/rechazos no escriben o repiten eventos.
+- Esquema/formato 4 añade dispatch al registro correspondiente, con comando assign/event y referencias. Envoltura de ocho campos y snapshot de 17; formatos 1/2/3 conservados, sin migración. Reconstrucción aislada verifica asignación/partes y compara todo antes de importar; unidad ocupada sigue ocupada, evidencia/eventos no se reemiten. Respaldo/cotas/algoritmo de archivos conservados.
+- Creada data/maps/dispatch_demo.json: tres ubicaciones/sectores no canónicos, patrulla/ambulancia, tres incidentes (puerto oculto), nueve partes, tres informes, cuatro nodos y seis opciones de conversación. Verificar el sensor antes permite reservar patrulla; enviarla sigue siendo legal pero ocupa recurso hasta cierre/liberación, explicado por el parte y sin penalización arbitraria. Fases solo por acciones narrativas.
+- MapPanel sustituye su escena existente con plano nativo, marcadores táctiles, lista alternativa, detalle/distrito, incidentes, recursos, revisión/confirmación/cancelación, partes y aviso/reintento. Cierre en consulta. MapCanvas no usa imágenes generadas, GPS, mapas externos, zoom, rutas o animaciones. Theme/iconos/Main/proyecto conservados.
+- CallsPanel añade Prueba de mapa y despacho de desarrollo y recuerda caso/carpeta al recuperar. DispatchConsole enlaza MapPanel al motor/gestor actuales, igual que Audio/Expedientes. Demo en user://dispatch_demo, producción aislada y pruebas únicas user://save_tests. No hay nuevo autoload o SaveManager.
+- Añadidas tres suites y [MAP_DISPATCH_SYSTEM.md](technical/MAP_DISPATCH_SYSTEM.md), actualizados contratos/estados y D-056–D-061. Se conservan las aserciones de trece suites anteriores; solo se ajusta limpieza de test_audio_playback tras observar aviso intermitente de recursos al terminar. Sin cambios de reproducción/recursos de audio.
+
+### Archivos de la entrega 10
+
+| Tipo | Archivos |
+| --- | --- |
+| Nuevos servicios | scripts/systems/map_manager.gd, dispatch_manager.gd, dispatch_rules.gd, dispatch_catalog_validator.gd y sus UID |
+| Nueva UI | scripts/ui/map_panel.gd, map_canvas.gd y sus UID |
+| Nuevos datos/pruebas | data/maps/dispatch_demo.json; tests/dispatch/test_map_manager.gd, test_dispatch_manager.gd, test_dispatch_integration.gd y UID |
+| Nueva documentación/evidencia | docs/technical/MAP_DISPATCH_SYSTEM.md; 48 PNG en docs/validation/prompt_10 |
+| Código/escenas modificados | scenes/screens/sections/map_panel.tscn, calls_panel.tscn; scripts/narrative/narrative_engine.gd, narrative_validator.gd, narrative_state_validator.gd; scripts/systems/call_controller.gd, evidence_manager.gd, save_manager.gd; scripts/ui/calls_panel.gd, dispatch_console.gd |
+| Auxiliar anterior modificado | tests/audio/test_audio_playback.gd: liberar el Node de prueba y esperar 0.2 s para drenar mixer antes de terminar, sin retirar/cambiar sus once aserciones |
+| Documentos modificados | AGENTS.md; docs/GDD.md, UI_NAVIGATION.md, ROADMAP.md, PROGRESS.md, DECISIONS.md; docs/technical/NARRATIVE_ENGINE.md, SAVE_SYSTEM.md, INVESTIGATION_SYSTEM.md, CALL_SYSTEM.md, AUDIO_ANALYZER.md |
+
+## Validaciones de PROMPT 10
+
+Godot 4.7.2.stable.official.ed1daf0bf, Windows/Compatibility, OpenGL 3.3.0 / Intel UHD Graphics. Resultados finales PASS con salida 0. CALL_DIAGNOSTIC write_error en integración es el fallo deliberado de escritura y reintento. No se presenta ese diagnóstico esperado como fallo de script. Ningún error crítico pendiente detectado en el alcance ejecutado.
+
+| Grupo de aceptación | Comprobación ejecutada |
+| --- | --- |
+| 01 Carga | Catálogo operativo válido reconocido y sesión técnica iniciada |
+| 02 Datos inválidos | Campos/tipos/colecciones/ID/referencias/coordenadas/enums/condiciones/transiciones/efectos inválidos rechazados; carga de mapa inexistente conserva sesión |
+| 03 Ubicaciones | Solo dos iniciales; tres tras comunicación portuaria; consultas/copias no alteran estado |
+| 04 Incidente oculto | Puerto ausente de marcadores/lista/detalle; acceso directo indistinguible de ID inexistente |
+| 05 Desbloqueo | dsp_report/dsp_new_port cambian condiciones reales del motor |
+| 06 Unidades | PATROL_01 y AMBULANCE_01 disponibles al iniciar, tipos correctos |
+| 07 Asignación válida | Patrulla/sensor y ambulancia/atención confirman vínculos unidad-incidente y evento |
+| 08 Ocupada | Patrulla ASSIGNED/BUSY no puede atender puerto simultáneamente |
+| 09 Incompatible | Patrulla no sustituye ambulancia y viceversa; snapshot intacto |
+| 10 Doble pulsación | Asignación repetida ALREADY_PROCESSED y callback de confirmación vacío sin segundo despacho |
+| 11 Consecuencia | Llegada al sensor fija false_alarm, explica motivo; resultado portuario fija port_done y cambia opciones |
+| 12 Evidencia | Partes de resultado conceden informes reales mediante EvidenceManager una vez |
+| 13 Liberación | Solo parte release válido, después de resultado, vuelve AVAILABLE y limpia asignación coincidente |
+| 14 Liberación inválida | Incidente ajeno, regla de otra fase o fase anterior pendiente se rechazan sin liberar otros recursos |
+| 15 Resolución | Resultado cambia a RESOLVED/CLOSED, unidad sigue BUSY hasta parte de liberación; repetición idempotente |
+| 16 Guardado | Disco real formato/esquema 4, session de 17 campos; asignación ocupada persistida |
+| 17 Restauración | Motor/gestor nuevos recuperan snapshot exacto con unidad BUSY |
+| 18 Sin duplicaciones | Restaurar no emite nuevos eventos/evidencias ni libera o redistribuye unidades |
+| 19 Navegación | Llamadas/Audio/Mapa/Expedientes conserva snapshot, llamada y ocupación sin tiempo narrativo |
+| 20 Nueva sesión | Reinicio limpia asignaciones, incidentes conocidos y selección de presentación |
+| 21 Rechazo seguro | Unidad inexistente, revisión obsoleta, reentrada y comandos inválidos conservan estado completo |
+| 22 Determinismo | Misma secuencia de asignación/partes produce snapshot idéntico |
+| 23 Persistencia inválida | Unidad/incidente/comando/asignación/versiones incompatibles rechazados manteniendo sesión activa |
+| 24 Integración | GUI real llamada→incidente→mapa→confirmación→parte→nueva opción; historial/visitas no se repiten |
+| 25 Regresión | Trece suites anteriores PASS: narrativa/guardado/llamadas/evidencias/deducciones/audio |
+
+Adicional: fixture en memoria condiciona todas las opciones a false_alarm=false. El parte de llegada intentaría fijarlo true; se rechaza y revierte estados de unidad/incidente, variables, eventos y diario completos. La GUI comprueba cancelación sin efectos, modo consulta final y fallo de guardado/reintento del mismo estado.
+
+| Suite/comprobación | Resultado final |
+| --- | --- |
+| test_map_manager | PASS, 65 aserciones |
+| test_dispatch_manager | PASS, 63 aserciones |
+| Integración headless 720×1280 / 1080×1920 | PASS, 1714 por ejecución |
+| Integración headless 1080×2400 / 720×1600 | PASS, 1712 por ejecución |
+| Integración gráfica 720×1280 / 1080×1920 | PASS, 1774 por ejecución, incluidas doce capturas |
+| Integración gráfica 1080×2400 / 720×1600 | PASS, 1772 por ejecución |
+| Trece suites previas | PASS: 151 + 334 + 114 + 905 + 68 + 402 + 69 + 88 + 2349 + 70 + 58 + 11 + 1675 = 6294 |
+| Referencia principal | 8136 = 6294 + 65 + 63 + 1714; no cuenta repeticiones de tamaño/capturas como escenarios nuevos |
+| Bootstrap/navegación | PASS headless en cuatro tamaños; 183 nodos estables antes/después de navegación vacía |
+| Capturas reales | 48 PNG de dimensiones exactas; doce estados por tamaño, revisados visualmente; mapa/selección/confirmación/estados/scroll/barra inferior legibles |
+| Importación/arranque | Importación final salida 0 sin diagnósticos de script; nueve UID nuevos generados. Arranque normal headless y gráfico con salida 0 |
+| Integridad documental/recursos | 408 archivos no vacíos fuera de .git/.godot; 315 enlaces Markdown locales válidos y 160 referencias resolubles a recursos. Diez referencias inseguras/ausentes excluidas exclusivamente en sus pruebas negativas identificadas |
+| Integridad de alcance | 318 de los 340 archivos iniciales con SHA-256 idéntico; 22 modificados y 68 nuevos (48 PNG y 20 fuentes/datos/documentación/UID). Historia/Caso 001, project.godot, Theme/iconos, WAV/datos/código de reproducción anteriores conservados. Sin commits/pushes |
+
+Las 60 aserciones adicionales gráficas verifican doce capturas por tamaño. Diferencia de dos entre proporciones por controles internos de scroll visibles. Son aserciones, no ese número de escenarios independientes. Matriz de capturas/comandos y recorrido manual en [MAP_DISPATCH_SYSTEM.md](technical/MAP_DISPATCH_SYSTEM.md). Muestras: [plano](validation/prompt_10/720x1280/map.png), [confirmación](validation/prompt_10/720x1280/confirmation.png), [mapa recuperado](validation/prompt_10/720x1280/restored.png) y [evidencias](validation/prompt_10/720x1280/evidence.png).
+
+Incidencias corregidas: helper _set colisionaba con una función virtual de Object; renombrado a _set_effect y compilación/arranque correctos. Se añadió tipo/estructura estricto y protección de bindings para evitar estados arbitrarios. La primera captura de confirmación no mostraba el bloque fuera del scroll: el auxiliar lo revela antes de capturar; estado final ahora informa operaciones cerradas/consulta. Un auxiliar anterior de audio emitió avisos intermitentes de cuatro ObjectDB al terminar antes de drenar recursos nativos; se libera su player y espera el mixer. Tres repeticiones finales pasan sin aviso, con sus once aserciones intactas. Las ejecuciones fallidas/avisadas previas no se confunden con resultados finales limpios.
+
+Pendientes/no ejecutados: Android físico, APK/release, gestos/zonas seguras reales, lector de pantalla, rendimiento/memoria móvil, cortes eléctricos o disco físicamente lleno. Toques/notificaciones/fallos de E/S son simulaciones controladas. 09B está pospuesto, no ausente por error; no bloquea 11. No hay R1/Caso 001 integrado, geografía canónica completa, bomberos, GPS, tráfico, IA, vehículos controlables o resultados definitivos. Trabajo detenido antes de 11, sin commits/pushes.
+
+## Publicación autorizada después de PROMPT 10
+
+- El usuario autorizó expresamente «Directo a github» después del cierre de 10. Esta autorización permite el commit y push de la entrega; no amplía el desarrollo a 09B ni a 11.
+- Se incluyen juntos los cambios locales pendientes de 09A y 10, porque la integración de mapa/guardado utiliza la base de análisis de audio. Se conservan sus pruebas, recursos propios, documentación y capturas.
+- Rama de destino: main de ArielPerez2001/Last-Signal. Antes de preparar la entrega, HEAD y origin/main coincidían en cc13c23 y la comprobación de diferencias no detectó errores de espacios. Las validaciones funcionales y limitaciones siguen siendo las documentadas arriba.
+
 ## Problemas conocidos y pendientes
 
 - La carpeta ya tiene repositorio Git local y origin configurado por autorización posterior del usuario. La futura publicación de otros cambios sigue requiriendo autorización explícita.
@@ -368,14 +537,14 @@ Pruebas no ejecutadas: Android físico, APK/exportación release, gestos físico
 - No hay contradicciones detectadas entre MVP y campaña. PROMPT 02 confirma incendio y clausura en 1981; sus fechas exactas siguen propuestas. Su relación causal con el incidente general sigue abierta.
 - El objetivo de 8–15 minutos del Caso 001 sigue siendo una estimación sin pruebas de personas reales. El núcleo genérico y su persistencia están probados en 05–06; su integración con el contenido oficial y sus invariantes específicas siguen pendientes.
 - Android sigue pendiente: no hay APK, exportación, SDK validado, plantillas de exportación verificadas ni prueba en dispositivo real. Las capturas son de escritorio y no demuestran zonas seguras o rendimiento móvil.
-- Menú y navegación siguen funcionando; Llamadas y Expedientes comparten investigación técnica solo en desarrollo. Audio/Mapa permanecen vacíos. No hay llamadas oficiales del Caso 001, reproducción/filtros de audio, mapa funcional, despacho, resultados definitivos o Continuar activado.
+- Menú y cuatro módulos comparten demos técnicas solo en desarrollo; Mapa ya consulta y despacha con partes explícitos. No hay contenido oficial del Caso 001, voces/subtítulos, geografía canónica completa, resultados definitivos o Continuar activado. 09B pospuesto no bloquea 11.
 - Los márgenes seguros Android tienen adaptación por API, pendiente de probar en dispositivo. Retroceso gestual/físico, densidad táctil real, lector de pantalla y rendimiento móvil permanecen pendientes. No hay APK ni pruebas en teléfono.
 - Créditos carece todavía de autoría confirmada y Configuración no permite ajustar preferencias; ambas limitaciones son visibles en la interfaz.
 - El validador no demuestra todas las combinaciones de condiciones. Una carga estructuralmente válida puede tener un inicio bloqueado: start_case informa el error sin sesión parcial. Las elecciones fallidas conservan su estado anterior. Los contratos de variantes de texto y resolución específica del caso siguen pendientes de integración autorizada.
-- El guardado 1 para esquema 1 y guardado 2 para esquema 2 exigen contenido/fingerprint exactos y no incluyen migraciones. Usan I/O síncrona, límites documentados y bloqueos de hilo principal dentro de un proceso; no hay garantía de atomicidad universal, durabilidad eléctrica o coordinación entre procesos externos. Las demos informan/reintentan; las decisiones de reemplazo y salida de la interfaz oficial siguen futuras.
+- Guardados 1/2/3/4 exigen contenido/fingerprint exactos, sin migraciones. I/O síncrona/cotas/bloqueos del proceso, sin atomicidad universal o durabilidad eléctrica. Demos informan/reintentan; políticas oficiales de salida/reemplazo siguen futuras. Audio sin confirmar/posición y selecciones operativas son temporales; observaciones/asignaciones/partes confirmados persisten.
 - La transcripción deriva presentación lógica confirmada, no acredita lectura humana o dibujo completo antes de una interrupción. Su reconstrucción y los controles crecen con el historial; no se ha medido rendimiento móvil. La demostración está limitada y el guardado conserva sus cotas de 06.
 - La UI de investigación permite dos fichas por relación; servicio/esquema admiten tres para contenido futuro. No hay reglas repetibles o ambiguas, IA de deducción, inventario convencional o migración de partidas. El coste de regenerar tarjetas y reconstruir registros no se ha perfilado en Android.
 
 ## Próxima etapa autorizable
 
-**09 — Analizador de audio**, únicamente después de recibir un prompt con autorización explícita. Investigación genérica, llamadas y guardado están conectados en una demo fuera de campaña; el Caso 001 sigue sin integrar. **La fase 08 termina aquí y no se inicia 09.** Al reanudar, consultar primero [AGENTS.md](../AGENTS.md), [INVESTIGATION_SYSTEM.md](technical/INVESTIGATION_SYSTEM.md), [CALL_SYSTEM.md](technical/CALL_SYSTEM.md), [NARRATIVE_ENGINE.md](technical/NARRATIVE_ENGINE.md), [SAVE_SYSTEM.md](technical/SAVE_SYSTEM.md) y los documentos pertinentes.
+**11 — Integración del Caso 001**, únicamente tras autorización explícita de su prompt. 09B permanece pospuesto y no lo bloquea. **La fase 10 termina aquí: no se inicia 11, no se implementa 09B y no se realizan commits/pushes.** Al reanudar consultar [AGENTS.md](../AGENTS.md), [MAP_DISPATCH_SYSTEM.md](technical/MAP_DISPATCH_SYSTEM.md), [AUDIO_ANALYZER.md](technical/AUDIO_ANALYZER.md), [INVESTIGATION_SYSTEM.md](technical/INVESTIGATION_SYSTEM.md), [CALL_SYSTEM.md](technical/CALL_SYSTEM.md), [NARRATIVE_ENGINE.md](technical/NARRATIVE_ENGINE.md), [SAVE_SYSTEM.md](technical/SAVE_SYSTEM.md) y fuentes oficiales del caso.

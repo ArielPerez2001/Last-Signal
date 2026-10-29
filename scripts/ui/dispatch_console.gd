@@ -45,3 +45,5 @@ func _update_call_status(view: Dictionary) -> void:
 
 func _bind_investigation(controller: RefCounted) -> void:
 	%EvidencePanel.bind_engine(controller.engine, controller.saves)
+	%AudioPanel.bind_engine(controller.engine, controller.saves)
+	%MapPanel.bind_engine(controller.engine, controller.saves)

@@ -8,6 +8,8 @@ Integración PROMPT 07 · 2026-10-28: [llamadas de desarrollo](CALL_SYSTEM.md) c
 
 Integración PROMPT 08 · 2026-10-28: [investigación](INVESTIGATION_SYSTEM.md), esquema 2 con catálogo/acciones/deducciones y confirmación externa atómica. Esquema 1 conserva su contrato; los apartados originales de 05–07 describen esa versión salvo indicación expresa. Guardado 2 solo para casos esquema 2; sin migración automática.
 
+Integración PROMPT 09A · 2026-10-28: [analizador de grabaciones](AUDIO_ANALYZER.md), esquema 3 con audio_analysis y comprobantes mínimos en el diario. Lectores 1/2 conservados, sin migración automática. No se integra audio de llamadas o Caso 001.
+
 El motor interpreta casos JSON, mantiene una sesión temporal y entrega vistas y señales independientes de Godot Control. En 07, Llamadas posee un controlador que lo usa al iniciar o recuperar expresamente una demo de desarrollo; no se inicia narrativa al abrir el menú. [test_narrative.json](../../data/cases/test_narrative.json) conserva la prueba de núcleo y [ui_call_demo.json](../../data/cases/ui_call_demo.json) añade prueba visual fuera de campaña. El Caso 001 sigue siendo documentación de diseño, sin integrar.
 
 ## Responsabilidades y archivos
@@ -345,10 +347,28 @@ En esquema 2, choice_id del registro puede ser opción, consulta o deducción. L
 
 Los 17 campos de NarrativeSessionState y ConditionEvaluator/EffectProcessor permanecen sin cambios. Las conclusiones se derivan de executed_actions; no hay segunda colección persistente. SaveManager usa formato 2 para esta semántica y conserva formato 1 para esquema 1. Se mantienen los límites de importación, reentradas bloqueadas, referencias exactas y compatibilidad por fingerprint.
 
+## Esquema 3 y observaciones sonoras — PROMPT 09A
+
+El esquema 3 extiende el 2 con audio_analysis: recordings y discovery_rules dentro del JSON exacto del caso. AudioCatalogValidator comprueba metadatos/recursos/intervalos/filtros; NarrativeValidator reutiliza sus validadores de condiciones y referencias. Cada regla tiene ID global único y evidencia existente; no admite efectos arbitrarios. Condiciones/evaluador/procesador y los 17 campos de NarrativeSessionState permanecen intactos.
+
+Nuevas API internas: get_audio_catalog devuelve una copia completa para servicios; register_audio_observation(rule_id, proof, expected_revision = -1) valida desbloqueo actual, condición adicional, regla/contexto y umbral de examen. AudioAnalysisManager es la API de jugador: solo ofrece recursos desbloqueados y genera proof después de escuchar el avance del reproductor, sin aceptar segundos o ID de evidencia desde UI. EvidenceManager.discover_from_audio enlaza esa confirmación con el motor.
+
+Proof contiene exactamente recording_id, segment_id, filter_id y listened_ms entero. Solo una transacción de audio del esquema 3 añade analysis al registro existente; choice_id identifica la regla. Se deriva add_to_set de la evidencia y el evento opcional declarado, y se reutiliza el candidato atómico de 08. Un rechazo conserva estado; una confirmación emite las señales existentes y actualiza opciones, sin nueva visita/node_changed o mensaje hablado. Repetida devuelve ALREADY_DISCOVERED sin efectos nuevos.
+
+La reconstrucción aislada reconoce reglas sonoras, revalida proof/condiciones/umbrales y reconstruye esas acciones con los consumos intercalados. No acepta analysis en entradas de diálogo/consulta/deducción ni en esquemas anteriores. Normaliza listened_ms solo después de validar integralidad/tipo/rango. Restaurar no emite nuevos descubrimientos/eventos o escribe archivos. La partida sigue teniendo 17 campos; formato 3 declara la semántica ampliada del diario. Contrato completo y límites en [AUDIO_ANALYZER.md](AUDIO_ANALYZER.md).
+
+## Esquema 4 y operaciones — PROMPT 10
+
+Esquema 4 extiende 3 con operations: map_id/title/districts/locations/units/incidents/event_rules. La validación sonora de 3 sigue disponible; la demo operativa usa audio_analysis vacío. DispatchCatalogValidator valida catálogo, estados iniciales/bindings y grafo permitido. NarrativeValidator reutiliza condiciones/referencias/efectos y registra los ID de asignación generados y partes en el espacio global de acciones.
+
+get_dispatch_catalog devuelve una copia interna. process_dispatch(command, expected_revision = -1) evalúa mediante DispatchRules y confirma con el candidato externo de 08; no crea otra sesión o procesador. Los estados/asignaciones operativos son variables enum centrales enlazadas por catálogo; se rechazan efectos authored que intenten escribir esos bindings. Solo la operación válida genera sus efectos de unidad/incidente, junto con las consecuencias narrativas/evidencias del parte. Rechazos preservan todo el estado.
+
+En esquema 4, una transacción operativa añade dispatch al registro de tres campos. El comando es assign con unit_id/incident_id, o event con event_id adicional. choice_id debe coincidir con la acción/regla que realmente confirma; no se permiten comprobantes de audio/dispatch en la misma entrada. La reconstrucción aislada usa process_dispatch para revalidar orden, revisión/nodo, disponibilidad, compatibilidad y partes. No publica efectos vivos ni inventa líneas de conversación; no reentra al nodo al despachar. Las 17 propiedades de sesión y ConditionEvaluator/EffectProcessor permanecen sin cambios. Formato 4 declara la semántica ampliada; 1/2/3 conservados. Contrato completo en [MAP_DISPATCH_SYSTEM.md](MAP_DISPATCH_SYSTEM.md).
+
 ## Limitaciones e integraciones posteriores
 
-El guardado en disco existe desde 06 como servicio separado. En 07 se añadió conversación y en 08 expediente/deducciones genéricos con demos aisladas accesibles solo en desarrollo. No hay analizador, despacho, servicios ni Caso 001 jugable. F5 conserva el menú de 04 y no inicia una sesión por sí solo.
+El guardado existe desde 06. 07 añade conversación, 08 expediente/deducciones, 09A grabaciones y 10 mapa/despacho genéricos con demos aisladas. No hay locuciones/subtítulos, servicios externos o Caso 001 jugable. F5 conserva el menú de 04 y no inicia una sesión por sí solo.
 
-06 integra persistencia, 07 presenta nodo/opciones e historial y 08 conecta investigación sin reentradas al diálogo. 09 y 10 incorporarán audio/mapa mediante contratos autorizados; 11–12 integrarán y comprobarán el caso y sus tres resultados. Las implementaciones de 09 en adelante requieren autorización posterior.
+09B está pospuesto intencionalmente y no bloquea 11. 11–12 integrarán/comprobarán el caso y sus resultados únicamente bajo autorización; no se inician por esta documentación.
 
-No se exportó APK ni se probó el motor en dispositivo Android real. La evidencia gráfica de 05 descrita arriba conserva su alcance histórico; los ensayos posteriores de persistencia, llamadas e investigación se registran en [PROGRESS.md](../PROGRESS.md). **PROMPT 08 cerrado; PROMPT 09 no autorizado.**
+No se exportó APK ni se probó Android físico. La evidencia de 05 conserva su alcance histórico; ensayos posteriores en [PROGRESS.md](../PROGRESS.md). **PROMPT 10 cerrado; no iniciar 11. 09B sigue pospuesto.**

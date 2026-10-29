@@ -5,6 +5,8 @@ signal operation_completed(result: Dictionary)
 const StateValidator = preload("res://scripts/narrative/narrative_state_validator.gd")
 const SAVE_VERSION: int = 1
 const INVESTIGATION_SAVE_VERSION: int = 2
+const AUDIO_SAVE_VERSION: int = 3
+const DISPATCH_SAVE_VERSION: int = 4
 const GAME_ID: String = "ultima_senal"
 const DEFAULT_DIRECTORY: String = "user://saves"
 const MAX_FILE_BYTES: int = 4 * 1024 * 1024
@@ -103,7 +105,7 @@ func _save() -> Dictionary:
 	_dirty = true
 	var metadata: Dictionary = _engine.get_case_metadata()
 	var document: Dictionary = {
-		"save_version": INVESTIGATION_SAVE_VERSION if metadata.narrative_schema_version == 2 else SAVE_VERSION, "game_id": GAME_ID,
+		"save_version": int(metadata.narrative_schema_version), "game_id": GAME_ID,
 		"case_id": metadata.case_id, "content_version": metadata.content_version,
 		"narrative_schema_version": metadata.narrative_schema_version,
 		"content_fingerprint": metadata.content_fingerprint,
@@ -274,13 +276,13 @@ func _validate_document(value: Variant) -> Dictionary:
 	if not value is Dictionary or not StateValidator.json_safe(value, 0, [0]) or not StateValidator.has_fields(value, DOCUMENT_FIELDS):
 		return _result(false, "invalid_save", "Formato incompleto, campos desconocidos o valores no JSON.")
 	var loaded_schema: int = int(_engine.get_case_metadata().get("narrative_schema_version", 1)) if _engine != null else 1
-	var expected_save_version: int = INVESTIGATION_SAVE_VERSION if loaded_schema == 2 else SAVE_VERSION
+	var expected_save_version: int = loaded_schema
 	if not StateValidator.is_integer(value.save_version, expected_save_version, expected_save_version):
 		return _result(false, "incompatible_save_version", "Versión de guardado no compatible.")
 	for field: String in ["game_id", "case_id", "content_version", "content_fingerprint", "saved_at"]:
 		if not value[field] is String:
 			return _result(false, "invalid_metadata", "Se esperaba texto en " + field)
-	if not StateValidator.is_integer(value.narrative_schema_version, 1, 2):
+	if not StateValidator.is_integer(value.narrative_schema_version, 1, 4):
 		return _result(false, "incompatible_content", "Esquema narrativo no compatible.")
 	if value.game_id != GAME_ID:
 		return _result(false, "wrong_game", "El archivo no pertenece a Última Señal.")

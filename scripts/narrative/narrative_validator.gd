@@ -2,6 +2,11 @@ extends RefCounted
 
 const SCHEMA_VERSION: int = 1
 const INVESTIGATION_SCHEMA_VERSION: int = 2
+const AUDIO_SCHEMA_VERSION: int = 3
+const DISPATCH_SCHEMA_VERSION: int = 4
+const DispatchCatalog = preload("res://scripts/systems/dispatch_catalog_validator.gd")
+const DispatchRules = preload("res://scripts/systems/dispatch_rules.gd")
+const AudioCatalog = preload("res://scripts/systems/audio_catalog_validator.gd")
 const Evidence = preload("res://scripts/systems/evidence_manager.gd")
 const MAX_SAFE_INTEGER: int = 9007199254740991
 const MAX_CONDITION_DEPTH: int = 32
@@ -29,12 +34,16 @@ func validate(input: Variant, source: String = "memory") -> Dictionary:
 		_error("invalid_root", "La raíz debe ser un objeto.", "$")
 		return _report()
 	var case_data: Dictionary = input
-	if not is_integer(case_data.get("schema_version")) or int(case_data.get("schema_version")) not in [SCHEMA_VERSION, INVESTIGATION_SCHEMA_VERSION]:
-		_error("incompatible_schema", "Se requiere schema_version 1 o 2 numérico.", "schema_version")
+	if not is_integer(case_data.get("schema_version")) or int(case_data.get("schema_version")) not in [SCHEMA_VERSION, INVESTIGATION_SCHEMA_VERSION, AUDIO_SCHEMA_VERSION, DISPATCH_SCHEMA_VERSION]:
+		_error("incompatible_schema", "Se requiere schema_version 1, 2, 3 o 4 numérico.", "schema_version")
 		return _report()
 	var fields: Array = ["schema_version", "case_id", "content_version", "title", "initial_node", "initial_state", "variables", "characters", "evidence_catalog", "event_catalog", "endings", "nodes"]
-	if int(case_data.schema_version) == INVESTIGATION_SCHEMA_VERSION:
+	if int(case_data.schema_version) >= INVESTIGATION_SCHEMA_VERSION:
 		fields.append("investigation")
+	if int(case_data.schema_version) >= AUDIO_SCHEMA_VERSION:
+		fields.append("audio_analysis")
+	if int(case_data.schema_version) == DISPATCH_SCHEMA_VERSION:
+		fields.append("operations")
 	_keys(case_data, fields, "$")
 	_identifier(case_data.get("case_id"), "case_id")
 	_string(case_data.get("title"), "title")
@@ -48,8 +57,12 @@ func validate(input: Variant, source: String = "memory") -> Dictionary:
 	_validate_variables(case_data.get("variables"))
 	_validate_initial_state(case_data.get("initial_state"))
 	_validate_nodes(case_data.get("nodes"))
-	if int(case_data.schema_version) == INVESTIGATION_SCHEMA_VERSION:
+	if int(case_data.schema_version) >= INVESTIGATION_SCHEMA_VERSION:
 		_validate_investigation(case_data.get("investigation"))
+	if int(case_data.schema_version) >= AUDIO_SCHEMA_VERSION:
+		_validate_audio(case_data.get("audio_analysis"), str(case_data.get("case_id", "")))
+	if int(case_data.schema_version) == DISPATCH_SCHEMA_VERSION and _errors.is_empty():
+		_validate_dispatch(case_data)
 	_validate_references()
 	if _identifier(case_data.get("initial_node"), "initial_node"):
 		if not _nodes.has(case_data.initial_node):
@@ -148,6 +161,48 @@ func _validate_investigation(input: Variant) -> void:
 				if not definition.get("result_type") is String or definition.result_type != "VALID" or not definition.get("repeatable", false) is bool or definition.get("repeatable", false):
 					_error("invalid_deduction", "Solo se admiten reglas VALID no repetibles.", path)
 				_condition(definition.get("additional_conditions", {"op": "always"}), path + ".additional_conditions", "")
+
+
+func _validate_dispatch(case_data: Dictionary) -> void:
+	var input: Variant = case_data.get("operations")
+	var report: Dictionary = DispatchCatalog.new().validate(input, case_data)
+	_errors.append_array(report.errors)
+	if not report.ok:
+		return
+	for item: Dictionary in input.locations:
+		_condition(item.visible_when, "operations.visible_when", "")
+		for detail: Dictionary in item.information:
+			_condition(detail.condition, "operations.information", "")
+	for item: Dictionary in input.incidents:
+		_condition(item.unlock_conditions, "operations.unlock_conditions", "")
+		_condition(item.activate_conditions, "operations.activate_conditions", "")
+		for unit: Dictionary in input.units:
+			_register_dispatch_id(DispatchRules.assignment_id(unit.unit_id, item.id))
+	for rule: Dictionary in input.event_rules:
+		_register_dispatch_id(rule.id)
+		_condition(rule.condition, "operations.condition", "")
+		_effects(rule.effects, "operations.effects", "")
+
+
+func _register_dispatch_id(id: String) -> void:
+	if _options.has(id):
+		_error("duplicate_id", "ID operativo en colisión con otra acción.", "operations.id")
+	_options[id] = "dispatch"
+
+
+func _validate_audio(input: Variant, case_id: String) -> void:
+	var report: Dictionary = AudioCatalog.new().validate(input, case_id, _evidence, _events)
+	_errors.append_array(report.errors)
+	_warnings.append_array(report.warnings)
+	if not report.ok:
+		return
+	for recording: Dictionary in input.recordings:
+		_condition(recording.unlocked_by, "audio_analysis.unlocked_by", "")
+	for rule: Dictionary in input.discovery_rules:
+		if _options.has(rule.id):
+			_error("duplicate_id", "Las reglas de audio comparten el espacio global de acciones.", "audio_analysis.id")
+		_options[rule.id] = "audio"
+		_condition(rule.get("additional_conditions", {"op": "always"}), "audio_analysis.additional_conditions", "")
 
 
 func _validate_characters(input: Variant) -> void:

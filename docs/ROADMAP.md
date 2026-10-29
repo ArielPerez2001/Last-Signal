@@ -2,7 +2,7 @@
 
 Actualizado: 2026-10-28. Las fases son planificación y no autorizan ejecución. Cada prompt posterior delimita el trabajo; una etapa puede requerir varios prompts.
 
-Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**. Una dependencia futura no convierte por sí sola una fase en bloqueada. Las etapas 00–08 están completadas. Llamadas y Expedientes comparten una investigación de prueba con motor y guardado aislado; menú/navegación se conservan, Continuar sigue deshabilitado y no hay Caso 001 jugable. PROMPT 09 requiere autorización explícita.
+Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**. Las etapas 00–08, 09A y 10 están completadas. Cuatro módulos con demos y guardado aislado; Continuar deshabilitado y Caso 001 sin integrar. 09B pospuesto intencionalmente, no es error/dependencia bloqueante de 10 o 11. 09 figura en proceso solo por esa división; ninguna etapa de planificación autoriza continuar.
 
 ## 00. Contexto maestro
 
@@ -76,13 +76,29 @@ Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**
 - **Aceptación:** reproducir deducciones válidas, incompletas y equivocadas según reglas aprobadas y conservar sus estados.
 - **Estado:** completado. Catálogo esquema 2, cinco categorías centrales, expediente de fichas descubiertas, detalle/procedencia, selección de dos y reglas de conjunto exacto. Deducciones atómicas con efectos únicos, desbloqueo real de diálogo y formato de guardado 2; lectores originales de esquema/formato 1 conservados. Demo no canónica de cinco pistas/dos conclusiones, 24 grupos de aceptación verificados, regresión previa correcta y 56 capturas reales en cuatro resoluciones. Contratos, procedimientos y límites en [INVESTIGATION_SYSTEM.md](technical/INVESTIGATION_SYSTEM.md). Android y Caso 001 oficial pendientes; fase detenida antes de 09.
 
-## 09. Analizador de audio
+## 09. Audio — fases autorizadas por separado
 
-- **Objetivo:** descubrir pistas mediante grabaciones y filtros simulados.
+- **Objetivo:** descubrir pistas mediante grabaciones/filtros simulados en 09A y abordar posteriormente voces/subtítulos de llamadas en 09B, solo bajo su prompt.
 - **Dependencias:** 02, 04, 06 y 08.
-- **Entregables:** reproducción, selección de fragmentos, filtros simulados y alternativas textuales.
+- **Entregables:** 09A: reproducción, selección de fragmentos, filtros simulados y alternativas textuales; 09B: alcance de locuciones/subtítulos por definir en su autorización.
 - **Aceptación:** pistas accesibles por los medios aprobados, resultados reproducibles y ausencia de procesamiento avanzado o reconocimiento de voz.
-- **Estado:** pendiente.
+- **Estado:** en proceso. 09A completado y detenido; 09B pendiente de autorización, sin implementación anticipada.
+
+### 09A. Analizador de grabaciones
+
+- **Objetivo:** explorar audio real y registrar pistas mediante acciones válidas.
+- **Dependencias:** 04–08 y autorización explícita de PROMPT 09A.
+- **Entregables:** catálogo validado, reproductor único, tres variantes WAV locales de doce segundos, tres intervalos/textos equivalentes, dos pistas, integración con expediente/deducción/guardado y pruebas.
+- **Aceptación:** transporte/filtros/segmentos reales, examen previo al registro, idempotencia y recuperación; regresión anterior y GUI en cuatro tamaños. Sin integrar Caso 001 o voces de llamadas.
+- **Estado:** completado. [AUDIO_ANALYZER.md](technical/AUDIO_ANALYZER.md) documenta esquema/formato 3 con compatibilidad 1/2, APIs, 20 grupos de pruebas y evidencia real. Comprobación por escucha humana y Android pendientes; no se presentan como superadas.
+
+### 09B. Voces de llamadas y subtítulos
+
+- **Objetivo:** abordar presentación sonora de diálogos y sincronización textual según un prompt posterior.
+- **Dependencias:** 07, 09A y autorización explícita de PROMPT 09B.
+- **Entregables:** por definir en su prompt; ningún proveedor de voces seleccionado o incorporado.
+- **Aceptación:** por precisar al autorizar, incluida coordinación de fuentes y alternativa textual.
+- **Estado:** pendiente y pospuesto intencionalmente por PROMPT 10; no bloquea 10/11. Sin TTS, gestor de locuciones, subtítulos sincronizados, APIs o voces.
 
 ## 10. Mapa y despacho
 
@@ -90,12 +106,12 @@ Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**
 - **Dependencias:** 02, 04, 05, 06 y 08.
 - **Entregables:** mapa básico, ubicaciones, unidades disponibles y reglas de despacho.
 - **Aceptación:** disponibilidad y consecuencias coherentes con el diseño, incluidos intentos de asignación no válidos.
-- **Estado:** pendiente.
+- **Estado:** completado. Catálogo esquema 4, plano técnico de tres ubicaciones, patrulla/ambulancia, tres incidentes y partes discretos. Confirmación, compatibilidad, exclusión de asignación simultánea, consecuencias/evidencias y guardado 4 sin duplicaciones; lectores 1/2/3 conservados. Tres suites nuevas y revisión real en cuatro tamaños. Contrato en [MAP_DISPATCH_SYSTEM.md](technical/MAP_DISPATCH_SYSTEM.md). No integra Caso 001 ni inicia 11; Android sigue pendiente.
 
 ## 11. Integración del Caso 001
 
 - **Objetivo:** conectar los sistemas en un recorrido jugable completo.
-- **Dependencias:** 07, 08, 09 y 10, con diseño de 02 aprobado.
+- **Dependencias:** 07, 08, 09A y 10, diseño de 02 aprobado y autorización explícita de PROMPT 11. 09B pospuesto no bloquea esta fase.
 - **Entregables:** contenido integrado y recorridos completos hasta los estados de cierre previstos.
 - **Aceptación:** llamadas, registros, audio, deducciones, eventos y despacho comparten un estado coherente sin bloqueos de progresión.
 - **Estado:** pendiente.

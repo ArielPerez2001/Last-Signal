@@ -4,6 +4,10 @@ PROMPT 07 · 2026-10-28 · Godot 4.7.2 estable · demostración de desarrollo.
 
 Ampliación PROMPT 08: expediente compartido, nueva demo `investigation_demo.json` y formato 2 para su esquema 2. El recorrido/contrato original de 07 y sus resultados históricos se conservan; los cambios actuales están detallados en el apartado de investigación y [INVESTIGATION_SYSTEM.md](INVESTIGATION_SYSTEM.md).
 
+Ampliación PROMPT 09A: botón **Prueba de análisis de audio** prepara data/audio/audio_analysis_demo.json en user://audio_analysis_demo (o subruta única user://save_tests en pruebas). La decisión aud_unlock habilita una grabación mediante la variable narrativa recording_unlocked. Audio/Expedientes comparten motor/guardado, sin modificar lógica de diálogo o introducir locuciones. Recuperar recuerda caso/ruta y no inicia reproducción; todas las acciones de demo siguen limitadas a desarrollo. Esquema/guardado 3 solo para esta demo; anteriores intactos. Véase [AUDIO_ANALYZER.md](AUDIO_ANALYZER.md). Los resultados siguientes de 07/08 conservan su alcance histórico; 09A se registra en PROGRESS.
+
+Ampliación PROMPT 10: **Prueba de mapa y despacho** prepara data/maps/dispatch_demo.json en user://dispatch_demo o subruta única de pruebas. Registrar avisos y partes operativos cambia opciones reales mediante el mismo motor, sin repetir visitas/historial. DispatchConsole enlaza también MapPanel al controlador y gestor existentes. Esquema/formato 4 solo para casos operativos; anteriores conservados. [MAP_DISPATCH_SYSTEM.md](MAP_DISPATCH_SYSTEM.md) documenta el recorrido; 09B está pospuesto y no bloquea 11.
+
 ## Acceso y alcance
 
 Abrir project.godot, ejecutar F5, pulsar **Ingresar a la central**, abrir **Llamadas**, elegir **Iniciar prueba** y después **Responder comunicación**. El rótulo DESARROLLO · PRUEBA FUERA DE CAMPAÑA distingue el contenido técnico. **Recuperar prueba** restaura el checkpoint aislado; **Reiniciar prueba** borra explícitamente solo esa demostración y vuelve a INCOMING.
@@ -180,6 +184,6 @@ La regresión original de 07 se ejecutó sin modificar sus suites (68 controlado
 
 Solo escritorio Windows/Compatibility e interacción táctil simulada. No hay APK, exportación release, teléfono Android real, medición de rendimiento, prueba de lector de pantalla, sonido o gestos físicos del dispositivo. Se comprueba la política de desarrollo desactivándola en pruebas; no se presenta como una exportación release verificada. Persisten las garantías/limitaciones de almacenamiento documentadas en [SAVE_SYSTEM.md](SAVE_SYSTEM.md).
 
-No hay llamada de campaña, árbol del Caso 001, audio, mapa, despacho, múltiples comunicaciones simultáneas o resultados oficiales. La combinación de evidencias de 08 es genérica y técnica. El espacio de cada demostración conserva su checkpoint entre ejecuciones hasta reinicio explícito. Una actualización incompatible de sus datos puede exigir Reiniciar prueba para reemplazar ese checkpoint; nunca se elimina automáticamente al fallar la carga.
+No hay llamada de campaña, árbol del Caso 001, voces/subtítulos, múltiples comunicaciones simultáneas o resultados oficiales. Investigación, grabaciones y mapa/despacho son técnicos. Cada demo conserva su checkpoint hasta reinicio explícito; una actualización incompatible puede exigir Reiniciar prueba para reemplazarlo, nunca se elimina automáticamente al fallar una carga.
 
-El panel y el controlador pueden presentar otros casos mediante sus API y datos, pero esos casos, su validación de dominio y su conexión al flujo de producción requieren autorización. **PROMPT 08 cerrado; PROMPT 09 no autorizado.**
+Otros casos y conexión a producción requieren autorización. **PROMPT 10 cerrado; 11 no autorizado. 09B pospuesto y no bloqueante.**

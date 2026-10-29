@@ -6,6 +6,8 @@ Integración PROMPT 07: [CallController/CallsPanel](CALL_SYSTEM.md) utilizan el 
 
 Integración PROMPT 08: formato **2** para casos narrativos esquema **2**, con registro de acciones externas/deducciones. Los casos de esquema 1 conservan escritura/lectura de formato 1. Sin migración automática. La envoltura y los 17 campos de session permanecen; se amplía la semántica validada del registro. La demo nueva usa user://investigation_demo. El resto de garantías de archivo de 06 se conserva; ver el apartado de formato 2 y [INVESTIGATION_SYSTEM.md](INVESTIGATION_SYSTEM.md).
 
+Integración PROMPT 09A: formato **3** solo para esquema **3**, con comprobantes mínimos de observaciones de audio en transaction_log. Formatos 1/2 y sus garantías conservados; sin migraciones. Nueva demo user://audio_analysis_demo; no hay audio de llamadas ni archivos PCM en la partida. Contrato del formato 3 más abajo y en [AUDIO_ANALYZER.md](AUDIO_ANALYZER.md).
+
 ## Objetivo y alcance
 
 Conservar una sesión lógica completa, recuperarla offline y seguir sin repetir consecuencias. El sistema se integra con el [motor narrativo](NARRATIVE_ENGINE.md) mediante API; no conoce escenas de la consola ni necesita Llamadas. El flujo normal del juego conserva su menú: Continuar sigue deshabilitado. El Caso 001 y las mecánicas de fases posteriores no se integran aquí.
@@ -195,6 +197,28 @@ Pruebas de 08: nueva instancia de motor/gestor recupera desde disco cinco eviden
 
 Los contratos narrativos de [CASE_001_TECHNICAL_SPEC.md](../cases/CASE_001_TECHNICAL_SPEC.md) siguen sin implementación: cursores específicos, K02, procedencia de pistas, variantes y recursos se validarán cuando se integre ese caso. Las pruebas PS01–PS13 de su plan continúan siendo futuras; los ensayos de esta fase verifican equivalentes genéricos con el caso técnico, sin afirmar que probaron esos eventos oficiales.
 
+### Formato 3 — Observaciones de audio
+
+SaveManager.AUDIO_SAVE_VERSION = 3, correspondiente al esquema narrativo 3; los tres lectores/escritores exigen que versión y esquema coincidan con el caso cargado. La envoltura conserva ocho campos y session los 17 originales. No hay listas paralelas de grabaciones/desbloqueos, evidencia sonora o deducciones; se derivan de variables, evidence, executed_actions y catálogos.
+
+Una entrada de audio añade analysis a `{node_id, choice_id, revision}`. analysis requiere exactamente recording_id, segment_id, filter_id y listened_ms entero. choice_id es una regla del catálogo sonoro; el tiempo canónico representa el umbral de examen cumplido, no un contador por fotograma. Las entradas de otros tipos y esquemas anteriores rechazan este campo. El nuevo registro justifica contexto/consumo de la regla y mantiene determinismo entre recorridos iguales.
+
+StateValidator comprueba tipos/rangos y normaliza enteros JSON, sin convertir bool/string/fracciones. NarrativeEngine reconstruye en una instancia aislada desbloqueo, condiciones, prueba de contexto/umbral, efectos y consumos intercalados antes de comparar todo el snapshot. Un comprobante corto, ausente, de otro filtro/regla o añadido a diálogo se rechaza. Solo después se sustituye memoria; no se emiten eventos/evidencias nuevos ni se reejecutan consecuencias sobre la sesión viva. No se afirma protección criptográfica frente a modificación deliberada de archivos/código.
+
+Persisten las observaciones confirmadas, sus efectos/eventos y deducciones; escuchas sin confirmar, selección/filtro/posición del reproductor son temporales. Navegar conserva razonablemente la posición en memoria y pausa; restaurar empieza sin audio activo. Nunca se guarda WAV, onda, catálogo o posición en cada frame. Autoguardado sigue state_changed de una transacción estable; un intento insuficiente o repetido no escribe. Cotas de tamaño/profundidad/2048 operaciones y algoritmo de temporal/respaldo no cambian.
+
+Compatibilidad estricta por versión, caso, content_version y fingerprint, sin migración automática. Rechazo conserva originales/sesión y prueba respaldo compatible. Pruebas de 09A guardan/restauran análisis, deducción y consumo de evento intercalado, e inyectan comprobantes/versiones incompatibles sin destruir memoria. Las nueve suites anteriores pasan con fuentes intactas; cifras y comandos en [PROGRESS.md](../PROGRESS.md).
+
+### Formato 4 — Mapa y despacho
+
+Formato 4 para esquema 4, con lectores/escritores 1/2/3 conservados y sin migraciones. La envoltura/sesión conserva ocho/17 campos. Unidad/estado de incidente/asignación son variables enum centrales enlazadas por catálogo, sin diccionarios persistentes paralelos; desbloqueos se derivan de condiciones. Los ID confirmados y efectos usan los registros existentes.
+
+Una entrada operativa añade dispatch al diario de node_id/choice_id/revision. El comando es `{kind: "assign", unit_id, incident_id}` o `{kind: "event", unit_id, incident_id, event_id}`. Campos/tipos/acciones desconocidos se rechazan. choice_id coincide con la asignación generada o parte realmente ejecutado. Entradas operativas no pueden contener también analysis; esquemas anteriores no aceptan dispatch.
+
+La reconstrucción aislada verifica todo el orden mediante la misma API: visibilidad/estado/compatibilidad, disponibilidad única, asignación coincidente y llegada/resultado/liberación autorizados. Se compara el snapshot entero antes de sustituir memoria; variables de asignación inventadas, unidad/incidente desconocidos, comando arbitrario o versión ajena no se reparan silenciosamente. Una unidad ocupada sigue ocupada al restaurar, un resultado no se reactiva y no se publican despachos/evidencias/eventos nuevos.
+
+Temporal/respaldo, compatibilidad exacta por contenido/fingerprint, cotas de 4 MiB/2048 operaciones y autoguardado siguen sus garantías existentes. Seleccionar/revisar/cancelar no escribe; reintento guarda el estado pendiente sin repetir despachos. Demo user://dispatch_demo y pruebas únicas user://save_tests; no se tocan partidas de producción. [MAP_DISPATCH_SYSTEM.md](MAP_DISPATCH_SYSTEM.md) define API, invariantes y procedimientos.
+
 ## Comandos y resultados
 
 PowerShell, desde cualquier carpeta:
@@ -229,4 +253,4 @@ El detalle de los 20 grupos de aceptación, incidencias corregidas y limitacione
 
 Sin APK, dispositivo real, corte de energía, llenado físico del disco ni prueba de rendimiento Android. Los errores de escritura/renombrado se inyectan en rutas aisladas, junto con un fallo real de carpeta obstruida; no se provoca daño al almacenamiento del usuario. No se promete durabilidad absoluta ni compatibilidad con versiones futuras desconocidas.
 
-F5 sigue abriendo menú sin sesión narrativa ni partidas de producción. Llamadas permite iniciar/recuperar/reiniciar demos solo en desarrollo, con SaveLifecycle conectado al mismo gestor y aviso/reintento de escritura. Desde 08 Expedientes comparte ese motor/gestor; la investigación usa user://investigation_demo separada de user://call_demo y user://saves. Cargar no reescribe originales y reiniciar elimina únicamente los archivos de ranura de esa demo mediante delete_save(true), sin borrar directorios o archivos ajenos. La interfaz oficial futura deberá decidir reemplazos/borrados y su salida ante fallos. Continuar permanece deshabilitado, no hay administración de ranuras ni Caso 001 integrado. **PROMPT 08 cerrado; no iniciar 09 sin autorización.**
+F5 sigue abriendo menú sin sesión o partida oficial. Llamadas permite preparar/recuperar/reiniciar demos de desarrollo, con el mismo SaveLifecycle/gestor compartido por Expedientes/Audio/Mapa. Demos en user://call_demo, user://investigation_demo, user://audio_analysis_demo y user://dispatch_demo, separadas de user://saves. Cargar no reescribe originales; reiniciar elimina solo archivos de ranura técnica, no carpetas/archivos ajenos. Continuar deshabilitado y Caso 001 sin integrar. **10 cerrado; no iniciar 11. 09B pospuesto no bloquea 11.**

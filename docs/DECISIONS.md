@@ -440,6 +440,123 @@ Los registros D-012–D-015 describen el estado de diseño al entregar 02. Su ap
 - **Consecuencias:** 69 comprobaciones de evidencias, 88 de deducciones y 2349 de integración base, más 1974 anteriores: 4480 de referencia sin volver a sumar resoluciones/capturas. Las variantes altas tienen dos aserciones menos por scroll. Sin prueba Android/APK/release, cortes eléctricos o rendimiento móvil. Se documentan fallos de auxiliares corregidos; no se declaran como ensayos superados las ejecuciones fallidas.
 - **Estado:** adoptada y verificada en PROMPT 08.
 
+## D-049 — Autorización exclusiva de PROMPT 09A
+
+- **Fecha:** 2026-10-28.
+- **Tema:** alcance de grabaciones de investigación.
+- **Decisión tomada:** aprobar 00–08 e implementar analizador, reproducción real/variantes locales, examen y descubrimiento, integración existente y pruebas/documentación. La nueva autorización sustituye la espera/prohibición temporal de audio al cerrar 08.
+- **Justificación:** alcance expreso de PROMPT 09A, separado de 09B.
+- **Consecuencias:** Audio deja de ser placeholder; no se integran Caso 001, voces/subtítulos de llamadas, TTS, APIs externas, mapa/despacho o resultados. No commits/pushes, instalaciones o descargas. Detenerse antes de 09B y 10.
+- **Estado:** aprobada e implementada en 09A.
+
+## D-050 — Catálogo de audio dentro del esquema 3
+
+- **Fecha:** 2026-10-28.
+- **Tema:** autoría, referencias y disponibilidad.
+- **Decisión tomada:** esquema 3 extiende 2 con audio_analysis (recordings/discovery_rules), incluido en el fingerprint del caso; demo completa en data/audio/audio_analysis_demo.json. Validación sonora separada y condiciones/referencias reutilizadas del motor.
+- **Justificación:** evitar un catálogo externo que cambie reglas sin afectar compatibilidad, sin introducir otro lenguaje de condiciones.
+- **Consecuencias:** ID únicos, fichas declaradas, intervalos acotados, formatos/rutas oficiales y tres filtros centrales. Solo grabaciones desbloqueadas en API de jugador, sin títulos/reglas ocultos. Esquemas/casos 1/2 conservados.
+- **Estado:** adoptada, implementada y probada.
+
+## D-051 — Reproducción única, modos y sincronización
+
+- **Fecha:** 2026-10-28.
+- **Tema:** transporte físico y ciclo de vida.
+- **Decisión tomada:** un AudioStreamPlayer en AudioPlaybackController; filtros por WAV preparados de la misma línea temporal, tolerancia de longitud 80 ms y posición/pausa conservadas al cambiar variante. Modo grabación completa distinto de segmento; seek acotado y fin notificado una vez.
+- **Justificación:** usar el motor oficial y evitar solapamientos o una implementación manual de audio.
+- **Consecuencias:** repetición idempotente, recursos ausentes deshabilitados sin sustitución, pausa al ocultar Audio/perder foco/suspender y sin reanudación automática. Corte directo entre mezclas, sin prometer crossfade. No es un gestor de locuciones de 09B.
+- **Estado:** adoptada y verificada con AudioStreamPlayer y WASAPI en escritorio.
+
+## D-052 — Examen real, texto equivalente y confirmación
+
+- **Fecha:** 2026-10-28.
+- **Tema:** descubrimiento sonoro e idempotencia.
+- **Decisión tomada:** AudioAnalysisManager cualifica desde avance físico del reproductor en el intervalo/filtro requerido; la UI solo solicita Registrar observación. La demo exige tres segundos de cuatro, sin precisión de milisegundos. Texto equivalente disponible durante el mismo examen; no requiere audición fina.
+- **Justificación:** abrir, seleccionar o buscar al final no debe conceder evidencia. El manager no recibe tiempos arbitrarios del jugador.
+- **Consecuencias:** comprobante canónico validado de nuevo por el motor; evidencia/evento derivados de regla, sin efectos arbitrarios; transacción atómica de 08 y fachada EvidenceManager. Repetir/restaurar no otorga consecuencias nuevas. Diseño T04/T05 del Caso 001 permanece intacto; su concesión inmediata/transcripción se reconciliará al autorizar integración, sin cambio unilateral ahora.
+- **Estado:** adoptada e implementada para la demo de 09A.
+
+## D-053 — Guardado 3 y comprobante mínimo en el diario
+
+- **Fecha:** 2026-10-28.
+- **Tema:** persistencia y reconstrucción.
+- **Decisión tomada:** formato 3 para esquema 3, lectores/escritores 1/2 intactos y sin migraciones. Solo entradas sonoras añaden analysis con recording_id/segment_id/filter_id/listened_ms al registro existente.
+- **Justificación:** declarar la nueva semántica de reanudación y acreditar el contexto confirmado sin duplicar colecciones o guardar audio/posición por frame.
+- **Consecuencias:** misma envoltura de ocho campos y snapshot de 17. Reproducción aislada de observaciones/consumos/deducciones, integralidad JSON estricta y rechazo conservador. Cualificaciones sin confirmar y posición son temporales; observaciones confirmadas persisten. El puente interno sirve a servicios/reconstrucción, no se presenta como protección contra archivos/código manipulados.
+- **Estado:** adoptada y probada con recuperación exacta y rechazos incompatibles.
+
+## D-054 — Recursos propios, onda y sesión compartida
+
+- **Fecha:** 2026-10-28.
+- **Tema:** demo, presentación y aislamiento.
+- **Decisión tomada:** tres WAV sintéticos mono PCM 22050 Hz/16 bit, doce segundos, generados localmente con biblioteca estándar Python. Voces es un marcador electrónico, sin habla. Onda de 120 picos medida del PCM Original y etiquetada como precalculada.
+- **Justificación:** demostrar audio real sin escoger proveedor de voz, descargar recursos o instalar herramientas.
+- **Consecuencias:** AudioPanel reutiliza sección/Theme y datos de la misma sesión de CallController; no crea motor, guardado o inventario paralelos. Carpeta user://audio_analysis_demo; pruebas solo user://save_tests. Posición temporal al navegar y reinicio limpio al sustituir sesión. La onda no determina pistas.
+- **Estado:** adoptada, implementada y probada.
+
+## D-055 — Evidencia real y límites de verificación 09A
+
+- **Fecha:** 2026-10-28.
+- **Tema:** pruebas y cierre.
+- **Decisión tomada:** validar catálogo/lógica, transporte físico específico, GUI real en cuatro tamaños, captura del bus PCM y regresión intacta de nueve suites anteriores.
+- **Justificación:** distinguir reglas de juego, reproducción real, apariencia y comprobación auditiva humana.
+- **Consecuencias:** 70 aserciones de catálogo, 58 de análisis, 11 de transporte físico y 1675 de integración base, más 4480 anteriores: 6294 de referencia. 48 capturas reales inspeccionadas, WASAPI con PCM no silencioso; simulación headless no se presenta como escucha. Pendientes escucha humana, Android/APK/release, accesibilidad física y perfil móvil. Cierre en 09A sin adelantar 09B/10.
+- **Estado:** adoptada y verificada en 09A; resultados detallados en PROGRESS.
+
+## D-056 — Alcance de PROMPT 10 y aplazamiento de 09B
+
+- **Fecha:** 2026-10-28.
+- **Tema:** autorización de mapa/despacho.
+- **Decisión tomada:** aprobar 00–08/09A y ejecutar exclusivamente mapa, incidentes, dos tipos de unidades, partes discretos, persistencia/integración y demo técnica. 09B pospuesto intencionalmente, no es error ni bloquea 10/11.
+- **Justificación:** alcance expreso del nuevo prompt; sustituye la prohibición temporal de mapa al cerrar 09A.
+- **Consecuencias:** no cambiar R1/Caso 001, añadir bomberos, voz/TTS, GPS, tráfico, IA o vehículos. Sin commits/pushes, instalaciones o inicio de 11. Conservar cambios locales anteriores de 09A.
+- **Estado:** aprobada e implementada en PROMPT 10.
+
+## D-057 — Catálogo operativo y estados centrales
+
+- **Fecha:** 2026-10-28.
+- **Tema:** datos, visibilidad y autoridad.
+- **Decisión tomada:** esquema narrativo 4 extiende 3 con operations, incluido en fingerprint; ubicaciones/sectores normalizados y reglas declaradas. MapManager proyecta visibilidad y DispatchManager administra solicitudes con DispatchRules compartido con el motor.
+- **Justificación:** evitar inventarios operativos paralelos y otro lenguaje de condiciones.
+- **Consecuencias:** estados/asignaciones enlazados a variables enum centrales; bindings exclusivos y protegidos contra efectos authored directos. HIDDEN/ACTIVE derivados de visibilidad/condiciones, sin flags duplicados. Tipos PATROL/AMBULANCE, sin asignaciones iniciales preestablecidas. Datos/casos 1/2/3 conservados.
+- **Estado:** adoptada, implementada y probada.
+
+## D-058 — Transacciones operativas, partes y recursos limitados
+
+- **Fecha:** 2026-10-28.
+- **Tema:** asignación y consecuencias.
+- **Decisión tomada:** revisión/confirmación separadas; candidato atómico del motor con el EffectProcessor existente. Ciclo AVAILABLE→ASSIGNED→BUSY→AVAILABLE mediante asignación/llegada/resultado/liberación declarados, con enlace coincidente y estados anteriores exactos.
+- **Justificación:** impedir recursos simultáneos, liberaciones ajenas, fases saltadas, repeticiones y efectos parciales.
+- **Consecuencias:** partes con ID estable/global, evidencia mediante puente EvidenceManager; resultados no liberan implícitamente. Sin cronómetros o autoavance al navegar/cargar. La falsa alarma es una decisión legal poco útil explicada por datos previos/parte, sin penalización arbitraria. Cursor/visitas/historial hablado no se reinician.
+- **Estado:** adoptada y probada, incluido rollback completo de un parte que bloquease el diálogo.
+
+## D-059 — Formato 4 y registro de comandos
+
+- **Fecha:** 2026-10-28.
+- **Tema:** persistencia y compatibilidad.
+- **Decisión tomada:** formato 4 para esquema 4, lectores 1/2/3 conservados y sin migración automática. Diario operativo añade dispatch con kind/unit_id/incident_id y event_id para partes; mismo snapshot de 17 campos/envoltura de ocho.
+- **Justificación:** acreditar orden y semántica operativa sin duplicar catálogos/colecciones.
+- **Consecuencias:** reconstrucción aislada por la misma API verifica comandos, referencias, estados, revisión/nodo, asignaciones y efectos antes de importar. Unidad ocupada sigue ocupada; no reactivar resueltos ni reemitir despachos/evidencias. Incompatibilidad conserva memoria/originales y política de respaldo. Garantías/cotas de guardado anteriores conservadas.
+- **Estado:** adoptada, implementada y probada con disco y referencias incorrectas.
+
+## D-060 — Plano de ensayo y sesión compartida
+
+- **Fecha:** 2026-10-28.
+- **Tema:** presentación, contenido y aislamiento.
+- **Decisión tomada:** plano nativo 2D estático, tres sectores/lugares de ensayo no canónicos; marcadores grandes y lista alternativa, estados en texto, confirmación explícita y barra inferior fija. Mismo motor/gestor de CallController enlazado a MapPanel.
+- **Justificación:** legibilidad táctil y coherencia con la central existente, sin cartografía externa o simulación innecesaria.
+- **Consecuencias:** demo data/maps/dispatch_demo.json, user://dispatch_demo y pruebas únicas user://save_tests; no tocar producción. Selección/cancelación solo de presentación. Reiniciar/restaurar limpia selección, no libera recursos. Cierre conserva estados en modo consulta. Theme, iconos y guion oficial intactos.
+- **Estado:** adoptada y verificada en escritorio.
+
+## D-061 — Verificación de despacho y cierre
+
+- **Fecha:** 2026-10-28.
+- **Tema:** aceptación y límites.
+- **Decisión tomada:** tres suites nuevas, regresión de trece anteriores, bootstrap/navegación en cuatro tamaños y 48 capturas gráficas reales inspeccionadas.
+- **Justificación:** probar estado, GUI, persistencia y ausencia de efectos duplicados, distinguiendo simulación de Android.
+- **Consecuencias:** 65 aserciones de mapa, 63 de despacho y 1714 de integración base; 6294 anteriores, total principal 8136 sin sumar repeticiones/capturas. Un ajuste de limpieza del auxiliar de audio conserva sus once aserciones y elimina el aviso observado en tres repeticiones finales. Pendientes Android/APK/release, gestos físicos, accesibilidad y perfil móvil. Registro de 25 grupos en PROGRESS; no iniciar 11.
+- **Estado:** adoptada y verificada en PROMPT 10.
+
 ## Plantilla para nuevos registros
 
 - **Identificador y tema:** D-XXX — título.

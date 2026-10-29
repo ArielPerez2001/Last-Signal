@@ -2,6 +2,10 @@
 
 PROMPT 08 · 2026-10-28 · Godot 4.7.2 estable · Windows/Compatibility. Implementación genérica y demostración fuera de campaña. El Caso 001 oficial no está integrado. Decisiones D-043–D-048 en [DECISIONS.md](../DECISIONS.md).
 
+Ampliación 09A: [AUDIO_ANALYZER.md](AUDIO_ANALYZER.md) conecta observaciones de grabaciones al mismo EvidenceManager/estado. Añade discover_from_audio como puente interno al motor, esquema/guardado 3 con comprobante mínimo y otra demo aislada; los contratos/resultados originales de 08 descritos abajo se conservan para esquema/formato 2.
+
+Ampliación 10: [MAP_DISPATCH_SYSTEM.md](MAP_DISPATCH_SYSTEM.md) conecta partes operativos por el puente estático EvidenceManager.process_dispatch_event(engine, command, revision). El motor confirma estado de unidad/incidente y efectos/evidencia juntos; ningún inventario paralelo o adquisición por abrir el mapa. Fichas declaradas en investigation.evidence, registro común y consulta en Expedientes. Formato/esquema 4 conserva los anteriores y no cambia DeductionManager. 09B pospuesto no bloquea 11; Caso 001 no integrado.
+
 ## 1. Arquitectura
 
 Una sola sesión de NarrativeEngine es la autoridad. EvidenceManager y DeductionManager son fachadas RefCounted; no mantienen otra copia persistente del progreso. EvidencePanel presenta sus proyecciones dentro de la sección Expedientes existente. CallController sigue poseyendo motor y SaveManager; DispatchConsole conecta ambos paneles a esas mismas instancias.
@@ -215,6 +219,14 @@ Catorce estados capturados por resolución, **56 PNG reales** inspeccionados, di
 No se ha probado dispositivo Android, APK/exportación release, gestos físicos, zonas seguras reales, lector de pantalla o rendimiento móvil. Los toques, fallos de disco y notificaciones son simulados en escritorio; no se llena físicamente el disco ni se prueba corte eléctrico. La lista recrea tarjetas al refrescar y la verificación del guardado reconstruye el historial: no se afirma escalabilidad o rendimiento constante.
 
 UI de dos fichas, motor de dos/tres; no se introducen reglas ambiguas, repetibles o descubrimiento probabilístico. No hay migraciones entre versiones, sincronización, inventario convencional o deducciones con IA. Hay dos desenlaces de prueba, sin pantalla definitiva de resultados. Caso 001, audio/filtros, mapa/despacho y sistemas posteriores siguen pendientes. No se hicieron commits, pushes, instalaciones ni cambios remotos en 08. Trabajo detenido antes de 09.
+
+## Integración de pistas sonoras — PROMPT 09A
+
+La nueva demo data/audio/audio_analysis_demo.json es un caso esquema 3: añade audio_analysis y conserva investigation.evidence/deductions de 08. La pista registrada solo inserta su ID en el conjunto existente evidence mediante EvidenceManager.discover_from_audio(rule_id, proof, revision). No hay inventario sonoro, fichas inventadas en UI o ruta de consulta en Expedientes que omita el examen del reproductor. DeductionManager permanece intacto y acepta aud_reference + aud_pulses como una relación técnica real.
+
+AudioAnalysisManager es la API de jugador y verifica desbloqueo/contexto/examen físico antes de pedir registro; NarrativeEngine revalida regla/condiciones/proof y usa la misma transacción atómica de 08. ID de reglas sonoras comparten el espacio global de executed_actions. Cursor, visitas e historial hablado no cambian; Expedientes actualiza por las señales existentes. Repetir o restaurar no duplica efectos. Nuevo formato 3 guarda solo analysis en las transacciones sonoras, sin cambiar los 17 campos ni duplicar metadatos. Las demos originales y sus formatos 1/2 no se modifican o migran.
+
+DispatchConsole enlaza Audio/Expedientes al controlador real; al cambiar/restaurar sesión el reproductor se limpia y se desconecta el gestor anterior. user://audio_analysis_demo es otra carpeta técnica separada de las anteriores y producción. Las pruebas de audio usan rutas únicas user://save_tests. Caso 001 conserva su historia y contrato de audio documental; no está integrado.
 
 ## 18. Autoría de casos futuros
 

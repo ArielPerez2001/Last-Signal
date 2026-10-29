@@ -18,6 +18,7 @@ const Conditions = preload("res://scripts/narrative/condition_evaluator.gd")
 const Effects = preload("res://scripts/narrative/effect_processor.gd")
 const StateValidator = preload("res://scripts/narrative/narrative_state_validator.gd")
 const Deductions = preload("res://scripts/systems/deduction_manager.gd")
+const DispatchRules = preload("res://scripts/systems/dispatch_rules.gd")
 const MAX_AUTO_TRANSITIONS: int = 64
 
 var _case: Dictionary = {}
@@ -214,6 +215,63 @@ func get_investigation_catalog() -> Dictionary:
 	return catalog
 
 
+func get_dispatch_catalog() -> Dictionary:
+	return _case.get("operations", {}).duplicate(true)
+
+
+func process_dispatch(command: Dictionary, expected_revision: int = -1) -> Dictionary:
+	if _busy:
+		return DispatchRules.report(false, "BUSY", "Espere a que termine la operación actual.")
+	var result: Dictionary = DispatchRules.evaluate(get_dispatch_catalog(), get_state_snapshot(), command)
+	if not result.ok or result.code != "VALID":
+		return result
+	var committed: Dictionary = _commit_investigation(result.data, false, expected_revision, {}, command)
+	if committed.ok:
+		committed.message = result.message
+	return committed
+
+
+func get_audio_catalog() -> Dictionary:
+	return _case.get("audio_analysis", {}).duplicate(true)
+
+
+# Internal bridge for AudioAnalysisManager and deterministic restoration.
+# Player UI submits no timing data; the playback service supplies the proof.
+func register_audio_observation(rule_id: String, proof: Dictionary, expected_revision: int = -1) -> Dictionary:
+	if _busy:
+		return Deductions.result(false, "BUSY", "Espere a que termine la operación actual.")
+	if _state == null:
+		return Deductions.result(false, "LOCKED", "No hay una investigación activa.")
+	for rule: Dictionary in _case.get("audio_analysis", {}).get("discovery_rules", []):
+		if rule.id != rule_id:
+			continue
+		var record: Dictionary = {}
+		for item: Dictionary in _case.audio_analysis.recordings:
+			if item.recording_id == rule.recording_id:
+				record = item
+		if not Conditions.evaluate(record.unlocked_by, _state.data):
+			return Deductions.result(false, "LOCKED", "La grabación no está disponible.")
+		if rule_id in _state.data.executed_actions:
+			return Deductions.result(true, "ALREADY_DISCOVERED", "La observación ya está registrada.")
+		if _state.data.finished or not Conditions.evaluate(rule.get("additional_conditions", {"op": "always"}), _state.data):
+			return Deductions.result(false, "LOCKED", "La investigación no admite este descubrimiento ahora.")
+		var interval: Dictionary = {}
+		for segment: Dictionary in record.segments:
+			if segment.segment_id == rule.segment_id:
+				interval = segment
+		if not StateValidator.has_fields(proof, ["recording_id", "segment_id", "filter_id", "listened_ms"]):
+			return Deductions.result(false, "INSUFFICIENT", "Examine el fragmento con el filtro adecuado antes de registrar.")
+		if proof.recording_id != rule.recording_id or proof.segment_id != rule.segment_id or proof.filter_id != rule.filter_id or not StateValidator.is_integer(proof.listened_ms, ceili(rule.min_listen_seconds * 1000.0), ceili((interval.end_time - interval.start_time) * 1000.0)):
+			return Deductions.result(false, "INSUFFICIENT", "El examen del fragmento todavía es insuficiente.")
+		var definition: Dictionary = {"id": rule.id, "effects": [{"op": "add_to_set", "target": "evidence", "value": rule.evidence_id}]}
+		if rule.has("event_id"):
+			definition.effects.append({"op": "emit_event", "event_id": rule.event_id})
+		var normalized: Dictionary = proof.duplicate(true)
+		normalized.listened_ms = int(normalized.listened_ms)
+		return _commit_investigation(definition, false, expected_revision, normalized)
+	return Deductions.result(false, "INVALID", "Observación no disponible.")
+
+
 func get_investigation_actions() -> Array:
 	var result: Array = []
 	if _state == null or _state.data.finished:
@@ -254,13 +312,17 @@ func confirm_deduction(evidence_ids: Array, expected_revision: int = -1) -> Dict
 	return Deductions.result(false, "INVALID", "Regla no disponible.")
 
 
-func _commit_investigation(definition: Dictionary, is_deduction: bool, expected_revision: int) -> Dictionary:
+func _commit_investigation(definition: Dictionary, is_deduction: bool, expected_revision: int, analysis: Dictionary = {}, dispatch: Dictionary = {}) -> Dictionary:
 	if expected_revision < -1 or (expected_revision != -1 and expected_revision != _state.data.revision):
 		return Deductions.result(false, "STALE", "La selección corresponde a un estado anterior.")
 	_busy = true
 	var candidate: SessionState = _state.copy()
 	candidate.data.executed_actions.append(definition.id)
 	candidate.data.transaction_log.append({"node_id": candidate.data.current_node, "choice_id": definition.id, "revision": candidate.data.revision})
+	if not analysis.is_empty():
+		candidate.data.transaction_log[-1]["analysis"] = analysis.duplicate(true)
+	if not dispatch.is_empty():
+		candidate.data.transaction_log[-1]["dispatch"] = dispatch.duplicate(true)
 	var pending: Array[Dictionary] = []
 	var error_message: String = Effects.apply(definition.effects, candidate.data, _case.variables, "investigation:" + definition.id, pending)
 	var eligible: bool = false
@@ -310,6 +372,26 @@ func _validate_snapshot(snapshot: Dictionary, include_history: bool) -> Dictiona
 				return StateValidator.failure("invalid_history", "El historial de consumo de eventos es inconsistente.")
 			consumed_index += 1
 		var before: Dictionary = replay.get_state_snapshot()
+		if entry.has("dispatch"):
+			if entry.has("analysis") or before.revision != entry.revision or before.current_node != entry.node_id:
+				return StateValidator.failure("invalid_history", "Transacción operativa fuera de su contexto.")
+			var dispatch_result: Dictionary = replay.process_dispatch(entry.dispatch, entry.revision)
+			if not dispatch_result.ok or dispatch_result.code != "VALID" or dispatch_result.data.id != entry.choice_id:
+				return StateValidator.failure("invalid_history", "Asignación o parte operativo incoherente.")
+			continue
+		var audio_rule: Dictionary = {}
+		for rule: Dictionary in _case.get("audio_analysis", {}).get("discovery_rules", []):
+			if rule.id == entry.choice_id:
+				audio_rule = rule
+		if not audio_rule.is_empty():
+			if before.revision != entry.revision or before.current_node != entry.node_id:
+				return StateValidator.failure("invalid_history", "Observación fuera de su revisión/nodo.")
+			var audio_result: Dictionary = replay.register_audio_observation(audio_rule.id, entry.get("analysis", {}), entry.revision)
+			if not audio_result.ok or audio_result.code != "VALID":
+				return StateValidator.failure("invalid_history", "Comprobante de observación incoherente.")
+			continue
+		if entry.has("analysis"):
+			return StateValidator.failure("invalid_history", "Solo las observaciones admiten comprobantes de audio.")
 		var investigation: Dictionary = {}
 		var is_deduction: bool = false
 		for group: String in ["actions", "deductions"]:
