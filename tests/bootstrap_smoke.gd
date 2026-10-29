@@ -51,6 +51,8 @@ func _prepare_main() -> bool:
 	if scene_error != OK:
 		return false
 	await _settle()
+	current_scene.official_directory = "user://save_tests/menu_%d_%d" % [OS.get_process_id(), Time.get_ticks_usec()]
+	current_scene.refresh_official_save()
 	_expect(current_scene is Control, "main is Control")
 	_expect(current_scene.theme != null, "shared theme assigned")
 	var scale_factor: float = minf(expected_window_size.x / 720.0, expected_window_size.y / 1280.0)
@@ -87,7 +89,10 @@ func _capture(file_path: String) -> void:
 	_expect(DisplayServer.get_name() != "headless", "capture requires graphical renderer")
 	if DisplayServer.get_name() == "headless":
 		return
-	await RenderingServer.frame_post_draw
+	# An occluded desktop window may stop emitting frame_post_draw. Request
+	# a real renderer frame explicitly instead of waiting indefinitely for it.
+	await process_frame
+	RenderingServer.force_draw(false)
 	var screenshot: Image = root.get_texture().get_image()
 	_expect(not screenshot.is_empty(), "rendered image is not empty")
 	if not screenshot.is_empty():

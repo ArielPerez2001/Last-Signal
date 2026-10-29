@@ -1,5 +1,9 @@
 # ÚLTIMA SEÑAL — Mapa operativo y despacho
 
+**Revisión UX posterior a 11:** la UI oficial activa DispatchManager.contextual_reports; otros consumidores conservan false y la API estricta. Disponibilidad usa preview_contextual_dispatch y el gesto explícito de recibir parte usa process_contextual_dispatch. Se prepara el contexto mediante opciones sin efectos, en candidato aislado y con una sola publicación; no por cambiar pestaña. Un plan preparado exige corrección explícita. El mapa preselecciona incidente/R1 únicamente cuando son únicos, muestra confirmación/cancelación juntas y partes antes del plano. Elegir ubicación no despacha. [Contrato, límites y verificación](../cases/CASE_001_UX_REVIEW.md).
+
+**Integración 11 · 2026-10-29:** [Caso 001](../cases/CASE_001_IMPLEMENTATION_REPORT.md) usa un distrito, dos accesos al mismo hotel y R1 RESCUE exterior; no bomberos actuales. Extensiones opcionales: layout_kind=building dibuja contorno esquemático; closed_when deriva operaciones cerradas conservando la última posición. No hay enum/inventario paralelo o liberación al finalizar. Reglas from_node/next avanzan a los nodos de parte dentro del candidato atómico. next exige origen válido; sin next, las reglas de 10 conservan su semántica. La fase reposition exige BUSY/ASSIGNED → ASSIGNED/CLOSED del incidente anterior y target_incident_id distinto, conocido/ACTIVE/compatible; asigna el nuevo destino sin disponibilidad intermedia. Son comandos event registrados/reconstruidos por la misma API. Las menciones siguientes a dos tipos, ausencia de reubicación o Caso 001 no integrado describen el alcance original de 10, no el estado actual. Demo y pruebas anteriores conservadas.
+
 PROMPT 10 · 2026-10-28 · Godot 4.7.2 estable / Compatibility. Escenario técnico fuera de campaña. **09B está pospuesto intencionalmente y no bloquea 11.** Este documento no autoriza iniciar 11 o integrar el Caso 001.
 
 ## 1. Objetivo y acceso

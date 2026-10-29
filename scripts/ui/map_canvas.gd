@@ -46,6 +46,10 @@ func _draw() -> void:
 		draw_rect(rect, Color("426359"), false, 1)
 		draw_string(get_theme_default_font(), rect.position + Vector2(8, 26), district.name, HORIZONTAL_ALIGNMENT_LEFT, rect.size.x - 16, 18, Color("a9bdb4"))
 	# Static street/port schematic; no routes, GPS, traffic or live simulation.
+	if map.get("layout_kind") == "building":
+		draw_rect(Rect2(size * Vector2(0.22, 0.23), size * Vector2(0.56, 0.53)), Color("7f958b"), false, 3)
+		draw_line(size * Vector2(0.22, 0.5), size * Vector2(0.78, 0.5), Color("426359"), 2)
+		return
 	draw_line(Vector2(size.x * 0.08, size.y * 0.48), Vector2(size.x * 0.92, size.y * 0.48), Color("658276"), 5)
 	draw_line(Vector2(size.x * 0.49, size.y * 0.18), Vector2(size.x * 0.49, size.y * 0.93), Color("658276"), 4)
 	for y: float in [0.68, 0.82, 0.93]:

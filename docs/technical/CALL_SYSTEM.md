@@ -1,5 +1,9 @@
 # ÚLTIMA SEÑAL — Llamadas y conversaciones
 
+**Revisión UX posterior a 11:** la campaña presenta la introducción en INCOMING con opciones reales del motor. El primer gesto valida su revisión, confirma conexión y ejecuta la opción existente; ya no requiere otro botón de responder. El historial conserva los mismos comandos. Se compactan rótulos redundantes, se agrupan consultas de investigación bajo Otras consultas y se mantiene la intervención vigente separada de historial. Retomar llamada y avisos de respuesta nueva orientan sin elegir respuestas. Los controles de demos permanecen como antes. [Revisión](../cases/CASE_001_UX_REVIEW.md).
+
+**Integración 11 · 2026-10-29:** [Caso 001](../cases/CASE_001_IMPLEMENTATION_REPORT.md) disponible desde Nueva partida, separado de Consola de desarrollo. OFFICIAL_PATH/OFFICIAL_DIRECTORY identifican contenido conocido y user://saves. Preparar oficial inicia un checkpoint INCOMING; responder confirma connection_action interna mediante el motor, y restaurar deriva INCOMING/CONNECTED/ENDED sin repetir historia. No hay voces. CallsPanel muestra la intervención actual completa y un historial consultable; este conserva sus controles/posición al navegar. Las opciones proceden siempre del motor. panel_id solicita una herramienta y los partes from_node/next regresan a Llamadas; no hay reglas narrativas en UI. Las menciones siguientes a campaña ausente/Continuar deshabilitado son históricas de 07–10. Demos anteriores conservadas.
+
 PROMPT 07 · 2026-10-28 · Godot 4.7.2 estable · demostración de desarrollo.
 
 Ampliación PROMPT 08: expediente compartido, nueva demo `investigation_demo.json` y formato 2 para su esquema 2. El recorrido/contrato original de 07 y sus resultados históricos se conservan; los cambios actuales están detallados en el apartado de investigación y [INVESTIGATION_SYSTEM.md](INVESTIGATION_SYSTEM.md).

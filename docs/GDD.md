@@ -1,6 +1,8 @@
 # ÚLTIMA SEÑAL — Documento de diseño
 
-Fecha de registro: 2026-10-27. Actualización técnica: 2026-10-28, PROMPT 10. Estado: diseño del Caso 001 aprobado; base técnica, navegación, motor/guardado, conversaciones, investigación, grabaciones y mapa/despacho con demos de desarrollo implementados. Caso 001 sin integrar; 09B pospuesto intencionalmente y no bloquea 11.
+Fecha de registro: 2026-10-27. Actualización técnica: 2026-10-29, PROMPT 11. Estado: Caso 001 integrado funcionalmente con sus tres desenlaces, menú/guardado oficial y herramientas compartidas. Grabaciones de investigación con habla pendientes, con alternativa textual funcional; validación auditiva y Android pendientes. 09B pospuesto. Detalles y límites en [el informe de implementación](cases/CASE_001_IMPLEMENTATION_REPORT.md); sin comenzar 12.
+
+Revisión posterior de experiencia autorizada por el usuario: orientación contextual, consultas agrupadas, navegación coherente y menos pasos de selección. [Resultado y límites](cases/CASE_001_UX_REVIEW.md). Conserva historia, datos, decisiones y desenlaces; comodidad/duración con jugadores y Android aún requieren validación.
 
 ## 1. Identidad y concepto aprobados
 
@@ -27,7 +29,7 @@ Público objetivo **propuesto, pendiente de aprobación**: personas que disfruta
 
 Generar misterio, tensión y curiosidad mediante información que el jugador pueda observar, revisar y conectar. Las soluciones deben ser razonables; las decisiones deben poder justificarse con la evidencia disponible. El juego no debe depender únicamente de elegir respuestas.
 
-El ciclo previsto combina atender una comunicación, investigar registros y sonidos, consultar pistas, formular deducciones, decidir el despacho y observar consecuencias. El orden y los requisitos del Caso 001 están detallados en [su diseño](cases/CASE_001_DESIGN.md), elaborado en 02 y aprobado por el usuario al iniciar PROMPT 03; su implementación sigue pendiente.
+El ciclo combina atender una comunicación, investigar registros y sonidos, consultar pistas, formular deducciones, decidir el despacho y observar consecuencias. El orden y los requisitos del Caso 001 están detallados en [su diseño](cases/CASE_001_DESIGN.md), elaborado en 02 y aprobado al iniciar PROMPT 03; su integración funcional se realizó en 11, conservando pendientes auditivos y de plataforma.
 
 La investigación no tiene presión de tiempo permanente. En eventos críticos, determinadas acciones avanzan el estado de la emergencia. Se prioriza razonar sobre reaccionar rápidamente, evitando interrupciones innecesarias.
 
@@ -73,7 +75,7 @@ Preferir escenas reutilizables, interfaces separadas de la lógica narrativa, ca
 
 El código deberá ser legible, mantenible, modular y apropiado para Godot, con tipado de GDScript cuando resulte útil. Evitar sistemas excesivamente complejos y dependencias externas innecesarias. Optimizar recursos para Android y facilitar pruebas reproducibles.
 
-La base de carpetas, la escena de entrada y el Theme se documentan en [TECHNICAL_SETUP.md](TECHNICAL_SETUP.md). Menú, consola y cuatro módulos comparten motor/guardado en demos técnicas aisladas. Mapa permite consultar, confirmar asignaciones y recibir partes sin tiempo real; no define la ciudad canónica o el despacho oficial R1. Contratos en [UI_NAVIGATION.md](UI_NAVIGATION.md), [CALL_SYSTEM.md](technical/CALL_SYSTEM.md), [INVESTIGATION_SYSTEM.md](technical/INVESTIGATION_SYSTEM.md), [AUDIO_ANALYZER.md](technical/AUDIO_ANALYZER.md) y [MAP_DISPATCH_SYSTEM.md](technical/MAP_DISPATCH_SYSTEM.md). El contenido oficial espera su autorización.
+La base de carpetas, la escena de entrada y el Theme se documentan en [TECHNICAL_SETUP.md](TECHNICAL_SETUP.md). Menú, consola y cuatro módulos comparten motor/guardado; el Caso 001 oficial usa una ranura independiente de las demos. Mapa permite consultar, confirmar asignaciones, reubicar R1 y recibir partes sin tiempo real; solo representa los accesos aprobados del hotel. Contratos en [UI_NAVIGATION.md](UI_NAVIGATION.md), [CALL_SYSTEM.md](technical/CALL_SYSTEM.md), [INVESTIGATION_SYSTEM.md](technical/INVESTIGATION_SYSTEM.md), [AUDIO_ANALYZER.md](technical/AUDIO_ANALYZER.md) y [MAP_DISPATCH_SYSTEM.md](technical/MAP_DISPATCH_SYSTEM.md). No se integran otros casos.
 
 ## 7. Alcance del MVP
 
@@ -88,7 +90,7 @@ Entregables jugables previstos:
 - Analizador de audio simplificado con alternativas textuales.
 - Pistas y deducciones.
 - Mapa y despacho básico.
-- Tres resultados narrativos diseñados y aprobados: salida comunicada, refugio sin confirmación y contacto perdido en riesgo; sin implementación aún.
+- Tres resultados narrativos diseñados, aprobados e integrados: salida comunicada, refugio sin confirmación y contacto perdido en riesgo; presentación básica en 11, sin puntuación definitiva de 12.
 - Guardado local.
 - Ambientación visual y sonora.
 - Ejecución en Android.

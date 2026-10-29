@@ -33,6 +33,42 @@ func get_confirmed() -> Array:
 	return result
 
 
+func get_hypotheses() -> Array:
+	var hypotheses: Array = []
+	if _engine == null or _engine.get_state_snapshot().is_empty():
+		return hypotheses
+	for definition: Dictionary in _engine.get_investigation_catalog().get("deductions", []):
+		if Conditions.evaluate(definition.get("additional_conditions", {"op": "always"}), _engine.get_state_snapshot()):
+			hypotheses.append({"id": definition.id, "title": definition.title})
+	return hypotheses
+
+
+func relate_hypothesis(id: String, evidence_ids: Array, revision: int = -1) -> Dictionary:
+	if _engine == null or _engine.get_state_snapshot().is_empty():
+		return result(false, "INVALID", "No hay una investigación activa.")
+	if id.is_empty():
+		return result(false, "INSUFFICIENT", "Seleccione una hipótesis antes de comprobar pruebas")
+	for definition: Dictionary in _engine.get_investigation_catalog().get("deductions", []):
+		if definition.id != id:
+			continue
+		var state: Dictionary = _engine.get_state_snapshot()
+		if not Conditions.evaluate(definition.get("additional_conditions", {"op": "always"}), state):
+			return result(false, "LOCKED", "Esta hipótesis no admite nuevas comprobaciones ahora.")
+		if evidence_ids.is_empty():
+			return result(false, "INSUFFICIENT", "Seleccione las evidencias que sostienen esta hipótesis")
+		var unique: Array = []
+		for evidence_id: Variant in evidence_ids:
+			if evidence_id not in state.evidence or evidence_id in unique:
+				return result(false, "INVALID", "Todavía no consta en el expediente")
+			unique.append(evidence_id)
+			if evidence_id not in definition.required_evidence:
+				return result(false, "INSUFFICIENT", "Estas pruebas no sostienen juntas la hipótesis elegida. Compare qué afirma cada fuente")
+		if unique.size() != definition.required_evidence.size():
+			return result(false, "INSUFFICIENT", "La relación es plausible, pero falta contrastarla con otra fuente")
+		return relate(evidence_ids, revision)
+	return result(false, "INVALID", "Hipótesis no disponible.")
+
+
 static func evaluate(catalog: Dictionary, state: Dictionary, evidence_ids: Array) -> Dictionary:
 	if state.is_empty() or catalog.is_empty():
 		return result(false, "INVALID", "No hay una investigación activa.")

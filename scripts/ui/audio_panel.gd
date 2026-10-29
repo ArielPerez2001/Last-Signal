@@ -3,6 +3,7 @@ extends VBoxContainer
 const Analysis = preload("res://scripts/systems/audio_analysis_manager.gd")
 const Playback = preload("res://scripts/systems/audio_playback_controller.gd")
 const Catalog = preload("res://scripts/systems/audio_catalog_validator.gd")
+const Guidance = preload("res://scripts/ui/case_guidance.gd")
 var manager: RefCounted
 var playback: Node
 var saves: RefCounted
@@ -11,6 +12,7 @@ var _dragging: bool = false
 var _touch_index: int = -1
 var last_result: Dictionary = {}
 var _displayed_record: Dictionary = {}
+var _read_context: String = ""
 
 
 func _ready() -> void:
@@ -24,6 +26,8 @@ func _ready() -> void:
 	$Player/Transport/Replay.pressed.connect(func() -> void: _show_result(playback.replay()))
 	$Player/Transport/Full.pressed.connect(func() -> void: _show_result(playback.play_full()))
 	$Player/Register.pressed.connect(func() -> void: _show_result(manager.register_observation()))
+	$Player/ReadText.pressed.connect(_read_fragment)
+	$Player/Capture.pressed.connect(func() -> void: _show_result({"ok": true, "message": "\n".join(_displayed_record.get("capture_information", []))}))
 	$Player/Progress.drag_started.connect(func() -> void: _dragging = true)
 	$Player/Progress.drag_ended.connect(func(_changed: bool) -> void:
 		_dragging = false
@@ -51,6 +55,7 @@ func bind_engine(engine: RefCounted, save_service: RefCounted) -> void:
 	manager = Analysis.new(engine, playback)
 	manager.changed.connect(_request_refresh)
 	last_result = {}
+	_read_context = ""
 	$Feedback.visible = false
 	$SaveNotice.visible = false
 	$RetrySave.visible = false
@@ -85,7 +90,7 @@ func _refresh() -> void:
 	var records: Array = [] if manager == null else manager.get_recordings()
 	$Empty.visible = records.is_empty()
 	for record: Dictionary in records:
-		var button: Button = _button("%s · %s\n%s · %d observaciones registradas" % [record.title, record.recording_id, _time(record.duration), record.confirmed])
+		var button: Button = _button("%s\n%s · %d observaciones registradas" % [record.title, _time(record.duration), record.confirmed])
 		button.set_meta("recording_id", record.recording_id)
 		button.pressed.connect(_select_recording.bind(record.recording_id))
 		$Recordings.add_child(button)
@@ -98,22 +103,25 @@ func _refresh() -> void:
 		return
 	$Player/Title.text = record.title
 	$Player/Description.text = record.description
+	$Player/Capture.visible = not record.capture_information.is_empty()
 	$Player/Wave.peaks = record.waveform
 	$Player/WaveNote.text = "Onda de amplitud precalculada del archivo Original. Toque para buscar." if not record.waveform.is_empty() else "Sin datos de amplitud precalculados. Use el control temporal."
 	$Player/Progress.max_value = record.duration
 	_clear($Player/Filters)
 	for variant: Dictionary in record.variants:
 		var text: String = variant.label + (" · activo" if variant.filter_id == view.filter_id else "")
-		if not variant.available:
+		if Guidance.active(manager.engine) and variant.filter_id == "voces":
+			text = "Voces" + (" · activo" if variant.filter_id == view.filter_id else "")
+		if not variant.available and not (Guidance.active(manager.engine) and variant.text_only):
 			text += "\n" + variant.reason
 		var button: Button = _button(text)
-		button.disabled = not variant.available
+		button.disabled = not variant.available and not variant.text_only
 		button.set_meta("filter_id", variant.filter_id)
 		button.pressed.connect(_select_filter.bind(variant.filter_id))
 		$Player/Filters.add_child(button)
 	_clear($Player/Segments)
 	for segment: Dictionary in record.segments:
-		var button: Button = _button(segment.title + (" · seleccionado" if segment.segment_id == view.segment_id else "") + "\nReproducir intervalo")
+		var button: Button = _button(segment.title + (" · seleccionado" if segment.segment_id == view.segment_id else "") + ("\nSeleccionar intervalo textual" if view.state == "TEXT" else "\nReproducir intervalo"))
 		button.set_meta("segment_id", segment.segment_id)
 		button.pressed.connect(_select_segment.bind(segment.segment_id))
 		$Player/Segments.add_child(button)
@@ -121,9 +129,19 @@ func _refresh() -> void:
 	var observations: Array = manager.get_observations()
 	$Player/Observation.text = "No hay una observación preparada para esta combinación. Explore los intervalos y las mezclas." if observations.is_empty() else observations[0].title
 	$Player/Register.disabled = manager.engine.is_case_finished() or view.state in ["ERROR", "EMPTY"]
+	$Player/ReadText.visible = view.state == "TEXT"
+	var textual: bool = Guidance.active(manager.engine) and view.state == "TEXT"
+	for control: String in ["Wave", "WaveNote", "Progress", "Time", "Transport", "Observation", "Register"]:
+		get_node("Player/" + control).visible = not textual
+	if textual:
+		$Player/Description.text = "Audio pendiente de producción. Puedes investigar mediante sus transcripciones."
+		$Player/ReadText.text = "Fragmento leído" if _read_context == _context_key() else "Leer fragmento"
+		$Player/ReadText.disabled = view.segment_id.is_empty() or _read_context == _context_key()
+		if _read_context != _context_key():
+			$Player/Accessible.text = "Selecciona un fragmento y una variante, y pulsa «Leer fragmento» para examinarlo."
 	$Player/Transport/Pause.disabled = view.state != "PLAYING"
 	for name: String in ["Play", "Replay", "Full", "Stop"]:
-		get_node("Player/Transport/" + name).disabled = view.state in ["ERROR", "EMPTY"]
+		get_node("Player/Transport/" + name).disabled = view.state in ["ERROR", "EMPTY", "TEXT"]
 	_on_progress(view)
 
 
@@ -163,6 +181,37 @@ func _select_recording(id: String) -> void:
 	_show_result(manager.select_recording(id))
 
 
+func _context_key() -> String:
+	var view: Dictionary = playback.get_view()
+	return view.recording_id + ":" + view.filter_id + ":" + view.segment_id
+
+
+func _read_fragment() -> void:
+	var result: Dictionary = manager.consult_selected()
+	if result.ok:
+		_read_context = _context_key()
+	_show_result(result)
+	if result.ok and Guidance.active(manager.engine):
+		_focus_reading.call_deferred()
+
+
+func _focus_reading(frames: int = 2) -> void:
+	if not is_inside_tree():
+		return
+	if frames > 0:
+		var callback: Callable = _focus_reading.bind(frames - 1)
+		if not get_tree().process_frame.is_connected(callback):
+			get_tree().process_frame.connect(callback, CONNECT_ONE_SHOT)
+		return
+	if not is_visible_in_tree():
+		return
+	var ancestor: Node = get_parent()
+	while ancestor != null:
+		if ancestor is ScrollContainer:
+			ancestor.ensure_control_visible($Player/ReadText)
+		ancestor = ancestor.get_parent()
+
+
 func _select_filter(id: String) -> void:
 	_show_result(manager.set_filter(id))
 
@@ -197,7 +246,7 @@ func _on_save(report: Dictionary) -> void:
 
 func _state_text(view: Dictionary) -> String:
 	var labels: Dictionary = {"EMPTY": "Sin audio", "STOPPED": "Detenido", "PLAYING": "Reproduciendo", "PAUSED": "En pausa · pulse Reproducir para continuar", "ENDED": "Intervalo finalizado" if not view.segment_id.is_empty() else "Grabación finalizada", "ERROR": "Error de reproducción"}
-	return labels[view.state] + ("\n" + view.error if not view.error.is_empty() else "")
+	return labels.get(view.state, "Grabación pendiente · consulta textual") + ("\n" + view.error if not view.error.is_empty() else "")
 
 
 func _time(seconds: float) -> String:

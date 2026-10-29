@@ -14,6 +14,8 @@ const AUDIO_PATH: String = "res://data/audio/audio_analysis_demo.json"
 const AUDIO_DIRECTORY: String = "user://audio_analysis_demo"
 const DISPATCH_PATH: String = "res://data/maps/dispatch_demo.json"
 const DISPATCH_DIRECTORY: String = "user://dispatch_demo"
+const OFFICIAL_PATH: String = "res://data/cases/case_001/case_001.json"
+const OFFICIAL_DIRECTORY: String = "user://saves"
 
 var engine = Narrative.new()
 var saves: RefCounted
@@ -30,7 +32,7 @@ var _disposed: bool = false
 
 
 func _init(directory: String = DEMO_DIRECTORY, save_script: Script = null) -> void:
-	_storage_valid = directory in [DEMO_DIRECTORY, INVESTIGATION_DIRECTORY, AUDIO_DIRECTORY, DISPATCH_DIRECTORY] or (directory.begins_with("user://save_tests/") and directory == directory.simplify_path() and not directory.contains("\\"))
+	_storage_valid = directory in [DEMO_DIRECTORY, INVESTIGATION_DIRECTORY, AUDIO_DIRECTORY, DISPATCH_DIRECTORY, OFFICIAL_DIRECTORY] or (directory.begins_with("user://save_tests/") and directory == directory.simplify_path() and not directory.contains("\\"))
 	saves = (save_script if save_script != null else Saves).new(engine, directory if _storage_valid else "")
 	saves.operation_completed.connect(_on_save_result)
 	engine.node_changed.connect(_on_engine_changed)
@@ -39,6 +41,10 @@ func _init(directory: String = DEMO_DIRECTORY, save_script: Script = null) -> vo
 
 
 func prepare_call(path: String = DEMO_PATH) -> Dictionary:
+	if saves.get_paths().get("main", "").begins_with(OFFICIAL_DIRECTORY + "/") and path != OFFICIAL_PATH:
+		if engine.get_state_snapshot().is_empty():
+			state = CallState.ERROR
+		return _reject("isolated_storage", "El contenido de desarrollo no puede usar la partida oficial.")
 	if _locked():
 		return _result(false, "busy", "Espere a que termine la operación actual.")
 	if state in [CallState.INCOMING, CallState.CONNECTED, CallState.ENDED]:
@@ -55,6 +61,13 @@ func prepare_call(path: String = DEMO_PATH) -> Dictionary:
 	_history = []
 	state = CallState.INCOMING
 	_message = "Llamada entrante · demostración técnica, fuera de la campaña."
+	if path == OFFICIAL_PATH:
+		_message = "14/11/1998 · 02:17 AM · Línea dos entrante."
+		saves.set_autosave_enabled(true)
+		if not engine.start_case():
+			_busy = false
+			state = CallState.ERROR
+			return _engine_failure("No se pudo preparar el Caso 001.")
 	_last_error = {}
 	_busy = false
 	_publish()
@@ -68,10 +81,14 @@ func answer_call() -> Dictionary:
 		return _reject("not_incoming", "No hay una llamada entrante que responder.")
 	_busy = true
 	saves.set_autosave_enabled(true)
-	if not engine.start_case():
+	if engine.get_state_snapshot().is_empty() and not engine.start_case():
 		state = CallState.ERROR
 		_busy = false
 		return _engine_failure("No se pudo conectar la comunicación.")
+	var connection: String = engine.get_case_metadata().get("connection_action", "")
+	if not connection.is_empty() and not engine.process_investigation_action(connection, engine.get_state_snapshot().revision).ok:
+		_busy = false
+		return _engine_failure("No se pudo confirmar la conexión.")
 	_last_error = {}
 	_refresh()
 	_busy = false
@@ -96,6 +113,8 @@ func select_choice(choice_id: String, expected_revision: int) -> Dictionary:
 
 
 func restore_call(path: String = DEMO_PATH) -> Dictionary:
+	if saves.get_paths().get("main", "").begins_with(OFFICIAL_DIRECTORY + "/") and path != OFFICIAL_PATH:
+		return _reject("isolated_storage", "El contenido de desarrollo no puede usar la partida oficial.")
 	if _locked() or not _storage_valid:
 		return _reject("busy", "No se puede recuperar la llamada ahora.")
 	# Load a known case only when no session exists. Failed restoration preserves
@@ -163,8 +182,13 @@ func _refresh() -> void:
 		return
 	var previously_ended: bool = state == CallState.ENDED
 	state = CallState.ENDED if engine.is_case_finished() else CallState.CONNECTED
+	var connection: String = engine.get_case_metadata().get("connection_action", "")
+	if not connection.is_empty() and connection not in engine.get_state_snapshot().executed_actions:
+		state = CallState.INCOMING
 	_history = engine.get_conversation_history()
 	_message = "Comunicación finalizada · resultado de prueba: " + engine.get_ending_id() if state == CallState.ENDED else "Comunicación activa · seleccione una respuesta."
+	if _source == OFFICIAL_PATH:
+		_message = "Atención cerrada. Puede consultar las fuentes conservadas." if state == CallState.ENDED else "14/11/1998 · 02:17 AM · Las consultas no avanzan la emergencia."
 	if state == CallState.ENDED and not previously_ended:
 		communication_ended.emit(engine.get_ending_id())
 

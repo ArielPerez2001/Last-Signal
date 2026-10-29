@@ -2,9 +2,17 @@
 
 ## Estado actual
 
-Actualizado: 2026-10-28. **PROMPT 10 completado: Mapa operativo técnico con incidentes, patrulla/ambulancia, confirmación, partes narrativos, evidencias y recuperación de recursos ocupados.** Godot 4.7.2 estable / Windows / Compatibility. Cuatro módulos conservados, Continuar deshabilitado y Caso 001 sin integrar. 09B pospuesto intencionalmente y no bloquea 11. Trabajo detenido; no iniciar 11 sin autorización explícita. Sin commits/pushes en 10; cambios locales de 09A preservados. Android físico sigue pendiente.
+Actualizado: 2026-10-29. **PROMPT 11: implementación funcional del Caso 001 realizada, con validación auditiva y Android pendientes.** 38 diálogos/57 opciones, diez evidencias/cuatro deducciones, dos grabaciones con ruta textual y recursos sonoros pendientes, mapa del hotel/R1 y tres desenlaces. Nueva partida/Continuar oficiales, demos aisladas. Godot 4.7.2 estable / Windows / Compatibility. No se presenta como experiencia totalmente validada. Trabajo detenido antes de 12; 09B sigue pendiente. Sin commits/pushes en 11.
 
-Publicación anterior de 08 — 2026-10-28: el usuario solicitó «Directo a github», autorizando commit/push de aquella entrega a main de ArielPerez2001/Last-Signal, realizado en cc13c237731b039d2c9b373bc3613fd2170ba986. La autorización se limita a 08; no se extiende a 09A o funcionalidades posteriores.
+**Revisión UX posterior autorizada e implementada:** objetivo contextual, avisos de avance, consultas agrupadas, entrada sin doble respuesta, navegación con posición conservada, retorno directo, deducción con confirmación fija, despacho de dos pasos y audio textual sin controles inactivos. [Descripción y límites](cases/CASE_001_UX_REVIEW.md). Conserva datos/fingerprint y decisiones A/B/C. Pruebas de escritorio aprobadas; la comodidad y duración humana aún requieren una partida del usuario. No inicia fases posteriores ni publica cambios.
+
+Publicaciones históricas: 08 en cc13c23 y, tras otra autorización expresa «Directo a github» posterior al cierre de 10, entrega conjunta 09A/10 en **5d12f88c307b0234041d44f05dc1c37452627454** de main en ArielPerez2001/Last-Signal. Esta autorización no se extiende al trabajo nuevo de 11.
+
+## Publicación posterior autorizada de 11 y revisión UX
+
+- Después del cierre de la corrección UX, el usuario solicitó expresamente «Directo a github». Esta autorización posterior permite commit/push de la entrega local pendiente de 11 y su revisión; las restricciones de publicación registradas durante el desarrollo conservan su contexto histórico.
+- Destino: main de ArielPerez2001/Last-Signal. Antes de preparar el commit, HEAD y origin/main coincidían en 5d12f88; diff --check sin incidencias. Se incluyen contenido oficial, corrección de flujo, pruebas, documentación y capturas.
+- Se mantienen los resultados y límites documentados: Android, producción auditiva y evaluación humana pendientes. No se inicia 12, 13 o 09B por publicar esta entrega.
 
 ## Etapas completadas
 
@@ -528,6 +536,140 @@ Pendientes/no ejecutados: Android físico, APK/release, gestos/zonas seguras rea
 - Se incluyen juntos los cambios locales pendientes de 09A y 10, porque la integración de mapa/guardado utiliza la base de análisis de audio. Se conservan sus pruebas, recursos propios, documentación y capturas.
 - Rama de destino: main de ArielPerez2001/Last-Signal. Antes de preparar la entrega, HEAD y origin/main coincidían en cc13c23 y la comprobación de diferencias no detectó errores de espacios. Las validaciones funcionales y limitaciones siguen siendo las documentadas arriba.
 
+## PROMPT 11 — Integración oficial del Caso 001
+
+Autorización recibida el 2026-10-29. Auditoría en [CASE_001_IMPLEMENTATION_CHECKLIST.md](cases/CASE_001_IMPLEMENTATION_CHECKLIST.md), entrega/archivos/API/recorrido y límites en [CASE_001_IMPLEMENTATION_REPORT.md](cases/CASE_001_IMPLEMENTATION_REPORT.md). No se detectó contradicción esencial respecto al diseño aprobado. Se conservaron guion, cronología, identidad y reglas A/C/B; D-062–D-067 registran las adaptaciones de implementación. No se altera STORY_BIBLE ni los tres documentos originales del caso.
+
+- Contenido c001-1.0, esquema 4: 38 diálogos/57 opciones, siete transiciones y tres terminales (48 nodos totales), diez evidencias, cuatro deducciones, G01/G02 con cinco segmentos, L01/L02 y una R1.
+- Un motor/guardado compartido; variantes/filas de texto, hipótesis de dos/tres fuentes, consulta textual por AudioAnalysisManager y partes/reubicación por DispatchManager. No hay efecto de hotel/finales en UI ni estado persistente paralelo. K01/K02 y resultados se guardan en los registros/variables existentes.
+- Nueva partida prepara un checkpoint INCOMING; responder registra c001_answer; Continuar distingue entrante/conectada/cerrada, conserva herramientas e historial y solo ofrece archivos compatibles. Confirmar/cancelar sustitución no equivale a avance narrativo. Fallos de guardado mantienen memoria y reintentan el mismo estado.
+- R1 RESCUE exterior usa asignación/estado centrales; U01/U02 avanzan a N19/N20 en la misma transacción; M05 cambia de frente a patio sin liberar entre ambos. K02 cierra las proyecciones de unidad/incidentes conservando última posición y bloquea adquisiciones/órdenes antes de terminar la lectura F.
+- G01/G02 no tienen archivos de voz reproducibles. Rutas vacías/available=false y modo TEXT; alternativa N12 y transcripción real permiten avanzar. El inventario de futuras locuciones tiene 48 entradas de línea/variante, sin tiempos o archivos inventados. No implementa 09B.
+- Intervención actual visible aparte de Consultar historial; pestañas sin avance de peligro; mapa limitado al hotel; N37 cierre básico sin puntuación definitiva.
+
+### Matriz narrativa ejecutada
+
+Todas parten de confianza/estrés 1/1, R1 disponible, sin evidencias o deducciones. Condiciones iniciales concretas, decisiones ordenadas, evidencias, deducciones, despachos y resultado se conservan en [narrative_coverage.json](validation/prompt_11/narrative_coverage.json).
+
+| Ruta | Decisiones/recuperación | Herramientas y despacho | Final | Resultado |
+| --- | --- | --- | --- | --- |
+| TR01 | Trato cordial, interpretación y servicio | Transcripción E03, patio directo; Q01/Q02 | A | PASS |
+| TR02 | Trato deteriorado, rectificación N18, corrección del plan | N12/plano, frente y reubicación a patio; Q01/Q02 | A | PASS |
+| TR03 | Investigación mínima, refugio | Frente; Q01; sin audio/plano opcionales | B | PASS |
+| TR04 | Servicio genérico sin interpretar | N12/plano/patio; solo Q01 | B | PASS |
+| TR05 | Servicio interpretado con cooperación insuficiente | Patio, Q01/Q02; hostilidad en N03/N21 | B | PASS |
+| TR06 | Pasillo tras advertencia, confianza agotada/estrés alto | Frente y Q01; sin calma | C | PASS |
+| TR07 | Misma apertura con historial cordial | Frente/Q01; cancelación previa de advertencia | B | PASS |
+| TR08 | Tutorial/consulta histórica y ECO | Patio, Q01–Q04, G01 textual, N38 | A | PASS |
+| TR09 | Pistas opcionales añadidas a TR03 | Frente, Q01/Q03/Q04 y N38 | B | PASS |
+| TR10 | Pistas opcionales añadidas a TR06 | Frente, Q01/Q03/Q04 y N38 | C | PASS |
+
+Se ejecutan todos los 38 diálogos y las 57 opciones entre rutas, y se obtienen las diez evidencias. Cada checkpoint pasa validación de historial, escritura real, carga en otro motor y comparación exacta de estado/transcripción, sin señales nuevas de evidencia o eventos. Esto no demuestra todas las secuencias arbitrarias de consultas/bucles. Dominio sintético de K02: 108 entradas, 18 inválidas, 4 A, 82 B, 4 C; no afirma que todos los estados sintéticos sean alcanzables desde nueva partida.
+
+### Treinta grupos de aceptación
+
+| Grupo | Evidencia ejecutada |
+| --- | --- |
+| 01 Carga | Catálogo oficial validado sin referencias/recursos falsamente disponibles |
+| 02 Nueva partida | Menú inicia c001, estados iniciales y partida aislada |
+| 03 Llamada | INCOMING, respuesta única y continuación antes/después de responder |
+| 04 Diálogo | Opciones reales, revisiones, emociones saturadas y variantes |
+| 05 Evidencias | Diez obtenibles; conjunto único y fichas comunes |
+| 06 Ocultación | Proyecciones/condiciones conservan pistas no descubiertas |
+| 07 Audio | Grabación/variante/segmento seleccionables en modo TEXT, sin stream inventado |
+| 08 Alternativa textual | E03 por consulta explícita y ruta N12; selección sola no otorga |
+| 09 Deducciones | Q01–Q04 con conjuntos exactos de dos/tres fuentes |
+| 10 Intentos erróneos | Hipótesis ausente, subconjunto, prueba ajena/extra; sin efectos |
+| 11 Mapa | L01/L02 del hotel y una R1; marcadores/lista consultables |
+| 12 Despacho válido | Asignación y partes reales, evidencias/diálogo comprometidos juntos |
+| 13 Despacho inválido | Duplicado/ocupada/ID ajeno/parte temprano, sin mutación parcial |
+| 14 Eventos críticos | K01/K02 únicos, revisión obsoleta rechazada, cancelación segura |
+| 15 Final A | TR01/TR02/TR08 |
+| 16 Final B | TR03/TR04/TR05/TR07/TR09 |
+| 17 Final C | TR06/TR10 |
+| 18 Exclusión | Tabla sintética completa y resultados de rutas reales |
+| 19 Historial emocional | TR06 frente a TR07: mismo plan, resultado distinto |
+| 20 Sin audición | Rutas N12 y transcripciones, sin necesitar archivo o altavoz |
+| 21 Guardado inicial | Checkpoint entrante y después de responder; menú frío compatible |
+| 22 Conversación | Restauración exacta en cada elección, sin reentrar efectos |
+| 23 Deducción persistida | Q confirmadas conservadas; repetir no suma efectos |
+| 24 Despacho persistido | En tránsito/lista/reubicación se recuperan sin duplicar R1 |
+| 25 Final persistido | K02/ramas/terminales y archivo final de consulta |
+| 26 Repetición | Reemplazo cancelado conserva; confirmado reinicia |
+| 27 Continuar | Archivo compatible habilita; inválido se conserva y deshabilita; respaldo válido recupera |
+| 28 Navegación | Cuatro secciones/historial sin alterar snapshot |
+| 29 Bloqueos | Rutas completas/estado estable en cada paso, referencias/grafo sin ciclos automáticos cerrados |
+| 30 Regresión | Dieciséis suites anteriores PASS; ningún error crítico pendiente detectado |
+
+### Resultados de pruebas y límites
+
+Entorno: Godot 4.7.2.stable.official.ed1daf0bf, Windows/Compatibility, OpenGL 3.3.0 / Intel UHD Graphics. Las pruebas usan únicamente user://save_tests. CALL_DIAGNOSTIC write_error es el fallo de escritura deliberadamente inyectado; no se cuenta como error inesperado.
+
+| Comprobación | Resultado |
+| --- | --- |
+| test_case_flow | PASS, 3285 aserciones; diez rutas, 57 opciones/38 diálogos, checkpoints y dominio K02 |
+| test_case_validation | PASS, 52 aserciones; datos/estados inválidos, sesión aún no iniciada, fallo de escritura/reintento, respaldo y menú frío |
+| GUI headless 720×1280 / 1080×1920 | PASS, 1807 por ejecución |
+| GUI headless 1080×2400 / 720×1600 | PASS, 1803 por ejecución |
+| GUI gráfica 720×1280 / 1080×1920 | PASS, 1872 por ejecución |
+| GUI gráfica 1080×2400 / 720×1600 | PASS, 1868 por ejecución |
+| Bootstrap/navegación | PASS en cuatro tamaños; 198 nodos estables en navegación vacía |
+| Regresión de dieciséis suites | PASS, 8178 aserciones: 905+114+334+151+405+65+63+68+1719+2378+69+88+11+1680+70+58 |
+| Referencia principal | 13322 = 8178 + 3285 + 52 + 1807; no suma repeticiones/capturas como escenarios nuevos |
+| Evidencia visual | 52 PNG reales, trece por tamaño, dimensiones verificadas y revisión visual del agente |
+| Importación/arranque | Importación final sin errores/advertencias de script; arranque normal headless y gráfico con salida 0 |
+| Integridad | 472 archivos no vacíos, 337 enlaces Markdown locales válidos y 78 referencias runtime res:// resolubles (sin contar rutas deliberadamente inválidas de pruebas) |
+| Alcance/archivos | 37 existentes modificados y 64 nuevos, incluidos 52 PNG. Sin cambios en STORY_BIBLE, tres fuentes originales del caso, project.godot, Theme/iconos o JSON/WAV de las demos. HEAD sigue 5d12f88; sin commits/pushes |
+
+Las 65 aserciones gráficas adicionales verifican trece capturas por ejecución. Los recuentos de GUI incluyen controles de infraestructura, no ese número de escenarios independientes. Diferencias entre proporciones dependen de controles de scroll. Los controles adicionales cambian recuentos respecto a las fases anteriores sin retirar sus aserciones funcionales.
+
+Incidencias corregidas: contratos de dos/tres fuentes y transcripción frente a examen; extensión operativa necesaria para partes/reubicación; llamada inicial sin registro de respuesta; historial antiguo junto a respuestas nuevas; rechazo de demo en carpeta oficial conservando ERROR sin sesión; consulta de hipótesis sin sesión; un auxiliar invocaba dispose inexistente de SaveManager. Dos intentos gráficos (1080×1920 y 720×1600) agotaron el vigilante esperando un fotograma bajo carga/ocultación. Se amplió el vigilante a 180 s y se corrigió el auxiliar de captura para pedir RenderingServer.force_draw después de un frame de proceso, sin depender de frame_post_draw de una ventana oculta. Las capturas finales se revisan separadamente; los intentos fallidos no se presentan como PASS. El vigilante no es un temporizador del juego.
+
+**Pendientes reales:** producción e inteligibilidad de G01/G02 y sus variantes, experiencia auditiva completa; Android/APK/exportación, gestos/zonas seguras/lector de pantalla y perfil móvil; prueba de lectura/duración humana 8–15 min; cortes eléctricos o disco físicamente lleno. Se realizaron recorridos GUI automatizados y revisión visual, no una partida humana cronometrada. 09B permanece pendiente. No hay otros casos, puntuación definitiva de 12, pulido completo de 13, instalaciones, commits o pushes.
+
+## Corrección UX posterior a 11 — 2026-10-29
+
+Autorización: «Adelante, hazlo» tras el análisis de tedio/orientación. Se delimita a mejorar el flujo existente; D-068–D-071, [CASE_001_UX_REVIEW.md](cases/CASE_001_UX_REVIEW.md) y UI_NAVIGATION registran decisiones y funcionamiento actual. Las métricas/capturas anteriores de 11 se conservan como evidencia de aquella entrega.
+
+### Cambios comprobables
+
+- Investigación cordial inicial: dos opciones principales y Otras consultas, en lugar de nueve simultáneas. Las 57 opciones permanecen en el motor; preguntas habilitadas y calma necesaria aparecen entre las principales. Objetivo visible sin combinaciones correctas o información aún desconocida.
+- Una interacción de Atender conecta y ejecuta la opción existente; introducción/tutorial conservados. Cabecera compacta y mensaje vigente con menos rótulos repetidos.
+- Cada herramienta contiene instrucciones locales y Retomar llamada. Cambiar pestaña conserva snapshot y desplazamiento; las acciones explícitas enfocan confirmación, transcripción o explicación nueva.
+- Despacho guiado: elegir acceso y confirmar (dos controles, frente a cinco selecciones/revisión previas). R1 e incidente preseleccionados solo al ser únicos. Cancelar/consultar no asigna; una confirmación obsoleta se invalida.
+- Partes disponibles desde investigación/audio/expediente: solo el gesto explícito de recibir parte prepara from_node mediante opciones sin efectos. Candidato atómico, rollback de diario/visitas y publicación única. No cruza emoción, evidencia, transición o cambio de plan. Corregir un plan sigue siendo una elección explícita.
+- Hipótesis seleccionable, pregunta/selección y comprobación visibles al pie; confirmación limpia selección temporal. Texto pendiente de audio tiene Leer fragmento como única consulta/registro; transporte inactivo oculto y lectura completa enfocada.
+- Avisos de nueva evidencia/respuesta y objetivo actualizado; no se fabrican descubrimientos al recuperar una partida. Las demos conservan su contrato.
+
+### Validación final de esta revisión
+
+Godot 4.7.2 estable / Windows / Compatibility / Intel UHD Graphics. Veinte suites funcionales aprobadas, sin diagnósticos inesperados en las ejecuciones finales. El write_error de la suite de fallos es deliberado y se comprueba con recuperación/reintento.
+
+| Grupo | Resultado |
+| --- | --- |
+| Dieciséis suites anteriores | PASS, 8176 aserciones; mismas comprobaciones funcionales. Dos controles de scroll menos en el auxiliar GUI de investigación frente a la referencia anterior |
+| Diez rutas originales del Caso 001 | PASS, 3285 aserciones; A/B/C, todas las opciones/diálogos, evidencias y checkpoints sin duplicación |
+| Validación del caso/fallos | PASS, 52 aserciones; arranque frío y conservación ante errores |
+| Nueva suite case_guidance | PASS, 108 aserciones; consultas puras, partes desde tres contextos, revisión obsoleta, incidente inválido, rollback completo, una publicación, guardado/recuperación e instrucción crítica protegida |
+| GUI headless 720×1280 / 1080×1920 | PASS, 1898 por ejecución |
+| GUI headless 1080×2400 / 720×1600 | PASS, 1894 por ejecución |
+| GUI gráfica 720×1280 / 1080×1920 | PASS, 1968 por ejecución, incluidas catorce capturas |
+| GUI gráfica 1080×2400 / 720×1600 | PASS, 1964 por ejecución |
+| Referencia sin repeticiones | 13519 = 8176 + 3285 + 52 + 108 + 1898; son aserciones, no escenarios independientes |
+| Bootstrap/navegación | PASS en los cuatro tamaños; 222 nodos estables en navegación sin sesión |
+| Capturas | 56 PNG reales, catorce estados por tamaño; dimensiones verificadas y revisión visual del agente |
+| Importación | Salida 0, sin errores o advertencias de script |
+
+La GUI verifica objetivo accionable, introducción sin botón de responder duplicado, desplegable de consultas/hipótesis, confirmación/cancelación visibles tras elegir destino, deducciones de dos/tres fuentes con barra fija, limpieza temporal, aviso NUEVO en Llamadas, regreso directo y posición de lectura conservada sin cambio narrativo. El selector se abre por entrada real y su selección se ejercita mediante el evento del control; no acredita interacción física Android.
+
+Evidencia nueva separada en docs/validation/case_001_ux: menu, incoming, contradiction, transcript, map, confirmation, restored, deduction_selection, deduction, revelation, critical, ending_a, resolution, closed_archive. Muestras: [orientación](validation/case_001_ux/720x1280/contradiction.png), [selección/confirmación fija](validation/case_001_ux/720x1280/deduction_selection.png), [parte tras recuperar](validation/case_001_ux/720x1280/restored.png) y [transcripción](validation/case_001_ux/720x1280/transcript.png).
+
+Integridad respecto a la entrega local anterior: 61 archivos nuevos (56 capturas, perfil y prueba con sus UID, documento UX), 24 existentes modificados; no se eliminan archivos. Datos oficiales, voice_inventory, documentos fuente de 02/STORY_BIBLE, configuración/Theme y datos/WAV de demos conservan SHA-256. No se requiere migración de partidas. SaveManager no modificado. HEAD continúa 5d12f88, sin stage/commit/push.
+
+Incidencias corregidas durante revisión: explicación oculta por cambio de pestaña, contexto de parte dependiente de ruta de UI, selección repetida y confirmación distante, lectura nueva fuera del área visible, foco diferido pendiente tras destruir una pantalla. Los nuevos trabajos de foco/scroll usan señales de un fotograma ligadas al Node y se desconectan al destruirlo; solicitudes de foco repetidas se agrupan. La prueba de menú frío finaliza sin errores de corrutinas abandonadas.
+
+Limitaciones: no se afirma que el juego ya resulte entretenido para todos ni que dure 8–15 minutos; falta evaluación del usuario/lectores. Android físico, gestos, accesibilidad y perfil móvil pendientes. Grabaciones oficiales/validación auditiva y 09B siguen pendientes. No se desarrollan puntuación de 12, pulido completo de 13, otros casos o nuevas dependencias. Corrección terminada; se detiene el trabajo.
+
 ## Problemas conocidos y pendientes
 
 - La carpeta ya tiene repositorio Git local y origin configurado por autorización posterior del usuario. La futura publicación de otros cambios sigue requiriendo autorización explícita.
@@ -535,16 +677,16 @@ Pendientes/no ejecutados: Android físico, APK/release, gestos/zonas seguras rea
 - No están definidos dispositivos objetivo, versión mínima de Android ni presupuestos técnicos medibles.
 - Público objetivo y mejoras de accesibilidad adicionales figuran como propuestas, pendientes de aprobación.
 - No hay contradicciones detectadas entre MVP y campaña. PROMPT 02 confirma incendio y clausura en 1981; sus fechas exactas siguen propuestas. Su relación causal con el incidente general sigue abierta.
-- El objetivo de 8–15 minutos del Caso 001 sigue siendo una estimación sin pruebas de personas reales. El núcleo genérico y su persistencia están probados en 05–06; su integración con el contenido oficial y sus invariantes específicas siguen pendientes.
+- El objetivo de 8–15 minutos del Caso 001 sigue siendo una estimación sin pruebas de personas reales. Integración oficial, invariantes y persistencia se verifican por las rutas de 11; no sustituyen una medición de lectura humana o una prueba auditiva completa.
 - Android sigue pendiente: no hay APK, exportación, SDK validado, plantillas de exportación verificadas ni prueba en dispositivo real. Las capturas son de escritorio y no demuestran zonas seguras o rendimiento móvil.
-- Menú y cuatro módulos comparten demos técnicas solo en desarrollo; Mapa ya consulta y despacha con partes explícitos. No hay contenido oficial del Caso 001, voces/subtítulos, geografía canónica completa, resultados definitivos o Continuar activado. 09B pospuesto no bloquea 11.
+- Menú y cuatro módulos comparten el Caso 001 oficial y conservan demos técnicas aisladas en desarrollo. Continuar oficial habilitado solo con checkpoint compatible. Sin voces/subtítulos, geografía canónica completa o puntuación definitiva de 12. Grabaciones de investigación pendientes; 09B pospuesto.
 - Los márgenes seguros Android tienen adaptación por API, pendiente de probar en dispositivo. Retroceso gestual/físico, densidad táctil real, lector de pantalla y rendimiento móvil permanecen pendientes. No hay APK ni pruebas en teléfono.
 - Créditos carece todavía de autoría confirmada y Configuración no permite ajustar preferencias; ambas limitaciones son visibles en la interfaz.
 - El validador no demuestra todas las combinaciones de condiciones. Una carga estructuralmente válida puede tener un inicio bloqueado: start_case informa el error sin sesión parcial. Las elecciones fallidas conservan su estado anterior. Los contratos de variantes de texto y resolución específica del caso siguen pendientes de integración autorizada.
 - Guardados 1/2/3/4 exigen contenido/fingerprint exactos, sin migraciones. I/O síncrona/cotas/bloqueos del proceso, sin atomicidad universal o durabilidad eléctrica. Demos informan/reintentan; políticas oficiales de salida/reemplazo siguen futuras. Audio sin confirmar/posición y selecciones operativas son temporales; observaciones/asignaciones/partes confirmados persisten.
 - La transcripción deriva presentación lógica confirmada, no acredita lectura humana o dibujo completo antes de una interrupción. Su reconstrucción y los controles crecen con el historial; no se ha medido rendimiento móvil. La demostración está limitada y el guardado conserva sus cotas de 06.
-- La UI de investigación permite dos fichas por relación; servicio/esquema admiten tres para contenido futuro. No hay reglas repetibles o ambiguas, IA de deducción, inventario convencional o migración de partidas. El coste de regenerar tarjetas y reconstruir registros no se ha perfilado en Android.
+- La UI de investigación admite dos/tres fuentes según catálogo; las demos anteriores mantienen selección de dos. No hay reglas repetibles o ambiguas, IA de deducción, inventario convencional o migración. Regeneración de tarjetas y reconstrucción del historial sin perfil Android.
 
 ## Próxima etapa autorizable
 
-**11 — Integración del Caso 001**, únicamente tras autorización explícita de su prompt. 09B permanece pospuesto y no lo bloquea. **La fase 10 termina aquí: no se inicia 11, no se implementa 09B y no se realizan commits/pushes.** Al reanudar consultar [AGENTS.md](../AGENTS.md), [MAP_DISPATCH_SYSTEM.md](technical/MAP_DISPATCH_SYSTEM.md), [AUDIO_ANALYZER.md](technical/AUDIO_ANALYZER.md), [INVESTIGATION_SYSTEM.md](technical/INVESTIGATION_SYSTEM.md), [CALL_SYSTEM.md](technical/CALL_SYSTEM.md), [NARRATIVE_ENGINE.md](technical/NARRATIVE_ENGINE.md), [SAVE_SYSTEM.md](technical/SAVE_SYSTEM.md) y fuentes oficiales del caso.
+**12 — Resultados y finales**, solo mediante autorización explícita de su prompt. La integración funcional de 11 termina aquí con producción/validación sonora y Android pendientes. 09B sigue pospuesto. **No se inicia 12 ni se realizan commits/pushes.** Al reanudar consultar [AGENTS.md](../AGENTS.md), [informe del caso](cases/CASE_001_IMPLEMENTATION_REPORT.md), checklist, documentación técnica y diseño aprobado. El roadmap no constituye autorización.

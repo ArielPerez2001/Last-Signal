@@ -557,6 +557,76 @@ Los registros D-012–D-015 describen el estado de diseño al entregar 02. Su ap
 - **Consecuencias:** 65 aserciones de mapa, 63 de despacho y 1714 de integración base; 6294 anteriores, total principal 8136 sin sumar repeticiones/capturas. Un ajuste de limpieza del auxiliar de audio conserva sus once aserciones y elimina el aviso observado en tres repeticiones finales. Pendientes Android/APK/release, gestos físicos, accesibilidad y perfil móvil. Registro de 25 grupos en PROGRESS; no iniciar 11.
 - **Estado:** adoptada y verificada en PROMPT 10.
 
+## D-062 — Autorización y autoridad del Caso 001
+
+- **Fecha:** 2026-10-29.
+- **Decisión:** PROMPT 11 autoriza integración oficial del diseño de 02 aprobado por D-017, menú, persistencia, herramientas, pruebas y cierre básico. Se conserva el guion/historia y se detiene antes de 12.
+- **Motivo/consecuencias:** sustituye prohibiciones temporales de 10 respecto al Caso 001/Continuar, sin autorizar otros casos, 09B, instalaciones, APK o commits/pushes. Auditoría inicial sin bloqueo narrativo.
+- **Estado:** autorizada por el usuario; implementada funcionalmente.
+
+## D-063 — Contenido estable y resolución declarativa
+
+- **Fecha:** 2026-10-29.
+- **Decisión:** JSON oficial esquema 4, c001-1.0: 38 diálogos/57 opciones originales, siete transiciones y tres terminales. Variantes/filas declarativas validadas y compartidas por vista/historial; panel_id solo presenta herramientas.
+- **Motivo/consecuencias:** reutiliza el motor sin lógica de hotel en scripts. K02 evalúa A/C/B según 02 y congela variables/acciones/última posición; el diario acredita el estado previo, sin duplicar resolution_snapshot o deducciones. N37 es cierre básico, no 12. Diez rutas/108 entradas sintéticas verifican exclusión y condiciones, sin prometer todas las secuencias posibles.
+- **Estado:** implementada y probada.
+
+## D-064 — Grabaciones pendientes y consulta textual explícita
+
+- **Fecha:** 2026-10-29.
+- **Decisión:** G01/G02 conservan IDs, segmentos y transcripciones; sus recursos con habla no existen. available=false y ruta vacía producen modo TEXT, sin reproducción ficticia. Regla consult permite descubrimiento explícito por transcripción con umbral cero; 09A conserva examen temporal. capture_information proyecta N-4 solo después de su descubrimiento.
+- **Motivo/consecuencias:** aplica la alternativa accesible autorizada en 11, conserva ruta N12 y evita sustituir voces por señales engañosas. No hay TTS, proveedor o implementación de 09B. Inventario futuro de 48 líneas/variantes sin rutas inexistentes. Validación auditiva oficial pendiente.
+- **Estado:** lógica textual implementada; producción/verificación sonora pendientes.
+
+## D-065 — R1, partes y reubicación sin duplicación
+
+- **Fecha:** 2026-10-29.
+- **Decisión:** añadir RESCUE exterior, from_node/next de partes, reposition validada y closed_when/layout_kind opcionales al catálogo operativo. Mismos bindings centrales y comandos registrados.
+- **Motivo/consecuencias:** U01/U02 avanzan N19/N20 y conceden entradas atómicamente; M05 cierra inspección del frente y asigna patio sin recurso libre intermedio. CLOSED es proyección del cierre, conservando posición para evaluación; no libera R1 ni crea bomberos actuales. Las reglas/demos originales de 10 conservan su ciclo.
+- **Estado:** implementada y probada, incluida restauración y duplicados.
+
+## D-066 — Menú oficial, conexión y conservación del progreso
+
+- **Fecha:** 2026-10-29.
+- **Decisión:** Nueva partida/Continuar usan contenido conocido y user://saves, con confirmación de reemplazo. connection_action referencia acción interna declarada para registrar respuesta; no aparece en Expedientes. Demos no pueden usar el espacio oficial.
+- **Motivo/consecuencias:** restaura INCOMING/CONNECTED/ENDED, sin perder o repetir N01. Inspección compatible desde arranque frío; inválidos conservados, respaldo disponible validado. Una sesión sucia no abandona consola si falla guardar; reintento escribe el mismo snapshot. Intervención vigente separada del historial para que texto/opciones correspondan sin desplazar consultas anteriores.
+- **Estado:** implementada y probada con ranuras aisladas, reemplazo cancelado/confirmado y fallos de E/S.
+
+## D-067 — Alcance de verificación de 11
+
+- **Fecha:** 2026-10-29.
+- **Decisión:** diez rutas de referencia, cobertura de 38 diálogos/57 opciones/diez evidencias, tabla sintética de 108 entradas, checkpoints reales, tres suites nuevas y regresión de dieciséis anteriores; UI real en cuatro tamaños.
+- **Motivo/consecuencias:** 3285 aserciones de flujo, 52 de validación y 1807 de GUI headless base; 8178 anteriores: 13322 de referencia, sin sumar repeticiones como escenarios nuevos. 52 capturas de Windows; tiempos automáticos no son duración humana. Android/audición, accesibilidad y perfil móvil pendientes. Se declara integración funcional realizada, no experiencia totalmente validada.
+- **Estado:** comprobaciones funcionales de escritorio aprobadas; límites registrados en PROGRESS y el informe. Sin iniciar 12 ni operaciones remotas.
+
+## D-068 — Autorización de corrección de experiencia
+
+- **Fecha:** 2026-10-29.
+- **Decisión:** aplicar el diagnóstico de orientación/tedio tras «Adelante, hazlo». Objetivos contextuales, navegación coherente, avisos, menos selección redundante y comprobaciones de UI. No es inicio de 12/13/09B.
+- **Consecuencias:** conservar historia, elecciones relevantes, condiciones A/B/C y contenido/fingerprint. Sin commits/pushes, instalaciones o APK. [Revisión](cases/CASE_001_UX_REVIEW.md).
+- **Estado:** autorizada e implementada.
+
+## D-069 — Orientación y controles según contexto
+
+- **Fecha:** 2026-10-29.
+- **Decisión:** perfil de presentación c001 sin efectos; guía y avisos comunes, entrada sin doble responder, consultas secundarias plegables, retorno directo y posición por pestaña. Selector de hipótesis y barra fija, selección temporal limpia al confirmar. Mapas de destino único preseleccionan R1/incidente, manteniendo confirmación y cancelación; texto pendiente de audio tiene una sola consulta.
+- **Consecuencias:** las herramientas se orientan con información conocida, sin revelar combinaciones o el destino correcto. No se elimina ninguna de las 57 opciones del motor. Demos y controles de audio real conservados. Foco de transcripción/explicación tras acción explícita; consulta y navegación no avanzan peligro.
+- **Estado:** implementada y comprobada en escritorio; evaluación humana pendiente.
+
+## D-070 — Preparación atómica del contexto de partes
+
+- **Fecha:** 2026-10-29.
+- **Decisión:** API optativa preview/process_contextual_dispatch, activada en DispatchManager para UI oficial. Solo opciones elegibles sin efectos y entradas de diálogo sin efectos pueden preparar from_node sobre una instancia candidata; comando real existente, una publicación estable y diario normal.
+- **Consecuencias:** misma disponibilidad desde investigación/audio/expediente sin mutar al consultar pestañas. No se atraviesan pruebas, emociones, transiciones o cambios de plan. Fallo revierte navegación preparatoria/diario junto a los efectos. Revisión obsoleta rechazada antes de navegar; repetición no duplica partes. Mantiene API estricta, JSON, fingerprint y formatos de guardado.
+- **Estado:** implementada y probada con rollback, reanudación exacta y plan crítico protegido.
+
+## D-071 — Verificación y límites de la corrección UX
+
+- **Fecha:** 2026-10-29.
+- **Decisión:** mantener las diez rutas originales y regresión de dieciséis sistemas; añadir 108 aserciones de contexto/orientación y actualizar el recorrido GUI, en cuatro tamaños con capturas reales separadas de las originales.
+- **Consecuencias:** funcionamiento y menor cantidad de pasos comprobables no equivalen a validar satisfacción o duración humana. Android físico, rendimiento/accesibilidad móvil y producción auditiva siguen pendientes. No presentar la actualización como implementación de 09B, 12 o 13.
+- **Estado:** comprobada en escritorio; resultados en PROGRESS. Trabajo detenido al terminar esta corrección.
+
 ## Plantilla para nuevos registros
 
 - **Identificador y tema:** D-XXX — título.

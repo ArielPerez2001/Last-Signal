@@ -114,9 +114,11 @@ Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**
 - **Dependencias:** 07, 08, 09A y 10, diseño de 02 aprobado y autorización explícita de PROMPT 11. 09B pospuesto no bloquea esta fase.
 - **Entregables:** contenido integrado y recorridos completos hasta los estados de cierre previstos.
 - **Aceptación:** llamadas, registros, audio, deducciones, eventos y despacho comparten un estado coherente sin bloqueos de progresión.
-- **Estado:** pendiente.
+- **Estado:** implementación funcional completada con validaciones pendientes. 38 diálogos/57 opciones, diez evidencias/cuatro deducciones, dos grabaciones con ruta textual y recursos sonoros pendientes, dos accesos del hotel y R1. Diez recorridos y tres cierres con guardado/restauración; Nueva partida/Continuar oficiales, demos aisladas. Validación auditiva y Android pendientes; no se considera totalmente validada la experiencia. [Informe](cases/CASE_001_IMPLEMENTATION_REPORT.md). 09B permanece pospuesto; no iniciar 12 sin su prompt.
 
 ## 12. Resultados y finales
+
+Nota de continuidad: antes de esta fase se autorizó una corrección UX de 11, descrita en [CASE_001_UX_REVIEW.md](cases/CASE_001_UX_REVIEW.md). Su implementación no autoriza ni inicia 12, 13 o 09B.
 
 - **Objetivo:** presentar los tres resultados narrativos del Caso 001.
 - **Dependencias:** 11 y condiciones aprobadas en 02.

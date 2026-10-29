@@ -37,9 +37,13 @@ func get_recording(id: String) -> Dictionary:
 	if record.is_empty():
 		return _result(false, "UNAVAILABLE", "La grabación no está disponible.")
 	var projected: Dictionary = {"recording_id": record.recording_id, "title": record.title, "description": record.description, "duration": record.duration, "segments": record.segments.duplicate(true), "waveform": record.get("waveform", []).duplicate(), "variants": []}
+	projected.capture_information = []
+	for info: Dictionary in record.get("capture_information", []):
+		if Conditions.evaluate(info.condition, engine.get_state_snapshot()):
+			projected.capture_information.append(info.text)
 	for variant: Dictionary in record.variants:
 		var available: bool = variant.get("available", true) and Catalog.resolve_stream(variant.audio_path) != null
-		projected.variants.append({"filter_id": variant.filter_id, "label": variant.label, "available": available, "reason": "" if available else "Variante no disponible en esta instalación."})
+		projected.variants.append({"filter_id": variant.filter_id, "label": variant.label, "available": available, "text_only": variant.get("available") == false and variant.audio_path == "", "reason": "" if available else "Grabación pendiente · transcripción disponible."})
 	return _result(true, "AVAILABLE", "", projected)
 
 
@@ -65,6 +69,16 @@ func play_segment(id: String) -> Dictionary:
 func get_accessible_information() -> String:
 	var segment: Dictionary = Catalog.find_segment(_current(), playback.get_view().segment_id)
 	return segment.get("accessible_information", {}).get(playback.get_view().filter_id, "Seleccione un intervalo para consultar su descripción sonora equivalente.")
+
+
+func consult_selected() -> Dictionary:
+	if _current().is_empty() or playback.get_view().segment_id.is_empty():
+		return _result(false, "UNAVAILABLE", "Seleccione un fragmento y una variante.")
+	for rule: Dictionary in _matching_rules():
+		if rule.get("discovery_mode") == "consult":
+			_qualified[rule.id] = {"recording_id": rule.recording_id, "segment_id": rule.segment_id, "filter_id": rule.filter_id, "listened_ms": ceili(rule.min_listen_seconds * 1000.0)}
+			return register_observation(rule.id)
+	return _result(true, "CONSULTED", get_accessible_information())
 
 
 func get_observations() -> Array:

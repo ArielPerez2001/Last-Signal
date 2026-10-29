@@ -106,7 +106,7 @@ static func validate(snapshot: Dictionary, case_data: Dictionary) -> Dictionary:
 			fields.append("analysis")
 			if not entry.analysis is Dictionary:
 				return failure("invalid_history", "Comprobante de análisis inválido.")
-			if not has_fields(entry.analysis, ["recording_id", "segment_id", "filter_id", "listened_ms"]) or not is_integer(entry.analysis.get("listened_ms"), 1, 120000):
+			if not has_fields(entry.analysis, ["recording_id", "segment_id", "filter_id", "listened_ms"]) or not is_integer(entry.analysis.get("listened_ms"), 0, 120000):
 				return failure("invalid_history", "Campos o tiempo de examen inválidos.")
 			for field: String in ["recording_id", "segment_id", "filter_id"]:
 				if not entry.analysis[field] is String:

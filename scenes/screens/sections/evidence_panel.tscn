@@ -36,6 +36,16 @@ autowrap_mode = 3
 layout_mode = 2
 autowrap_mode = 3
 
+[node name="Hypotheses" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HypothesisPicker" type="OptionButton" parent="."]
+visible = false
+layout_mode = 2
+custom_minimum_size = Vector2(0, 88)
+text_overrun_behavior = 3
+fit_to_longest_item = false
+
 [node name="SaveNotice" type="Label" parent="."]
 layout_mode = 2
 theme_type_variation = &"AccentLabel"

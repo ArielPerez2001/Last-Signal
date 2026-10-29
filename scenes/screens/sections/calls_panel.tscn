@@ -47,6 +47,17 @@ theme_type_variation = &"PrimaryButton"
 text = "Responder comunicación"
 autowrap_mode = 3
 
+[node name="CurrentText" type="Label" parent="."]
+visible = false
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="HistoryToggle" type="Button" parent="."]
+visible = false
+layout_mode = 2
+custom_minimum_size = Vector2(0, 88)
+text = "Consultar historial"
+
 [node name="TranscriptHeading" type="Label" parent="."]
 visible = false
 layout_mode = 2
@@ -88,6 +99,12 @@ scroll_deadzone = 16
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 12
+
+[node name="MoreOptions" type="Button" parent="."]
+visible = false
+layout_mode = 2
+custom_minimum_size = Vector2(0, 88)
+text = "Otras consultas"
 
 [node name="Retry" type="Button" parent="."]
 visible = false

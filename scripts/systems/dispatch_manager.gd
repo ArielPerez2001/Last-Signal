@@ -3,6 +3,7 @@ extends RefCounted
 const Rules = preload("res://scripts/systems/dispatch_rules.gd")
 const Evidence = preload("res://scripts/systems/evidence_manager.gd")
 var engine: RefCounted
+var contextual_reports: bool = false
 
 
 func _init(narrative: RefCounted) -> void:
@@ -52,6 +53,8 @@ func dispatch_unit(unit_id: String, incident_id: String, revision: int = -1) -> 
 
 
 func process_event(event_id: String, unit_id: String, incident_id: String, revision: int = -1) -> Dictionary:
+	if contextual_reports:
+		return engine.process_contextual_dispatch({"kind": "event", "unit_id": unit_id, "incident_id": incident_id, "event_id": event_id}, revision)
 	return Evidence.process_dispatch_event(engine, {"kind": "event", "unit_id": unit_id, "incident_id": incident_id, "event_id": event_id}, revision)
 
 
@@ -69,6 +72,8 @@ func get_available_events() -> Array:
 	for rule: Dictionary in catalog.get("event_rules", []):
 		var command: Dictionary = {"kind": "event", "unit_id": rule.unit_id, "incident_id": rule.incident_id, "event_id": rule.id}
 		var checked: Dictionary = Rules.evaluate(catalog, state, command)
+		if contextual_reports:
+			checked = engine.preview_contextual_dispatch(command)
 		if checked.ok and checked.code == "VALID":
 			result.append({"id": rule.id, "label": rule.label, "unit_id": rule.unit_id, "incident_id": rule.incident_id, "revision": state.revision})
 	return result

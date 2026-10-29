@@ -8,8 +8,10 @@ var bindings: Array = []
 func validate(input: Variant, case_data: Dictionary) -> Dictionary:
 	errors.clear()
 	bindings.clear()
-	if not _fields(input, ["map_id", "title", "districts", "locations", "units", "incidents", "event_rules"]):
+	if not _fields(input, ["map_id", "title", "districts", "locations", "units", "incidents", "event_rules"], ["closed_when", "layout_kind"]):
 		return _report()
+	if input.has("layout_kind") and input.layout_kind not in ["districts", "building"]:
+		_error("map", "Composición de plano desconocida.")
 	if not _id(input.map_id) or not _text(input.title):
 		_error("map", "Identidad del mapa inválida.")
 	var districts: Dictionary = _collection(input.districts, "id", 6)
@@ -56,7 +58,7 @@ func validate(input: Variant, case_data: Dictionary) -> Dictionary:
 	if not errors.is_empty():
 		return _report()
 	for rule: Dictionary in events.values():
-		if not _fields(rule, ["id", "label", "result_text", "stage", "unit_id", "incident_id", "from_unit_status", "to_unit_status", "from_incident_status", "to_incident_status", "condition", "effects"]):
+		if not _fields(rule, ["id", "label", "result_text", "stage", "unit_id", "incident_id", "from_unit_status", "to_unit_status", "from_incident_status", "to_incident_status", "condition", "effects"], ["next", "from_node", "target_incident_id"]):
 			continue
 		if not _text(rule.label) or not _text(rule.result_text) or not units.has(rule.unit_id) or not incidents.has(rule.incident_id) or not rule.condition is Dictionary or not rule.effects is Array:
 			_error("dispatch_event", "Evento, condición o referencias inválidos.")
@@ -68,6 +70,15 @@ func validate(input: Variant, case_data: Dictionary) -> Dictionary:
 			"arrive": legal = rule.from_unit_status == "ASSIGNED" and rule.to_unit_status == "BUSY" and rule.from_incident_status == "ASSIGNED" and rule.to_incident_status == "ASSIGNED"
 			"resolve": legal = rule.from_unit_status == "BUSY" and rule.to_unit_status == "BUSY" and rule.from_incident_status == "ASSIGNED" and rule.to_incident_status in ["RESOLVED", "CLOSED"]
 			"release": legal = rule.from_unit_status == "BUSY" and rule.to_unit_status == "AVAILABLE" and rule.from_incident_status in ["RESOLVED", "CLOSED"] and rule.to_incident_status == rule.from_incident_status
+			"reposition": legal = rule.from_unit_status == "BUSY" and rule.to_unit_status == "ASSIGNED" and rule.from_incident_status == "ASSIGNED" and rule.to_incident_status == "CLOSED" and incidents.has(rule.get("target_incident_id", "")) and rule.get("target_incident_id") != rule.incident_id
+		if rule.has("target_incident_id") and rule.stage != "reposition":
+			legal = false
+		if rule.has("next") and (not rule.next is String or not case_data.nodes.any(func(node: Dictionary) -> bool: return node.id == rule.next)):
+			legal = false
+		if rule.has("next") and not rule.has("from_node"):
+			legal = false
+		if rule.has("from_node") and (not rule.from_node is String or not case_data.nodes.any(func(node: Dictionary) -> bool: return node.id == rule.from_node and node.type == "dialogue")):
+			legal = false
 		if not legal:
 			_error("dispatch_transition", "Transición de unidad/incidente no autorizada.")
 	_no_protected_effects(case_data)
@@ -134,10 +145,14 @@ func _text(value: Variant) -> bool:
 	return value is String and not value.strip_edges().is_empty()
 
 
-func _fields(value: Variant, expected: Array) -> bool:
-	if not value is Dictionary or value.size() != expected.size():
+func _fields(value: Variant, expected: Array, optional: Array = []) -> bool:
+	if not value is Dictionary:
 		_error("dispatch_fields", "Campos operativos ausentes o desconocidos.")
 		return false
+	for key: Variant in value:
+		if key not in expected and key not in optional:
+			_error("dispatch_fields", "Campo operativo desconocido.")
+			return false
 	for field: String in expected:
 		if not value.has(field):
 			_error("dispatch_fields", "Campo operativo ausente: " + field)

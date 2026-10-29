@@ -1,5 +1,11 @@
 # ÚLTIMA SEÑAL — Estado, guardado y recuperación
 
+**Revisión UX posterior a 11:** no cambia código de SaveManager, JSON oficial, fingerprint, versión de contenido o formato. Los objetivos, avisos, selecciones y posiciones de lectura son proyecciones/presentación temporal. La recepción contextual de partes agrega opciones normales de consulta seguidas del comando existente al diario; se confirma atómicamente y restaura mediante el replay actual. Las partidas de la entrega inicial siguen siendo compatibles. [Revisión y pruebas](../cases/CASE_001_UX_REVIEW.md).
+
+**Integración 11 · 2026-10-29:** Nueva partida/Continuar ya usan el Caso 001 conocido en user://saves. Las referencias posteriores a Continuar deshabilitado o Caso 001 no integrado describen fases anteriores. SaveManager conserva código, ocho campos y snapshot de 17; esquema/formato 4 del contenido oficial, sin migración. La acción interna de conexión distingue llamada entrante/respondida; variables, diario y condiciones recuperan herramientas, última asignación y desenlace congelado. [Informe y pruebas](../cases/CASE_001_IMPLEMENTATION_REPORT.md).
+
+El menú inspecciona ranura compatible incluso en arranque frío, conserva archivos inválidos y requiere confirmación para sustituir archivos/progreso existente. Una restauración fallida no autoriza reemplazo. Al salir al menú, un fallo de escritura mantiene la consola con reintento; no se abandona silenciosamente la sesión sucia. Las demos tienen carpetas independientes y no pueden preparar/restaurar su contenido en user://saves. Todas las pruebas escriben bajo user://save_tests. No se añaden ranuras o progresión de campaña.
+
 PROMPT 06 · 2026-10-28 · Godot 4.7.2 estable · formato de guardado 1.
 
 Integración PROMPT 07: [CallController/CallsPanel](CALL_SYSTEM.md) utilizan el servicio sin modificar código de guardado, estructura o versiones. La demo usa user://call_demo y las pruebas user://save_tests; user://saves sigue reservado para producción. Su transcripción se deriva de transaction_log/visitas/consumos, sin campos nuevos.

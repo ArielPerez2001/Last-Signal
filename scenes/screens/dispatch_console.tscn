@@ -23,6 +23,27 @@ size_flags_vertical = 3
 horizontal_scroll_mode = 0
 follow_focus = true
 
+[node name="Guidance" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+
+[node name="Objective" type="Label" parent="Guidance"]
+layout_mode = 2
+theme_type_variation = &"SignalLabel"
+theme_override_font_sizes/font_size = 22
+autowrap_mode = 3
+
+[node name="Action" type="Button" parent="Guidance"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 88)
+autowrap_mode = 3
+
+[node name="Notice" type="Label" parent="Guidance"]
+layout_mode = 2
+theme_type_variation = &"AccentLabel"
+theme_override_font_sizes/font_size = 20
+autowrap_mode = 3
+
 [node name="Panels" type="VBoxContainer" parent="ContentScroll"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -46,6 +67,32 @@ layout_mode = 2
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+
+[node name="ActionDock" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+
+[node name="Selection" type="Label" parent="ActionDock"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+autowrap_mode = 3
+
+[node name="Buttons" type="HBoxContainer" parent="ActionDock"]
+layout_mode = 2
+
+[node name="Return" type="Button" parent="ActionDock/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 88)
+text = "Retomar llamada"
+autowrap_mode = 3
+
+[node name="Confirm" type="Button" parent="ActionDock/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 88)
+text = "Comprobar relación"
+autowrap_mode = 3
 
 [node name="BottomNavigation" parent="." instance=ExtResource("3_navigation")]
 unique_name_in_owner = true

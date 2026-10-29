@@ -25,7 +25,7 @@ func validate(input: Variant, case_id: String, evidence_ids: Array, event_ids: A
 		if not record is Dictionary:
 			_error("audio_recording", "Cada grabación debe ser un objeto.")
 			continue
-		if not _fields(record, ["recording_id", "title", "description", "case_id", "unlocked_by", "duration", "variants", "segments", "waveform"]):
+		if not _fields(record, ["recording_id", "title", "description", "case_id", "unlocked_by", "duration", "variants", "segments", "waveform", "capture_information"]):
 			continue
 		if not _id(record.get("recording_id")) or recordings.has(record.get("recording_id")):
 			_error("audio_id", "ID de grabación inválido o duplicado.")
@@ -41,6 +41,12 @@ func validate(input: Variant, case_id: String, evidence_ids: Array, event_ids: A
 			continue
 		_validate_variants(record)
 		_validate_segments(record)
+		if not record.get("capture_information", []) is Array:
+			_error("audio_capture", "Se requiere una lista de datos de captura.")
+		else:
+			for info: Variant in record.get("capture_information", []):
+				if not info is Dictionary or not _fields(info, ["condition", "text"]) or not info.get("condition") is Dictionary or not _text(info.get("text")):
+					_error("audio_capture", "Dato de captura inválido.")
 		var waveform: Variant = record.get("waveform", [])
 		if not waveform is Array or waveform.size() > 256:
 			_error("audio_waveform", "La onda admite como máximo 256 amplitudes precalculadas.")
@@ -56,7 +62,7 @@ func validate(input: Variant, case_id: String, evidence_ids: Array, event_ids: A
 		if not rule is Dictionary:
 			_error("audio_rule", "Cada regla debe ser un objeto.")
 			continue
-		if not _fields(rule, ["id", "recording_id", "evidence_id", "segment_id", "filter_id", "min_listen_seconds", "additional_conditions", "once_only", "event_id"]):
+		if not _fields(rule, ["id", "recording_id", "evidence_id", "segment_id", "filter_id", "min_listen_seconds", "additional_conditions", "once_only", "event_id", "discovery_mode"]):
 			continue
 		if not _id(rule.get("id")) or ids.has(rule.get("id")):
 			_error("audio_rule", "ID de regla inválido o duplicado.")
@@ -70,7 +76,10 @@ func validate(input: Variant, case_id: String, evidence_ids: Array, event_ids: A
 		if segment.is_empty() or not rule.get("filter_id") is String or not FILTERS.has(rule.filter_id) or find_variant(record, rule.filter_id).is_empty():
 			_error("audio_rule", "Segmento o filtro de regla inexistente.")
 			continue
-		if not number(rule.get("min_listen_seconds")) or rule.min_listen_seconds < 0.5 or rule.min_listen_seconds > segment.end_time - segment.start_time:
+		if rule.has("discovery_mode") and rule.discovery_mode != "consult":
+			_error("audio_rule", "Modalidad de descubrimiento desconocida.")
+		var minimum: float = 0.0 if rule.get("discovery_mode") == "consult" else 0.5
+		if not number(rule.get("min_listen_seconds")) or rule.min_listen_seconds < minimum or rule.min_listen_seconds > segment.end_time - segment.start_time:
 			_error("audio_rule", "Tiempo de examen requerido fuera del intervalo.")
 		if rule.get("once_only") != true or not rule.get("once_only") is bool or not rule.get("additional_conditions", {}) is Dictionary:
 			_error("audio_rule", "Las reglas deben ser únicas y tener condiciones declarativas.")
@@ -98,13 +107,14 @@ func _validate_variants(record: Dictionary) -> void:
 			_error("audio_variant", "Filtro desconocido o duplicado.")
 			continue
 		seen[variant.filter_id] = true
-		if not _text(variant.get("label")) or not variant.get("available", true) is bool or not valid_path(variant.get("audio_path")):
+		var pending_text: bool = variant.get("available") == false and variant.get("audio_path") == ""
+		if not _text(variant.get("label")) or not variant.get("available", true) is bool or (not pending_text and not valid_path(variant.get("audio_path"))):
 			_error("audio_variant", "Etiqueta, disponibilidad o ruta de audio inválidas.")
 			continue
 		var stream: AudioStream = resolve_stream(variant.audio_path)
-		if stream == null:
+		if stream == null and not pending_text:
 			warnings.append(_issue("missing_audio_variant", "Variante ausente; se deshabilita sin sustituirla.", "variants"))
-		elif not is_finite(stream.get_length()) or stream.get_length() <= 0 or absf(stream.get_length() - record.duration) > DURATION_TOLERANCE:
+		elif stream != null and (not is_finite(stream.get_length()) or stream.get_length() <= 0 or absf(stream.get_length() - record.duration) > DURATION_TOLERANCE):
 			_error("audio_duration", "La variante no coincide con la duración declarada (tolerancia 80 ms).")
 	if not seen.has("original"):
 		_error("audio_variant", "Debe declararse el filtro Original.")

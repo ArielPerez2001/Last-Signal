@@ -2,11 +2,14 @@ extends VBoxContainer
 
 signal call_presentation_changed(view: Dictionary)
 signal controller_replaced(controller: RefCounted)
+signal section_requested(section: StringName)
+signal menu_requested
 
 const Controller = preload("res://scripts/systems/call_controller.gd")
 const EntryScene = preload("res://scenes/components/calls/dialogue_entry.tscn")
 const ChoiceScene = preload("res://scenes/components/calls/dialogue_choice.tscn")
 const Lifecycle = preload("res://scripts/systems/save_lifecycle.gd")
+const Guidance = preload("res://scripts/ui/case_guidance.gd")
 var controller: RefCounted
 var development_enabled: bool = OS.is_debug_build()
 var _entries: Array = []
@@ -16,6 +19,8 @@ var _scroll_generation: int = 0
 var lifecycle: Node
 var _demo_path: String = Controller.DEMO_PATH
 var _storage_directory: String = Controller.DEMO_DIRECTORY
+var _history_open: bool = false
+var _more_open: bool = false
 
 @onready var history_scroll: ScrollContainer = $History
 @onready var choices_scroll: ScrollContainer = $Choices
@@ -36,6 +41,14 @@ func _ready() -> void:
 	$Development/Actions/Audio.pressed.connect(_prepare_audio)
 	$Development/Actions/Dispatch.pressed.connect(_prepare_dispatch)
 	$Retry.pressed.connect(func() -> void: controller.retry_save())
+	$MoreOptions.pressed.connect(func() -> void:
+		_more_open = not _more_open
+		_apply_choice_visibility()
+	)
+	$HistoryToggle.pressed.connect(func() -> void:
+		_history_open = not _history_open
+		_render(controller.get_view())
+	)
 
 
 func configure_development_storage(directory: String, save_script: Script = null, case_path: String = Controller.DEMO_PATH) -> void:
@@ -44,6 +57,8 @@ func configure_development_storage(directory: String, save_script: Script = null
 	controller = Controller.new(directory, save_script)
 	_demo_path = case_path
 	_storage_directory = directory
+	_history_open = false
+	_more_open = false
 	controller.presentation_changed.connect(_render)
 	if lifecycle == null:
 		lifecycle = Lifecycle.new()
@@ -51,6 +66,11 @@ func configure_development_storage(directory: String, save_script: Script = null
 	lifecycle.save_manager = controller.saves
 	_render(controller.get_view())
 	controller_replaced.emit(controller)
+
+
+func configure_official(directory: String = Controller.OFFICIAL_DIRECTORY) -> void:
+	development_enabled = false
+	configure_development_storage(directory, null, Controller.OFFICIAL_PATH)
 
 
 func _exit_tree() -> void:
@@ -123,7 +143,21 @@ func _choose(choice_id: String, revision: int) -> void:
 		return
 	for option: Button in options.get_children():
 		option.disabled = true
-	controller.select_choice(choice_id, revision)
+	if Guidance.active(controller.engine) and controller.get_view().state == "INCOMING":
+		if controller.engine.get_state_snapshot().revision != revision or not controller.answer_call().ok:
+			_lock_until_next_turn()
+			return
+		revision = controller.engine.get_state_snapshot().revision
+	_more_open = false
+	var report: Dictionary = controller.select_choice(choice_id, revision)
+	if report.ok:
+		var node: Dictionary = controller.engine.get_current_node()
+		if controller.engine.is_case_finished() and _demo_path == Controller.OFFICIAL_PATH:
+			menu_requested.emit()
+		elif node.has("panel_id"):
+			section_requested.emit(StringName(node.panel_id))
+		elif _demo_path == Controller.OFFICIAL_PATH:
+			section_requested.emit(&"calls")
 	_lock_until_next_turn()
 
 
@@ -138,19 +172,28 @@ func _unlock() -> void:
 
 
 func _render(view: Dictionary) -> void:
-	var active: bool = view.state in ["CONNECTED", "ENDED"]
+	var campaign: bool = _demo_path == Controller.OFFICIAL_PATH
+	var active: bool = view.state in ["CONNECTED", "ENDED"] or (campaign and view.state == "INCOMING")
 	$Caller.text = view.caller if view.state != "IDLE" else "Línea en espera"
 	var states: Dictionary = {"IDLE": "SIN LLAMADA ACTIVA", "INCOMING": "● LLAMADA ENTRANTE", "CONNECTED": "● COMUNICACIÓN ACTIVA", "ENDED": "COMUNICACIÓN FINALIZADA", "ERROR": "COMUNICACIÓN NO DISPONIBLE"}
 	$Connection.text = states[view.state]
 	$Message.text = view.message
 	if not view.error.is_empty():
-		$Message.text += "\nPrueba técnica · " + view.error.code
-	answer_button.visible = view.state == "INCOMING"
+		if development_enabled:
+			$Message.text += "\nPrueba técnica · " + view.error.code
+	answer_button.visible = view.state == "INCOMING" and not campaign
 	answer_button.disabled = view.busy or _input_locked
-	$TranscriptHeading.visible = active
-	history_scroll.visible = active
-	$ChoicesHeading.visible = view.state == "CONNECTED"
-	choices_scroll.visible = view.state == "CONNECTED"
+	$CurrentText.visible = active and campaign
+	$CurrentText.text = controller.engine.get_current_node().get("text", "")
+	$HistoryToggle.visible = active and campaign
+	$HistoryToggle.text = "Ocultar historial" if _history_open else "Consultar historial"
+	$TranscriptHeading.visible = active and (not campaign or _history_open)
+	history_scroll.visible = active and (not campaign or _history_open)
+	$ChoicesHeading.visible = view.state == "CONNECTED" or (campaign and view.state == "INCOMING")
+	choices_scroll.visible = $ChoicesHeading.visible
+	for label: String in ["Heading", "Connection", "Context"]:
+		get_node(label).visible = not campaign
+	$Message.visible = not campaign or not view.error.is_empty()
 	$Development.visible = development_enabled
 	start_button.visible = view.state in ["IDLE", "ERROR"] and controller.engine.get_state_snapshot().is_empty()
 	$Development/Actions/Investigation.visible = start_button.visible
@@ -159,7 +202,8 @@ func _render(view: Dictionary) -> void:
 	restart_button.visible = not start_button.visible
 	$Retry.visible = not view.error.is_empty() and controller.saves.get_status().data.dirty and active
 	_update_history(view.history)
-	_update_choices(view.choices)
+	_update_choices(controller.engine.get_available_choices() if campaign and view.state == "INCOMING" else view.choices)
+	_apply_choice_visibility()
 	if $Retry.visible:
 		$Development.visible = false
 	call_presentation_changed.emit(view.duplicate(true))
@@ -209,9 +253,31 @@ func _update_choices(choices: Array) -> void:
 		for choice: Dictionary in choices:
 			var button: Button = ChoiceScene.instantiate()
 			button.configure(choice)
+			if Guidance.active(controller.engine):
+				button.text = Guidance.choice_label(controller.engine, choice) + ("\n" + choice.disabled_reason if not choice.enabled else "")
 			button.choice_requested.connect(_choose)
 			options.add_child(button)
 		_choice_signature = choices.duplicate(true)
 		choices_scroll.scroll_vertical = 0
 	for index: int in range(choices.size()):
 		options.get_child(index).disabled = _input_locked or not choices[index].enabled
+
+
+func _apply_choice_visibility() -> void:
+	var guided: bool = Guidance.active(controller.engine)
+	var extras: int = 0
+	for index: int in range(_choice_signature.size()):
+		var primary: bool = not guided or Guidance.primary_choice(controller.engine, _choice_signature[index])
+		options.get_child(index).visible = primary or _more_open
+		if not primary:
+			extras += 1
+	$MoreOptions.visible = extras > 0
+	$MoreOptions.text = "Ocultar otras consultas" if _more_open else "Otras consultas (%d)" % extras
+
+
+func return_to_conversation() -> void:
+	var choice: Dictionary = Guidance.return_choice(controller.engine)
+	if not choice.is_empty():
+		_choose(choice.id, choice.revision)
+	else:
+		section_requested.emit(&"calls")

@@ -1,4 +1,6 @@
 extends VBoxContainer
+signal selection_changed
+const Guidance = preload("res://scripts/ui/case_guidance.gd")
 
 const Evidence = preload("res://scripts/systems/evidence_manager.gd")
 const Deductions = preload("res://scripts/systems/deduction_manager.gd")
@@ -16,12 +18,16 @@ var _detail_id: String = ""
 var _detail_is_conclusion: bool = false
 var _pending_refresh: bool = false
 var _last_revision: int = 0
+var selected_hypothesis: String = ""
+var _hypothesis_mode: bool = false
 
 
 func _ready() -> void:
 	$Relate.pressed.connect(_relate)
 	$Detail/Back.pressed.connect(_close_detail)
 	$RetrySave.pressed.connect(_retry_save)
+	$HypothesisPicker.item_selected.connect(_pick_hypothesis)
+	$HypothesisPicker.get_popup().add_theme_constant_override("v_separation", 64)
 	_refresh()
 
 
@@ -65,6 +71,7 @@ func _clear_presentation() -> void:
 	result = {}
 	_detail_id = ""
 	_last_revision = 0
+	selected_hypothesis = ""
 	$SaveNotice.text = ""
 	$SaveNotice.visible = false
 	$RetrySave.visible = false
@@ -73,6 +80,23 @@ func _clear_presentation() -> void:
 func _on_case_loaded(_case_id: String) -> void:
 	_clear_presentation()
 	_request_refresh()
+
+
+func _focus_feedback(frames: int = 2) -> void:
+	if not is_inside_tree():
+		return
+	if frames > 0:
+		var callback: Callable = _focus_feedback.bind(frames - 1)
+		if not get_tree().process_frame.is_connected(callback):
+			get_tree().process_frame.connect(callback, CONNECT_ONE_SHOT)
+		return
+	if not is_visible_in_tree():
+		return
+	var ancestor: Node = get_parent()
+	while ancestor != null:
+		if ancestor is ScrollContainer:
+			ancestor.ensure_control_visible($Feedback)
+		ancestor = ancestor.get_parent()
 
 
 func _on_restored(_snapshot: Dictionary) -> void:
@@ -106,8 +130,11 @@ func _refresh() -> void:
 	var conclusions: Array = [] if deductions == null else deductions.get_confirmed()
 	$CaseTitle.text = catalog.get("title", "Sin expediente activo")
 	$Summary.text = "Evidencias: %d · Deducciones: %d" % [records.size(), conclusions.size()]
-	var closed: bool = engine != null and engine.is_case_finished()
+	var closed: bool = engine != null and engine.is_investigation_closed()
+	_hypothesis_mode = catalog.get("deductions", []).any(func(item: Dictionary) -> bool: return item.required_evidence.size() == 3)
 	$Notice.text = "Expediente cerrado · consulta de evidencias y conclusiones." if closed else ("Todavía no se han registrado evidencias. Examine las comunicaciones disponibles." if records.is_empty() else "Consulte las fuentes y seleccione dos evidencias distintas para relacionarlas.")
+	if _hypothesis_mode and not closed:
+		$Notice.text = "Seleccione una hipótesis y entre dos y tres evidencias. Las consultas y los intentos no avanzan la emergencia."
 	if catalog.is_empty() and engine != null and not engine.get_case_metadata().is_empty():
 		$Notice.text = "El contenido activo no define un expediente consultable."
 	var available_ids: Array = records.map(func(record: Dictionary) -> String: return record.id)
@@ -118,10 +145,17 @@ func _refresh() -> void:
 	_rebuild_cards()
 	_rebuild_conclusions(conclusions)
 	_rebuild_actions()
+	_rebuild_hypotheses()
 	_update_selection()
 	$Feedback.text = result.get("message", "")
 	$Feedback.visible = not $Feedback.text.is_empty()
 	_show_detail()
+	var guided: bool = Guidance.active(engine)
+	$Hypotheses.visible = not guided
+	$HypothesisPicker.visible = guided and not closed
+	$Relate.visible = not guided
+	$Selection.visible = not guided
+	$Notice.text = "Elige una pregunta y selecciona las pruebas que la sostienen. Usa «Comprobar relación» al pie de la pantalla." if guided and not closed else $Notice.text
 
 
 func _rebuild_filters() -> void:
@@ -182,12 +216,12 @@ func _set_category(id: String) -> void:
 
 
 func _toggle_selection(id: String) -> void:
-	if evidence == null or not evidence.get_detail(id).ok or engine.is_case_finished():
+	if evidence == null or not evidence.get_detail(id).ok or engine.is_investigation_closed():
 		return
 	if id in selected_ids:
 		selected_ids.erase(id)
 		result = {}
-	elif selected_ids.size() < MAX_SELECTED:
+	elif selected_ids.size() < (3 if _hypothesis_mode else MAX_SELECTED):
 		selected_ids.append(id)
 		result = {}
 	else:
@@ -205,23 +239,63 @@ func _update_selection() -> void:
 	for id: String in selected_ids:
 		titles.append(evidence.get_detail(id).data.title)
 	$Selection.text = "Selección: " + ("ninguna" if titles.is_empty() else "; ".join(titles))
-	$Relate.disabled = selected_ids.size() != MAX_SELECTED or engine == null or engine.is_case_finished()
+	$Relate.disabled = engine == null or engine.is_investigation_closed() or (not _hypothesis_mode and selected_ids.size() != MAX_SELECTED)
 	for id: String in cards:
 		var button: Button = cards[id].get_node("Content/Actions/Select")
 		button.text = "✓ Seleccionada · quitar" if id in selected_ids else "Seleccionar"
-		button.disabled = engine.is_case_finished()
+		button.disabled = engine.is_investigation_closed()
+	selection_changed.emit()
 
 
 func _relate() -> void:
-	if deductions == null or selected_ids.size() != MAX_SELECTED:
+	if deductions == null or (not _hypothesis_mode and selected_ids.size() != MAX_SELECTED):
 		return
 	$Relate.disabled = true
-	result = deductions.relate(selected_ids, engine.get_state_snapshot().revision)
+	result = deductions.relate_hypothesis(selected_hypothesis, selected_ids, engine.get_state_snapshot().revision) if _hypothesis_mode else deductions.relate(selected_ids, engine.get_state_snapshot().revision)
+	if Guidance.active(engine) and result.ok:
+		selected_ids.clear()
+		selected_hypothesis = ""
+		selection_changed.emit()
 	$Feedback.text = result.message
 	$Feedback.visible = true
 	if result.code in ["INVALID", "STALE", "BUSY"] and OS.is_debug_build():
 		print("INVESTIGATION_DIAGNOSTIC ", JSON.stringify(result))
 	_request_refresh()
+	if Guidance.active(engine) and result.ok:
+		_focus_feedback.call_deferred()
+
+
+func _rebuild_hypotheses() -> void:
+	_clear_children($Hypotheses)
+	$HypothesisPicker.clear()
+	$HypothesisPicker.add_item("¿Qué quieres comprobar?")
+	if not _hypothesis_mode:
+		return
+	for hypothesis: Dictionary in deductions.get_hypotheses():
+		if Guidance.active(engine) and deductions.get_confirmed().any(func(item: Dictionary) -> bool: return item.id == hypothesis.id):
+			continue
+		var index: int = $HypothesisPicker.item_count
+		$HypothesisPicker.add_item(hypothesis.title)
+		$HypothesisPicker.set_item_metadata(index, hypothesis.id)
+		if hypothesis.id == selected_hypothesis:
+			$HypothesisPicker.select(index)
+		if Guidance.active(engine):
+			continue
+		var button: Button = _button(hypothesis.title + (" · seleccionada" if hypothesis.id == selected_hypothesis else ""))
+		button.set_meta("hypothesis_id", hypothesis.id)
+		button.pressed.connect(func() -> void:
+			selected_hypothesis = hypothesis.id
+			result = {}
+			_refresh()
+		)
+		$Hypotheses.add_child(button)
+
+
+func _pick_hypothesis(index: int) -> void:
+	selected_hypothesis = $HypothesisPicker.get_item_metadata(index) if index > 0 else ""
+	selected_ids.clear()
+	result = {}
+	_refresh()
 
 
 func _discover(id: String, revision: int) -> void:

@@ -30,6 +30,11 @@ func load_recording(record: Dictionary) -> Dictionary:
 	for variant: Dictionary in _record.get("variants", []):
 		if variant.get("available", true) and Catalog.resolve_stream(variant.get("audio_path", "")) != null:
 			return set_filter(variant.filter_id)
+	if _record.get("variants", []).any(func(item: Dictionary) -> bool: return item.get("available") == false and item.get("audio_path") == ""):
+		_filter = "original"
+		_state = "TEXT"
+		_publish()
+		return _ok()
 	return _fail("No hay una variante de audio disponible para esta grabación.")
 
 
@@ -52,6 +57,14 @@ func set_filter(filter_id: String) -> Dictionary:
 	if _record.is_empty() or player == null:
 		return _fail("Seleccione una grabación disponible.")
 	var variant: Dictionary = Catalog.find_variant(_record, filter_id)
+	if not variant.is_empty() and variant.get("available") == false and variant.get("audio_path") == "":
+		player.stop()
+		player.stream = null
+		_filter = filter_id
+		_heard = 0.0
+		_state = "TEXT"
+		_publish()
+		return _ok()
 	if variant.is_empty() or not variant.get("available", true):
 		return _fail("El filtro no está disponible.", false)
 	var stream: AudioStream = Catalog.resolve_stream(variant.audio_path)
@@ -111,6 +124,11 @@ func play_segment(segment_id: String) -> Dictionary:
 	var segment: Dictionary = Catalog.find_segment(_record, segment_id)
 	if segment.is_empty():
 		return _fail("El segmento no existe.", false)
+	if _state == "TEXT":
+		_segment = segment_id
+		_position = float(segment.start_time)
+		_publish()
+		return _ok()
 	if player == null or player.stream == null:
 		return _fail("No hay audio cargado.")
 	player.stop()

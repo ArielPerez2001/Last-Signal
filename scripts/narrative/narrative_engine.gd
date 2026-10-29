@@ -170,11 +170,20 @@ func get_current_node() -> Dictionary:
 		return {}
 	var node: Dictionary = _nodes[_state.data.current_node]
 	var view: Dictionary = {"id": node.id, "type": node.type, "text": node.get("text", ""), "revision": _state.data.revision}
+	for variant: Dictionary in node.get("text_variants", []):
+		if Conditions.evaluate(variant.condition, _state.data):
+			view.text = variant.text
+			break
+	for row: Dictionary in node.get("text_rows", []):
+		if Conditions.evaluate(row.condition, _state.data):
+			view.text += "\n" + row.text
 	if node.has("speaker_id"):
 		view.speaker_id = node.speaker_id
 		for character: Dictionary in _case.characters:
 			if character.id == node.speaker_id:
 				view.speaker_name = character.display_name
+	if node.has("panel_id"):
+		view.panel_id = node.panel_id
 	if node.has("ending_id"):
 		view.ending_id = node.ending_id
 	return view.duplicate(true)
@@ -199,7 +208,14 @@ func get_state_snapshot() -> Dictionary:
 func get_case_metadata() -> Dictionary:
 	if _case.is_empty():
 		return {}
-	return {"case_id": _case.case_id, "content_version": _case.content_version, "narrative_schema_version": int(_case.schema_version), "content_fingerprint": JSON.stringify(_case, "", true, true).sha256_text()}
+	var metadata: Dictionary = {"case_id": _case.case_id, "content_version": _case.content_version, "narrative_schema_version": int(_case.schema_version), "content_fingerprint": JSON.stringify(_case, "", true, true).sha256_text()}
+	if _case.has("connection_action"):
+		metadata.connection_action = _case.connection_action
+	return metadata
+
+
+func get_case_id() -> String:
+	return _case.get("case_id", "")
 
 
 func is_busy() -> bool:
@@ -233,6 +249,82 @@ func process_dispatch(command: Dictionary, expected_revision: int = -1) -> Dicti
 
 func get_audio_catalog() -> Dictionary:
 	return _case.get("audio_analysis", {}).duplicate(true)
+
+
+func _dispatch_context_path(command: Dictionary) -> Array:
+	if _state == null or command.get("kind") != "event":
+		return []
+	var rule: Dictionary = DispatchRules.find(get_dispatch_catalog().get("event_rules", []), "id", command.get("event_id", ""))
+	var target: String = rule.get("from_node", _state.data.current_node)
+	if target == _state.data.current_node:
+		return []
+	# Only effect-free tool/return choices may prepare a report's existing
+	# context. Never cross a plan, emotional choice, evidence entry or ending.
+	var queue: Array = [{"node": _state.data.current_node, "path": []}]
+	var visited: Array = []
+	while not queue.is_empty() and visited.size() < 16:
+		var item: Dictionary = queue.pop_front()
+		if item.node in visited:
+			continue
+		visited.append(item.node)
+		for choice: Dictionary in _nodes[item.node].get("options", []):
+			var destination: Dictionary = _nodes[choice.next]
+			if not choice.get("effects", []).is_empty() or not _eligible(choice, _state.data) or destination.type != "dialogue" or not destination.get("entry_effects", []).is_empty():
+				continue
+			var path: Array = item.path + [choice.id]
+			if destination.id == target:
+				return path
+			queue.append({"node": destination.id, "path": path})
+	return []
+
+
+func preview_contextual_dispatch(command: Dictionary) -> Dictionary:
+	var state: Dictionary = get_state_snapshot()
+	var direct: Dictionary = DispatchRules.evaluate(get_dispatch_catalog(), state, command)
+	if direct.ok or state.is_empty():
+		return direct
+	var path: Array = _dispatch_context_path(command)
+	if path.is_empty():
+		return direct
+	var rule: Dictionary = DispatchRules.find(get_dispatch_catalog().event_rules, "id", command.event_id)
+	state.current_node = rule.from_node
+	return DispatchRules.evaluate(get_dispatch_catalog(), state, command)
+
+
+func process_contextual_dispatch(command: Dictionary, expected_revision: int = -1) -> Dictionary:
+	if _busy:
+		return DispatchRules.report(false, "BUSY", "Espere a que termine la operación actual.")
+	if _state == null:
+		return DispatchRules.report(false, "LOCKED", "No hay una investigación activa.")
+	if expected_revision < -1 or (expected_revision != -1 and expected_revision != _state.data.revision):
+		return DispatchRules.report(false, "STALE", "El parte corresponde a una revisión anterior.")
+	var available: Dictionary = preview_contextual_dispatch(command)
+	if not available.ok or available.code != "VALID":
+		return available
+	var path: Array = _dispatch_context_path(command)
+	if path.is_empty():
+		return process_dispatch(command, expected_revision)
+	_busy = true
+	# Reuse the exact command implementations on an isolated candidate. Publish
+	# a single stable result; failure leaves the live session entirely intact.
+	var candidate = get_script().new()
+	candidate._case = _case.duplicate(true)
+	candidate._nodes = _nodes.duplicate(true)
+	candidate._state = _state.copy()
+	var pending: Array[Dictionary] = []
+	candidate.evidence_registered.connect(func(id: String) -> void: pending.append({"kind": "evidence", "id": id}))
+	candidate.event_requested.connect(func(event: Dictionary) -> void: pending.append({"kind": "event", "event": event}))
+	for id: String in path:
+		if not candidate.select_choice(id, candidate.get_state_snapshot().revision):
+			_busy = false
+			return DispatchRules.report(false, "INVALID_EVENT", "No se pudo preparar la consulta del parte.")
+	var result: Dictionary = candidate.process_dispatch(command, candidate.get_state_snapshot().revision)
+	if result.ok and result.code == "VALID":
+		_state = candidate._state.copy()
+		_clear_errors()
+		_publish(pending, true)
+	_busy = false
+	return result
 
 
 # Internal bridge for AudioAnalysisManager and deterministic restoration.
@@ -277,7 +369,7 @@ func get_investigation_actions() -> Array:
 	if _state == null or _state.data.finished:
 		return result
 	for action: Dictionary in _case.get("investigation", {}).get("actions", []):
-		if action.id not in _state.data.executed_actions and Conditions.evaluate(action.get("condition", {"op": "always"}), _state.data):
+		if not action.get("internal", false) and action.id not in _state.data.executed_actions and Conditions.evaluate(action.get("condition", {"op": "always"}), _state.data):
 			result.append({"id": action.id, "title": action.title, "enabled": true, "revision": _state.data.revision})
 	return result
 
@@ -325,8 +417,11 @@ func _commit_investigation(definition: Dictionary, is_deduction: bool, expected_
 		candidate.data.transaction_log[-1]["dispatch"] = dispatch.duplicate(true)
 	var pending: Array[Dictionary] = []
 	var error_message: String = Effects.apply(definition.effects, candidate.data, _case.variables, "investigation:" + definition.id, pending)
-	var eligible: bool = false
-	for option: Dictionary in _nodes[candidate.data.current_node].options:
+	var changed_node: bool = definition.has("next")
+	if error_message.is_empty() and changed_node:
+		error_message = _advance(candidate, definition.next, pending)
+	var eligible: bool = candidate.data.finished
+	for option: Dictionary in _nodes[candidate.data.current_node].get("options", []):
 		eligible = eligible or _eligible(option, candidate.data)
 	if not error_message.is_empty() or not eligible:
 		_busy = false
@@ -336,7 +431,7 @@ func _commit_investigation(definition: Dictionary, is_deduction: bool, expected_
 	_clear_errors()
 	if is_deduction:
 		pending.append({"kind": "deduction", "id": definition.id})
-	_publish(pending, false)
+	_publish(pending, changed_node)
 	_busy = false
 	return Deductions.result(true, "VALID", "Acción de investigación confirmada.", {"id": definition.id})
 
@@ -378,6 +473,8 @@ func _validate_snapshot(snapshot: Dictionary, include_history: bool) -> Dictiona
 			var dispatch_result: Dictionary = replay.process_dispatch(entry.dispatch, entry.revision)
 			if not dispatch_result.ok or dispatch_result.code != "VALID" or dispatch_result.data.id != entry.choice_id:
 				return StateValidator.failure("invalid_history", "Asignación o parte operativo incoherente.")
+			if include_history and replay.get_state_snapshot().visit_serial != before.visit_serial:
+				_append_transcript_node(history, replay)
 			continue
 		var audio_rule: Dictionary = {}
 		for rule: Dictionary in _case.get("audio_analysis", {}).get("discovery_rules", []):
@@ -456,6 +553,10 @@ func restore_state_snapshot(snapshot: Dictionary) -> bool:
 
 func is_case_finished() -> bool:
 	return _state != null and _state.data.finished
+
+
+func is_investigation_closed() -> bool:
+	return DispatchRules.is_closed(get_dispatch_catalog(), get_state_snapshot())
 
 
 func get_ending_id() -> String:

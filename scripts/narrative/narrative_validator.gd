@@ -37,7 +37,7 @@ func validate(input: Variant, source: String = "memory") -> Dictionary:
 	if not is_integer(case_data.get("schema_version")) or int(case_data.get("schema_version")) not in [SCHEMA_VERSION, INVESTIGATION_SCHEMA_VERSION, AUDIO_SCHEMA_VERSION, DISPATCH_SCHEMA_VERSION]:
 		_error("incompatible_schema", "Se requiere schema_version 1, 2, 3 o 4 numérico.", "schema_version")
 		return _report()
-	var fields: Array = ["schema_version", "case_id", "content_version", "title", "initial_node", "initial_state", "variables", "characters", "evidence_catalog", "event_catalog", "endings", "nodes"]
+	var fields: Array = ["schema_version", "case_id", "content_version", "title", "initial_node", "initial_state", "variables", "characters", "evidence_catalog", "event_catalog", "endings", "nodes", "connection_action"]
 	if int(case_data.schema_version) >= INVESTIGATION_SCHEMA_VERSION:
 		fields.append("investigation")
 	if int(case_data.schema_version) >= AUDIO_SCHEMA_VERSION:
@@ -59,6 +59,9 @@ func validate(input: Variant, source: String = "memory") -> Dictionary:
 	_validate_nodes(case_data.get("nodes"))
 	if int(case_data.schema_version) >= INVESTIGATION_SCHEMA_VERSION:
 		_validate_investigation(case_data.get("investigation"))
+	if case_data.has("connection_action"):
+		if not case_data.connection_action is String or _options.get(case_data.connection_action) != "actions":
+			_error("invalid_connection_action", "La conexión debe referir una acción de investigación declarada.", "connection_action")
 	if int(case_data.schema_version) >= AUDIO_SCHEMA_VERSION:
 		_validate_audio(case_data.get("audio_analysis"), str(case_data.get("case_id", "")))
 	if int(case_data.schema_version) == DISPATCH_SCHEMA_VERSION and _errors.is_empty():
@@ -141,7 +144,9 @@ func _validate_investigation(input: Variant) -> void:
 			_string(definition.get("title"), path + ".title")
 			_effects(definition.get("effects"), path + ".effects", "")
 			if group == "actions":
-				_keys(definition, ["id", "title", "condition", "effects"], path)
+				_keys(definition, ["id", "title", "condition", "effects", "internal"], path)
+				if definition.has("internal") and not definition.internal is bool:
+					_error("invalid_action", "internal debe ser booleano.", path)
 				_condition(definition.get("condition", {"op": "always"}), path + ".condition", "")
 			else:
 				_keys(definition, ["id", "title", "description", "required_evidence", "additional_conditions", "result_type", "effects", "repeatable", "narrative_feedback"], path)
@@ -182,6 +187,10 @@ func _validate_dispatch(case_data: Dictionary) -> void:
 		_register_dispatch_id(rule.id)
 		_condition(rule.condition, "operations.condition", "")
 		_effects(rule.effects, "operations.effects", "")
+		if rule.has("next"):
+			_destination(rule.next, "operations.next", rule.from_node)
+	if input.has("closed_when"):
+		_condition(input.closed_when, "operations.closed_when", "")
 
 
 func _register_dispatch_id(id: String) -> void:
@@ -198,6 +207,8 @@ func _validate_audio(input: Variant, case_id: String) -> void:
 		return
 	for recording: Dictionary in input.recordings:
 		_condition(recording.unlocked_by, "audio_analysis.unlocked_by", "")
+		for info: Dictionary in recording.get("capture_information", []):
+			_condition(info.condition, "audio_analysis.capture_information", "")
 	for rule: Dictionary in input.discovery_rules:
 		if _options.has(rule.id):
 			_error("duplicate_id", "Las reglas de audio comparten el espacio global de acciones.", "audio_analysis.id")
@@ -300,8 +311,21 @@ func _validate_nodes(input: Variant) -> void:
 		_effects(node.get("entry_effects", []), "entry_effects", node_id)
 		match node.get("type"):
 			"dialogue":
-				_keys(node, ["id", "type", "speaker_id", "text", "entry_effects", "options"], "node", node_id)
+				_keys(node, ["id", "type", "speaker_id", "text", "entry_effects", "options", "text_variants", "text_rows", "panel_id"], "node", node_id)
+				if node.has("panel_id") and node.panel_id not in ["calls", "audio", "map", "evidence"]:
+					_error("invalid_panel", "Panel narrativo desconocido.", "panel_id", node_id)
 				_string(node.get("text"), "text", node_id)
+				for field: String in ["text_variants", "text_rows"]:
+					if not node.get(field, []) is Array:
+						_error("invalid_text_variants", "Se requiere una lista de textos condicionados.", field, node_id)
+						continue
+					for part: Variant in node.get(field, []):
+						if not part is Dictionary:
+							_error("invalid_text_variants", "Texto condicionado inválido.", field, node_id)
+							continue
+						_keys(part, ["condition", "text"], field, node_id)
+						_condition(part.get("condition"), field, node_id)
+						_string(part.get("text"), field, node_id)
 				if not node.get("speaker_id") is String or node.get("speaker_id") not in _speakers:
 					_error("unknown_speaker", "El personaje no está declarado.", "speaker_id", node_id)
 				_validate_options(node.get("options"), node_id)

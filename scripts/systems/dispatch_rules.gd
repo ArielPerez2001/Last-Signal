@@ -3,7 +3,11 @@ extends RefCounted
 const Conditions = preload("res://scripts/narrative/condition_evaluator.gd")
 const UNIT_STATES: Array = ["AVAILABLE", "ASSIGNED", "BUSY", "UNAVAILABLE"]
 const INCIDENT_STATES: Array = ["REPORTED", "ASSIGNED", "RESOLVED", "CLOSED"]
-const UNIT_TYPES: Array = ["PATROL", "AMBULANCE"]
+const UNIT_TYPES: Array = ["PATROL", "AMBULANCE", "RESCUE"]
+
+
+static func is_closed(catalog: Dictionary, state: Dictionary) -> bool:
+	return not state.is_empty() and (state.finished or (catalog.has("closed_when") and Conditions.evaluate(catalog.closed_when, state)))
 
 
 static func find(items: Array, field: String, id: String) -> Dictionary:
@@ -26,6 +30,8 @@ static func incident(catalog: Dictionary, state: Dictionary, id: String) -> Dict
 	result["status"] = state.variables[item.status_variable]
 	if result.status == "REPORTED" and Conditions.evaluate(item.activate_conditions, state):
 		result.status = "ACTIVE"
+	if catalog.has("closed_when") and is_closed(catalog, state):
+		result.status = "CLOSED"
 	return result
 
 
@@ -36,6 +42,8 @@ static func unit(catalog: Dictionary, state: Dictionary, id: String) -> Dictiona
 	var result: Dictionary = item.duplicate(true)
 	result["status"] = state.variables[item.status_variable]
 	result["assigned_incident_id"] = state.variables[item.assignment_variable]
+	if catalog.has("closed_when") and is_closed(catalog, state):
+		result.status = "CLOSED"
 	return result
 
 
@@ -44,7 +52,7 @@ static func assignment_id(unit_id: String, incident_id: String) -> String:
 
 
 static func evaluate(catalog: Dictionary, state: Dictionary, command: Dictionary) -> Dictionary:
-	if state.is_empty() or catalog.is_empty() or state.finished:
+	if state.is_empty() or catalog.is_empty() or is_closed(catalog, state):
 		return report(false, "LOCKED", "No hay una sesión operativa que admita cambios.")
 	var kind: Variant = command.get("kind")
 	var fields: Array = ["kind", "unit_id", "incident_id"]
@@ -79,14 +87,28 @@ static func evaluate(catalog: Dictionary, state: Dictionary, command: Dictionary
 		id = rule.id
 		if id in state.executed_actions:
 			return report(true, "ALREADY_PROCESSED", "El parte ya fue procesado; puede consultar sus resultados.")
+		if rule.has("from_node") and rule.from_node != state.current_node:
+			return report(false, "INVALID_EVENT", "Reciba el parte desde la consulta de despacho de la llamada.")
 		if resource.assigned_incident_id != target.id or resource.status != rule.from_unit_status or target.status != rule.from_incident_status or not Conditions.evaluate(rule.condition, state):
 			return report(false, "INVALID_EVENT", "Primero complete la fase operativa anterior.")
 		effects = [_set_effect(resource.status_variable, rule.to_unit_status), _set_effect(target.status_variable, rule.to_incident_status)]
 		if rule.stage == "release":
 			effects.append(_set_effect(resource.assignment_variable, ""))
+		if rule.stage == "reposition":
+			var destination: Dictionary = incident(catalog, state, rule.target_incident_id)
+			if destination.is_empty() or destination.status != "ACTIVE" or resource.unit_type not in destination.required_unit_types:
+				return report(false, "INVALID_EVENT", "El nuevo destino no admite la reubicación.")
+			effects.append(_set_effect(resource.assignment_variable, destination.id))
+			effects.append(_set_effect(destination.status_variable, "ASSIGNED"))
+			effects.append({"op": "emit_event", "event_id": destination.dispatch_event})
 		effects.append_array(rule.effects.duplicate(true))
 		message = rule.result_text
-	return report(true, "VALID", message, {"id": id, "effects": effects})
+	var definition: Dictionary = {"id": id, "effects": effects}
+	if kind == "event":
+		var rule: Dictionary = find(catalog.event_rules, "id", command.event_id)
+		if rule.has("next"):
+			definition.next = rule.next
+	return report(true, "VALID", message, definition)
 
 
 static func _set_effect(target: String, value: String) -> Dictionary:

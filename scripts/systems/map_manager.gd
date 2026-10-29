@@ -11,7 +11,12 @@ func _init(narrative: RefCounted) -> void:
 
 func get_map() -> Dictionary:
 	var catalog: Dictionary = engine.get_dispatch_catalog()
-	return {} if catalog.is_empty() or engine.get_state_snapshot().is_empty() else {"map_id": catalog.map_id, "title": catalog.title, "districts": catalog.districts.duplicate(true)}
+	if catalog.is_empty() or engine.get_state_snapshot().is_empty():
+		return {}
+	var view: Dictionary = {"map_id": catalog.map_id, "title": catalog.title, "districts": catalog.districts.duplicate(true)}
+	if catalog.has("layout_kind"):
+		view.layout_kind = catalog.layout_kind
+	return view
 
 
 func get_visible_locations() -> Array:

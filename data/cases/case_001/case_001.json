@@ -1,0 +1,2655 @@
+{
+  "schema_version": 4,
+  "case_id": "c001",
+  "content_version": "c001-1.0",
+  "title": "Caso 001 · La habitación 304",
+  "initial_node": "c001_n01",
+  "characters": [
+    {
+      "id": "c001_p00",
+      "display_name": "Sistema"
+    },
+    {
+      "id": "c001_p01",
+      "display_name": "El Operador"
+    },
+    {
+      "id": "c001_p02",
+      "display_name": "Clara Salcedo"
+    },
+    {
+      "id": "c001_p03",
+      "display_name": "Elena Vargas"
+    },
+    {
+      "id": "c001_p04",
+      "display_name": "Inés Duarte · R1"
+    }
+  ],
+  "variables": {
+    "confianza": {
+      "type": "int",
+      "min": 0,
+      "max": 2
+    },
+    "estres": {
+      "type": "int",
+      "min": 0,
+      "max": 2
+    },
+    "etapa": {
+      "type": "string",
+      "allowed_values": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ]
+    },
+    "plan": {
+      "type": "string",
+      "allowed_values": [
+        "ninguno",
+        "refugio",
+        "servicio",
+        "pasillo"
+      ]
+    },
+    "comunicacion": {
+      "type": "string",
+      "allowed_values": [
+        "entrante",
+        "activa",
+        "cerrada",
+        "interrumpida"
+      ]
+    },
+    "resultado": {
+      "type": "string",
+      "allowed_values": [
+        "pendiente",
+        "A",
+        "B",
+        "C"
+      ]
+    },
+    "r1_status": {
+      "type": "string",
+      "allowed_values": [
+        "AVAILABLE",
+        "ASSIGNED",
+        "BUSY",
+        "UNAVAILABLE"
+      ]
+    },
+    "r1_assignment": {
+      "type": "string",
+      "allowed_values": [
+        "",
+        "c001_i01",
+        "c001_i02"
+      ]
+    },
+    "frente_status": {
+      "type": "string",
+      "allowed_values": [
+        "REPORTED",
+        "ASSIGNED",
+        "RESOLVED",
+        "CLOSED"
+      ]
+    },
+    "patio_status": {
+      "type": "string",
+      "allowed_values": [
+        "REPORTED",
+        "ASSIGNED",
+        "RESOLVED",
+        "CLOSED"
+      ]
+    }
+  },
+  "initial_state": {
+    "variables": {
+      "confianza": 1,
+      "estres": 1,
+      "etapa": "A",
+      "plan": "ninguno",
+      "comunicacion": "entrante",
+      "resultado": "pendiente",
+      "r1_status": "AVAILABLE",
+      "r1_assignment": "",
+      "frente_status": "REPORTED",
+      "patio_status": "REPORTED"
+    },
+    "evidence": []
+  },
+  "evidence_catalog": [
+    "c001_e01",
+    "c001_e02",
+    "c001_e03",
+    "c001_e04",
+    "c001_e05",
+    "c001_e06",
+    "c001_e07",
+    "c001_e08",
+    "c001_e09",
+    "c001_e10"
+  ],
+  "event_catalog": [
+    "c001_despacho"
+  ],
+  "endings": [
+    "c001_final_a",
+    "c001_final_b",
+    "c001_final_c"
+  ],
+  "nodes": [
+    {
+      "id": "c001_n01",
+      "type": "dialogue",
+      "speaker_id": "c001_p03",
+      "text": "Turno de noche. Soy Elena Vargas, tu supervisora. La línea dos está entrando. Primero escucha; después comprobamos los datos.",
+      "options": [
+        {
+          "id": "c001_n01_o01",
+          "text": "Atender la línea dos",
+          "next": "c001_n03",
+          "effects": [
+            {
+              "op": "set",
+              "target": "comunicacion",
+              "value": "activa"
+            }
+          ]
+        },
+        {
+          "id": "c001_n01_o02",
+          "text": "Ver los controles de la consola",
+          "next": "c001_n02"
+        }
+      ]
+    },
+    {
+      "id": "c001_n02",
+      "type": "dialogue",
+      "speaker_id": "c001_p03",
+      "text": "La conversación queda en el historial. El expediente reúne lo que confirmes. Puedes volver a leer sin perder la llamada.",
+      "options": [
+        {
+          "id": "c001_n02_o01",
+          "text": "Atender la línea dos",
+          "next": "c001_n03",
+          "effects": [
+            {
+              "op": "set",
+              "target": "comunicacion",
+              "value": "activa"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c001_n03",
+      "type": "dialogue",
+      "speaker_id": "c001_p02",
+      "text": "¿Emergencias? Por favor… alguien está golpeando. Estoy encerrada en una habitación.",
+      "options": [
+        {
+          "id": "c001_n03_o01",
+          "text": "Estoy aquí. Dígame su nombre y dónde está.",
+          "next": "c001_n04",
+          "effects": [
+            {
+              "op": "add_clamped",
+              "target": "confianza",
+              "value": 1
+            },
+            {
+              "op": "add_clamped",
+              "target": "estres",
+              "value": -1
+            }
+          ]
+        },
+        {
+          "id": "c001_n03_o02",
+          "text": "Necesito datos, no suposiciones. ¿Quién es y dónde está?",
+          "next": "c001_n04",
+          "effects": [
+            {
+              "op": "add_clamped",
+              "target": "confianza",
+              "value": -1
+            },
+            {
+              "op": "add_clamped",
+              "target": "estres",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c001_n04",
+      "type": "dialogue",
+      "speaker_id": "c001_p02",
+      "text": "Clara Salcedo. Hotel Mirador, habitación trescientos cuatro. No puedo salir por el pasillo.",
+      "options": [
+        {
+          "id": "c001_n04_o01",
+          "text": "¿Qué ha visto de la persona que golpea?",
+          "next": "c001_n05"
+        }
+      ],
+      "entry_effects": [
+        {
+          "op": "add_to_set",
+          "target": "evidence",
+          "value": "c001_e01"
+        }
+      ]
+    },
+    {
+      "id": "c001_n05",
+      "type": "dialogue",
+      "speaker_id": "c001_p02",
+      "text": "No la he visto. Golpea tres veces y grita algo. La luz se ha ido. Hay otra puerta, junto al baño, pero no sé adónde lleva.",
+      "options": [
+        {
+          "id": "c001_n05_o01",
+          "text": "Voy a comprobar el hotel. Mantenga la línea.",
+          "next": "c001_n06"
+        }
+      ]
+    },
+    {
+      "id": "c001_n06",
+      "type": "dialogue",
+      "speaker_id": "c001_p01",
+      "text": "Clara, sigo escuchándola mientras consulto los registros.",
+      "options": [
+        {
+          "id": "c001_n06_o01",
+          "text": "Consultar Hotel Mirador",
+          "next": "c001_n07",
+          "effects": [
+            {
+              "op": "set",
+              "target": "etapa",
+              "value": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c001_n07",
+      "type": "dialogue",
+      "speaker_id": "c001_p03",
+      "text": "La dirección existe. Pero la ficha dice que el hotel lleva diecisiete años clausurado. Comprueba la fecha antes de sacar conclusiones.",
+      "options": [
+        {
+          "id": "c001_n07_o01",
+          "text": "Abrir ficha municipal",
+          "next": "c001_n08"
+        },
+        {
+          "id": "c001_n07_o02",
+          "text": "¿Seguimos tratándolo como una emergencia?",
+          "next": "c001_n09"
+        }
+      ]
+    },
+    {
+      "id": "c001_n08",
+      "type": "dialogue",
+      "speaker_id": "c001_p00",
+      "text": "HOTEL MIRADOR. Paseo del Faro, 18. Clausurado tras el incendio del 14/11/1981. Prohibido acceder por el vestíbulo: forjado dañado. Anexos: plano de planta, huéspedes y telefonía.",
+      "options": [
+        {
+          "id": "c001_n08_o01",
+          "text": "Guardar ficha en el expediente",
+          "next": "c001_n10",
+          "effects": [
+            {
+              "op": "set",
+              "target": "etapa",
+              "value": "C"
+            }
+          ]
+        }
+      ],
+      "entry_effects": [
+        {
+          "op": "add_to_set",
+          "target": "evidence",
+          "value": "c001_e02"
+        }
+      ]
+    },
+    {
+      "id": "c001_n09",
+      "type": "dialogue",
+      "speaker_id": "c001_p03",
+      "text": "Sí. Que el registro no encaje no significa que nadie necesite ayuda. Podemos enviar una unidad a comprobar el exterior.",
+      "options": [
+        {
+          "id": "c001_n09_o01",
+          "text": "Abrir ficha municipal",
+          "next": "c001_n08"
+        }
+      ]
+    },
+    {
+      "id": "c001_n10",
+      "type": "dialogue",
+      "speaker_id": "c001_p00",
+      "text": "Línea dos activa. Contraste las fuentes antes de decidir. Las consultas no avanzan la emergencia.",
+      "options": [
+        {
+          "id": "c001_n10_o01",
+          "text": "Consultar plano de planta",
+          "next": "c001_n11"
+        },
+        {
+          "id": "c001_n10_o02",
+          "text": "Preguntar por los sonidos y el aire",
+          "next": "c001_n12"
+        },
+        {
+          "id": "c001_n10_o03",
+          "text": "Abrir analizador de audio",
+          "next": "c001_n13"
+        },
+        {
+          "id": "c001_n10_o04",
+          "text": "Consultar registro de huéspedes",
+          "next": "c001_n14"
+        },
+        {
+          "id": "c001_n10_o05",
+          "text": "Consultar anexo de telefonía",
+          "next": "c001_n15"
+        },
+        {
+          "id": "c001_n10_o06",
+          "text": "Abrir mapa y despacho",
+          "next": "c001_n16"
+        },
+        {
+          "id": "c001_n10_o07",
+          "text": "Relacionar evidencias",
+          "next": "c001_n17"
+        },
+        {
+          "id": "c001_n10_o08",
+          "text": "Recuperar la calma con Clara",
+          "next": "c001_n18",
+          "visible_when": {
+            "op": "once_not_applied",
+            "value": "c001_n18_o01"
+          }
+        },
+        {
+          "id": "c001_n10_o09",
+          "text": "Contrastar la fecha con Clara",
+          "next": "c001_n21",
+          "visible_when": {
+            "op": "equals",
+            "target": "etapa",
+            "value": "C"
+          },
+          "enabled_when": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "contains",
+                "target": "executed_actions",
+                "value": "c001_q01"
+              },
+              {
+                "op": "contains",
+                "target": "evidence",
+                "value": "c001_e06"
+              }
+            ]
+          },
+          "disabled_reason": "Relacione el testimonio con la ficha y reciba un parte exterior",
+          "effects": [
+            {
+              "op": "set",
+              "target": "etapa",
+              "value": "D"
+            },
+            {
+              "op": "mark_once",
+              "value": "c001_k01"
+            }
+          ]
+        },
+        {
+          "id": "c001_n10_o10",
+          "text": "Volver a la decisión crítica",
+          "next": "c001_n24",
+          "visible_when": {
+            "op": "equals",
+            "target": "etapa",
+            "value": "E"
+          }
+        },
+        {
+          "id": "c001_n10_o11",
+          "text": "Hablar del registro de 1981",
+          "next": "c001_n38",
+          "visible_when": {
+            "op": "contains",
+            "target": "executed_actions",
+            "value": "c001_q04"
+          }
+        }
+      ],
+      "text_variants": [
+        {
+          "condition": {
+            "op": "equals",
+            "target": "etapa",
+            "value": "E"
+          },
+          "text": "Clara sigue al teléfono. Puede revisar el expediente y preparar la unidad antes de transmitir una instrucción."
+        }
+      ]
+    },
+    {
+      "id": "c001_n11",
+      "type": "dialogue",
+      "speaker_id": "c001_p00",
+      "text": "PLANTA TERCERA, archivo de 1981. La 304 tiene una puerta al pasillo interior y otra de servicio junto al baño. Esta segunda puerta comunica con un descansillo abierto al patio y una escalera exterior posterior. El plano no certifica el estado actual de la escalera.",
+      "options": [
+        {
+          "id": "c001_n11_o01",
+          "text": "Volver al expediente",
+          "next": "c001_n10"
+        }
+      ],
+      "entry_effects": [
+        {
+          "op": "add_to_set",
+          "target": "evidence",
+          "value": "c001_e04"
+        }
+      ]
+    },
+    {
+      "id": "c001_n12",
+      "type": "dialogue",
+      "speaker_id": "c001_p02",
+      "text": "Ahora huelo humo por debajo de la puerta del pasillo. Entre los golpes oigo “bomberos”… y “no abra al pasillo”. Yo creía que venían a buscarme. La otra puerta tiene una placa: servicio.",
+      "options": [
+        {
+          "id": "c001_n12_o01",
+          "text": "Lo anoto. Seguimos comprobando.",
+          "next": "c001_n10"
+        }
+      ],
+      "entry_effects": [
+        {
+          "op": "add_to_set",
+          "target": "evidence",
+          "value": "c001_e03"
+        }
+      ]
+    },
+    {
+      "id": "c001_n13",
+      "type": "dialogue",
+      "speaker_id": "c001_p00",
+      "text": "Grabaciones de la línea dos. Seleccione un fragmento y una variante, o lea su transcripción equivalente. Ninguna pista exige oír el audio.",
+      "options": [
+        {
+          "id": "c001_n13_o01",
+          "text": "Volver al expediente",
+          "next": "c001_n10"
+        }
+      ],
+      "panel_id": "audio"
+    },
+    {
+      "id": "c001_n14",
+      "type": "dialogue",
+      "speaker_id": "c001_p00",
+      "text": "REGISTRO HISTÓRICO, 14/11/1981. Clara Salcedo, habitación 304. Anotación posterior: evacuación no confirmada en este folio. Este documento no permite determinar su destino.",
+      "options": [
+        {
+          "id": "c001_n14_o01",
+          "text": "Volver al expediente",
+          "next": "c001_n10"
+        }
+      ],
+      "entry_effects": [
+        {
+          "op": "add_to_set",
+          "target": "evidence",
+          "value": "c001_e05"
+        }
+      ]
+    },
+    {
+      "id": "c001_n15",
+      "type": "dialogue",
+      "speaker_id": "c001_p00",
+      "text": "ANEXO DE TELEFONÍA, 10/11/1981. Hotel Mirador, circuito N-4. Copia de ensayo de enlace: Estación Nadir / Proyecto ECO. El anexo no describe el objetivo del ensayo ni lo relaciona con el incendio.",
+      "options": [
+        {
+          "id": "c001_n15_o01",
+          "text": "Volver al expediente",
+          "next": "c001_n10"
+        }
+      ],
+      "entry_effects": [
+        {
+          "op": "add_to_set",
+          "target": "evidence",
+          "value": "c001_e09"
+        }
+      ]
+    },
+    {
+      "id": "c001_n16",
+      "type": "dialogue",
+      "speaker_id": "c001_p00",
+      "text": "Vestíbulo clausurado; acceso posterior por el patio. La unidad no entrará en una estructura insegura.",
+      "options": [
+        {
+          "id": "c001_n16_o01",
+          "text": "Volver al expediente",
+          "next": "c001_n10"
+        }
+      ],
+      "panel_id": "map",
+      "text_rows": [
+        {
+          "condition": {
+            "op": "equals",
+            "target": "r1_status",
+            "value": "AVAILABLE"
+          },
+          "text": "R1 disponible. Seleccione un destino para inspección exterior"
+        },
+        {
+          "condition": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "equals",
+                "target": "r1_status",
+                "value": "ASSIGNED"
+              },
+              {
+                "op": "equals",
+                "target": "r1_assignment",
+                "value": "c001_i01"
+              }
+            ]
+          },
+          "text": "R1 asignada al frente. Pulse «Recibir parte»"
+        },
+        {
+          "condition": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "equals",
+                "target": "r1_status",
+                "value": "ASSIGNED"
+              },
+              {
+                "op": "equals",
+                "target": "r1_assignment",
+                "value": "c001_i02"
+              }
+            ]
+          },
+          "text": "R1 asignada al patio. Pulse «Recibir parte»"
+        },
+        {
+          "condition": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "equals",
+                "target": "r1_status",
+                "value": "BUSY"
+              },
+              {
+                "op": "equals",
+                "target": "r1_assignment",
+                "value": "c001_i01"
+              }
+            ]
+          },
+          "text": "Parte del frente recibido. Puede reubicar R1 al patio"
+        },
+        {
+          "condition": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "equals",
+                "target": "r1_assignment",
+                "value": "c001_i02"
+              },
+              {
+                "op": "equals",
+                "target": "r1_status",
+                "value": "BUSY"
+              }
+            ]
+          },
+          "text": "Acceso posterior comprobado. R1 mantiene posición exterior"
+        }
+      ]
+    },
+    {
+      "id": "c001_n17",
+      "type": "dialogue",
+      "speaker_id": "c001_p00",
+      "text": "Seleccione una hipótesis y las pruebas que la sostienen. Una combinación incompleta o equivocada puede corregirse sin penalización.",
+      "options": [
+        {
+          "id": "c001_n17_o01",
+          "text": "Volver al expediente",
+          "next": "c001_n10"
+        }
+      ],
+      "panel_id": "evidence"
+    },
+    {
+      "id": "c001_n18",
+      "type": "dialogue",
+      "speaker_id": "c001_p02",
+      "text": "Está bien. Le escucho. Pensé que no me creía. Dígame una cosa cada vez.",
+      "options": [
+        {
+          "id": "c001_n18_o01",
+          "text": "Voy a basarme en lo que podamos comprobar.",
+          "next": "c001_n10",
+          "effects": [
+            {
+              "op": "set",
+              "target": "confianza",
+              "value": 1
+            },
+            {
+              "op": "set",
+              "target": "estres",
+              "value": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c001_n19",
+      "type": "dialogue",
+      "speaker_id": "c001_p04",
+      "text": "R1 en Paseo del Faro. Hotel cerrado, sin humo actual ni personas visibles. El vestíbulo tiene riesgo de derrumbe; no vamos a entrar. Podemos rodear hasta el patio si lo autoriza.",
+      "options": [
+        {
+          "id": "c001_n19_o01",
+          "text": "Recibido. Revisaré el acceso posterior.",
+          "next": "c001_n10"
+        }
+      ],
+      "entry_effects": [
+        {
+          "op": "add_to_set",
+          "target": "evidence",
+          "value": "c001_e06"
+        }
+      ]
+    },
+    {
+      "id": "c001_n20",
+      "type": "dialogue",
+      "speaker_id": "c001_p04",
+      "text": "R1 en el patio. No hay humo actual ni personas visibles. El vestíbulo sigue siendo inseguro. Desde fuera confirmamos la escalera posterior y el descansillo de la tercera planta. La puerta de servicio de la 304 da allí, según la placa de planta conservada. Nos quedamos en zona segura.",
+      "options": [
+        {
+          "id": "c001_n20_o01",
+          "text": "Mantengan posición exterior.",
+          "next": "c001_n10"
+        }
+      ],
+      "entry_effects": [
+        {
+          "op": "add_to_set",
+          "target": "evidence",
+          "value": "c001_e04"
+        },
+        {
+          "op": "add_to_set",
+          "target": "evidence",
+          "value": "c001_e06"
+        },
+        {
+          "op": "add_to_set",
+          "target": "evidence",
+          "value": "c001_e07"
+        }
+      ]
+    },
+    {
+      "id": "c001_n21",
+      "type": "dialogue",
+      "speaker_id": "c001_p02",
+      "text": "Mi recibo está aquí, junto al teléfono. Clara Salcedo, 304… catorce de noviembre de mil novecientos ochenta y uno. ¿Por qué me pregunta eso? El humo está entrando más.",
+      "options": [
+        {
+          "id": "c001_n21_o01",
+          "text": "Gracias, Clara. Eso ayuda a entender la llamada.",
+          "next": "c001_n22",
+          "effects": [
+            {
+              "op": "add_clamped",
+              "target": "confianza",
+              "value": 1
+            },
+            {
+              "op": "add_clamped",
+              "target": "estres",
+              "value": -1
+            }
+          ]
+        },
+        {
+          "id": "c001_n21_o02",
+          "text": "Esa fecha es imposible. ¿Me está mintiendo?",
+          "next": "c001_n22",
+          "effects": [
+            {
+              "op": "add_clamped",
+              "target": "confianza",
+              "value": -1
+            },
+            {
+              "op": "add_clamped",
+              "target": "estres",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "entry_effects": [
+        {
+          "op": "add_to_set",
+          "target": "evidence",
+          "value": "c001_e08"
+        }
+      ]
+    },
+    {
+      "id": "c001_n22",
+      "type": "dialogue",
+      "speaker_id": "c001_p03",
+      "text": "Nuestra consola marca catorce de noviembre de 1998. Su recibo dice 1981. Además, la captura lleva la cabecera N-4, un circuito que no figura entre los activos. Conserva la grabación. Ahora resuelve el peligro que está describiendo.",
+      "options": [
+        {
+          "id": "c001_n22_o01",
+          "text": "Volver a Clara",
+          "next": "c001_n23",
+          "effects": [
+            {
+              "op": "set",
+              "target": "etapa",
+              "value": "E"
+            }
+          ]
+        }
+      ],
+      "entry_effects": [
+        {
+          "op": "add_to_set",
+          "target": "evidence",
+          "value": "c001_e10"
+        }
+      ]
+    },
+    {
+      "id": "c001_n23",
+      "type": "dialogue",
+      "speaker_id": "c001_p02",
+      "text": "Los golpes han parado. El humo sigue por la puerta del pasillo. La puerta de servicio está a mi lado. No sé qué hacer. ¿Me quedo o intento salir?",
+      "options": [
+        {
+          "id": "c001_n23_o01",
+          "text": "Preparar una instrucción",
+          "next": "c001_n24"
+        }
+      ]
+    },
+    {
+      "id": "c001_n24",
+      "type": "dialogue",
+      "speaker_id": "c001_p03",
+      "text": "El pasillo de su llamada tiene humo; nuestro equipo ve un edificio clausurado. No confundas esas dos situaciones. Antes de transmitir, revisa qué acceso has comprobado y si Clara puede seguirte.",
+      "options": [
+        {
+          "id": "c001_n24_o01",
+          "text": "Revisar pruebas y despacho",
+          "next": "c001_n10"
+        },
+        {
+          "id": "c001_n24_o02",
+          "text": "Mantenerla en la habitación, apartada del pasillo",
+          "next": "c001_n25",
+          "effects": [
+            {
+              "op": "set",
+              "target": "plan",
+              "value": "refugio"
+            }
+          ]
+        },
+        {
+          "id": "c001_n24_o03",
+          "text": "Guiarla a la puerta de servicio y al descansillo",
+          "next": "c001_n25",
+          "visible_when": {
+            "op": "contains",
+            "target": "evidence",
+            "value": "c001_e04"
+          },
+          "enabled_when": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "equals",
+                "target": "r1_assignment",
+                "value": "c001_i02"
+              },
+              {
+                "op": "equals",
+                "target": "r1_status",
+                "value": "BUSY"
+              }
+            ]
+          },
+          "disabled_reason": "Falta comprobar el acceso posterior con R1",
+          "effects": [
+            {
+              "op": "set",
+              "target": "plan",
+              "value": "servicio"
+            }
+          ]
+        },
+        {
+          "id": "c001_n24_o04",
+          "text": "Pedirle que abra la puerta del pasillo · riesgo conocido: humo",
+          "next": "c001_n26"
+        }
+      ]
+    },
+    {
+      "id": "c001_n25",
+      "type": "dialogue",
+      "speaker_id": "c001_p01",
+      "text": "Clara, manténgase en la habitación, junto a la puerta de servicio y apartada del pasillo. Seguimos con usted mientras verificamos cómo alcanzarla.",
+      "options": [
+        {
+          "id": "c001_n25_o01",
+          "text": "Transmitir instrucción",
+          "next": "c001_resolver_a",
+          "enabled_when": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "equals",
+                "target": "resultado",
+                "value": "pendiente"
+              },
+              {
+                "op": "equals",
+                "target": "etapa",
+                "value": "E"
+              },
+              {
+                "op": "equals",
+                "target": "comunicacion",
+                "value": "activa"
+              },
+              {
+                "op": "contains",
+                "target": "evidence",
+                "value": "c001_e06"
+              },
+              {
+                "op": "any",
+                "conditions": [
+                  {
+                    "op": "equals",
+                    "target": "plan",
+                    "value": "refugio"
+                  },
+                  {
+                    "op": "equals",
+                    "target": "plan",
+                    "value": "pasillo"
+                  },
+                  {
+                    "op": "all",
+                    "conditions": [
+                      {
+                        "op": "equals",
+                        "target": "plan",
+                        "value": "servicio"
+                      },
+                      {
+                        "op": "all",
+                        "conditions": [
+                          {
+                            "op": "equals",
+                            "target": "r1_assignment",
+                            "value": "c001_i02"
+                          },
+                          {
+                            "op": "equals",
+                            "target": "r1_status",
+                            "value": "BUSY"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "disabled_reason": "La instrucción no se puede transmitir con este estado. Revise el expediente y el despacho"
+        },
+        {
+          "id": "c001_n25_o02",
+          "text": "Corregir antes de transmitir",
+          "next": "c001_n24",
+          "effects": [
+            {
+              "op": "set",
+              "target": "plan",
+              "value": "ninguno"
+            }
+          ]
+        }
+      ],
+      "text_variants": [
+        {
+          "condition": {
+            "op": "equals",
+            "target": "plan",
+            "value": "refugio"
+          },
+          "text": "Clara, manténgase en la habitación, junto a la puerta de servicio y apartada del pasillo. Seguimos con usted mientras verificamos cómo alcanzarla."
+        },
+        {
+          "condition": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "equals",
+                "target": "plan",
+                "value": "servicio"
+              },
+              {
+                "op": "contains",
+                "target": "executed_actions",
+                "value": "c001_q02"
+              }
+            ]
+          },
+          "text": "Clara, la puerta junto al baño comunica con el descansillo exterior. La unidad ha comprobado ese acceso. Siga mi voz hasta esa puerta; no use el pasillo."
+        },
+        {
+          "condition": {
+            "op": "equals",
+            "target": "plan",
+            "value": "servicio"
+          },
+          "text": "Clara, nuestra unidad está detrás del hotel. Busque una salida por ese lado."
+        },
+        {
+          "condition": {
+            "op": "equals",
+            "target": "plan",
+            "value": "pasillo"
+          },
+          "text": "Clara, abra la puerta del pasillo para comprobar quién está fuera."
+        }
+      ],
+      "text_rows": [
+        {
+          "condition": {
+            "op": "contains",
+            "target": "executed_actions",
+            "value": "c001_q02"
+          },
+          "text": "Amenaza: interpretada"
+        },
+        {
+          "condition": {
+            "op": "not",
+            "condition": {
+              "op": "contains",
+              "target": "executed_actions",
+              "value": "c001_q02"
+            }
+          },
+          "text": "Amenaza: sin deducción confirmada"
+        },
+        {
+          "condition": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "equals",
+                "target": "r1_assignment",
+                "value": "c001_i02"
+              },
+              {
+                "op": "equals",
+                "target": "r1_status",
+                "value": "BUSY"
+              }
+            ]
+          },
+          "text": "Unidad: patio"
+        },
+        {
+          "condition": {
+            "op": "not",
+            "condition": {
+              "op": "all",
+              "conditions": [
+                {
+                  "op": "equals",
+                  "target": "r1_assignment",
+                  "value": "c001_i02"
+                },
+                {
+                  "op": "equals",
+                  "target": "r1_status",
+                  "value": "BUSY"
+                }
+              ]
+            }
+          },
+          "text": "Unidad: frente"
+        },
+        {
+          "condition": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "at_least",
+                "target": "confianza",
+                "value": 1
+              },
+              {
+                "op": "at_most",
+                "target": "estres",
+                "value": 1
+              }
+            ]
+          },
+          "text": "Clara: cooperando"
+        },
+        {
+          "condition": {
+            "op": "not",
+            "condition": {
+              "op": "all",
+              "conditions": [
+                {
+                  "op": "at_least",
+                  "target": "confianza",
+                  "value": 1
+                },
+                {
+                  "op": "at_most",
+                  "target": "estres",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "text": "Clara: necesita calma"
+        },
+        {
+          "condition": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "equals",
+                "target": "plan",
+                "value": "servicio"
+              },
+              {
+                "op": "not",
+                "condition": {
+                  "op": "contains",
+                  "target": "executed_actions",
+                  "value": "c001_q02"
+                }
+              }
+            ]
+          },
+          "text": "La instrucción aún no identifica una puerta concreta. Relacione las fuentes para precisarla"
+        }
+      ]
+    },
+    {
+      "id": "c001_n26",
+      "type": "dialogue",
+      "speaker_id": "c001_p03",
+      "text": "Ha descrito humo en el pasillo. Abrir puede empeorar su situación. Si está alterada, quizá no consiga retroceder a tiempo. Todavía puedes comprobar la salida de servicio o mantenerla apartada.",
+      "options": [
+        {
+          "id": "c001_n26_o01",
+          "text": "Cancelar esa instrucción",
+          "next": "c001_n24",
+          "effects": [
+            {
+              "op": "set",
+              "target": "plan",
+              "value": "ninguno"
+            }
+          ]
+        },
+        {
+          "id": "c001_n26_o02",
+          "text": "Preparar la apertura pese al riesgo",
+          "next": "c001_n25",
+          "effects": [
+            {
+              "op": "set",
+              "target": "plan",
+              "value": "pasillo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c001_n27",
+      "type": "dialogue",
+      "speaker_id": "c001_p02",
+      "text": "La puerta de servicio abre… estoy en el descansillo. Aquí puedo respirar. Hay una luz abajo. Oigo a los bomberos. Voy con ellos. Gracias por seguir ahí.",
+      "options": [
+        {
+          "id": "c001_n27_o01",
+          "text": "Pedir confirmación a R1",
+          "next": "c001_n28"
+        }
+      ]
+    },
+    {
+      "id": "c001_n28",
+      "type": "dialogue",
+      "speaker_id": "c001_p04",
+      "text": "El descansillo está vacío. No hemos visto salir a nadie. La escalera sigue donde le dijimos. Confirmo: nuestra unidad no ha establecido contacto físico con Clara.",
+      "options": [
+        {
+          "id": "c001_n28_o01",
+          "text": "Registrar ambas versiones",
+          "next": "c001_n29"
+        }
+      ]
+    },
+    {
+      "id": "c001_n29",
+      "type": "dialogue",
+      "speaker_id": "c001_p03",
+      "text": "Su respiración mejoró y comunicó que había alcanzado una salida. Eso es lo que sabemos. Registra la ayuda prestada y la ausencia de confirmación física. No inventemos lo que pasó después.",
+      "options": [
+        {
+          "id": "c001_n29_o01",
+          "text": "Cerrar la atención de emergencia",
+          "next": "c001_n36"
+        }
+      ]
+    },
+    {
+      "id": "c001_n30",
+      "type": "dialogue",
+      "speaker_id": "c001_p02",
+      "text": "Me quedo junto a la puerta de servicio. Aquí entra menos humo. ¿Sigue conmigo? La línea… apenas le oigo.",
+      "options": [
+        {
+          "id": "c001_n30_o01",
+          "text": "Consultar el último parte",
+          "next": "c001_n31"
+        }
+      ],
+      "text_variants": [
+        {
+          "condition": {
+            "op": "equals",
+            "target": "plan",
+            "value": "refugio"
+          },
+          "text": "Me quedo junto a la puerta de servicio. Aquí entra menos humo. ¿Sigue conmigo? La línea… apenas le oigo."
+        },
+        {
+          "condition": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "equals",
+                "target": "plan",
+                "value": "servicio"
+              },
+              {
+                "op": "contains",
+                "target": "executed_actions",
+                "value": "c001_q02"
+              }
+            ]
+          },
+          "text": "No consigo seguirlo. Me he apartado del pasillo, junto a la otra puerta. Repítalo… su voz se está cortando."
+        },
+        {
+          "condition": {
+            "op": "equals",
+            "target": "plan",
+            "value": "servicio"
+          },
+          "text": "¿Por qué lado? No sé qué salida dice. Me quedo junto al baño, lejos del pasillo. Repítalo… su voz se está cortando."
+        },
+        {
+          "condition": {
+            "op": "equals",
+            "target": "plan",
+            "value": "pasillo"
+          },
+          "text": "He abierto un poco. Hay humo; cierro otra vez. Me aparto. No puedo pasar por ahí. ¿Me oye?"
+        }
+      ]
+    },
+    {
+      "id": "c001_n31",
+      "type": "dialogue",
+      "speaker_id": "c001_p04",
+      "text": "Mantenemos la inspección desde zona segura. No encontramos a la interlocutora ni podemos confirmar una evacuación. El edificio actual no presenta humo.",
+      "options": [
+        {
+          "id": "c001_n31_o01",
+          "text": "Registrar contacto perdido",
+          "next": "c001_n32"
+        }
+      ]
+    },
+    {
+      "id": "c001_n32",
+      "type": "dialogue",
+      "speaker_id": "c001_p03",
+      "text": "La mantuvimos apartada del pasillo, pero no pudimos confirmar que saliera. Anota qué faltó: una interpretación comprobada, un acceso preparado o recuperar su cooperación. El expediente conservará lo que sí averiguaste.",
+      "options": [
+        {
+          "id": "c001_n32_o01",
+          "text": "Cerrar la atención de emergencia",
+          "next": "c001_n36"
+        }
+      ]
+    },
+    {
+      "id": "c001_n33",
+      "type": "dialogue",
+      "speaker_id": "c001_p02",
+      "text": "Abro… no veo nada. El humo… no sé volver a la puerta. ¿Dónde está? ¿Me oye?",
+      "options": [
+        {
+          "id": "c001_n33_o01",
+          "text": "Solicitar comprobación exterior",
+          "next": "c001_n34"
+        }
+      ]
+    },
+    {
+      "id": "c001_n34",
+      "type": "dialogue",
+      "speaker_id": "c001_p04",
+      "text": "No localizamos a nadie desde el exterior. No hay una entrada interior segura. No voy a exponer al equipo a un derrumbe sin una localización verificable.",
+      "options": [
+        {
+          "id": "c001_n34_o01",
+          "text": "Registrar pérdida de contacto en riesgo",
+          "next": "c001_n35"
+        }
+      ]
+    },
+    {
+      "id": "c001_n35",
+      "type": "dialogue",
+      "speaker_id": "c001_p03",
+      "text": "La instrucción la llevó hacia el humo cuando ya no conseguía seguirte con calma. Había una advertencia y una alternativa. No podemos confirmar su destino; sí podemos registrar cómo empeoró la atención.",
+      "options": [
+        {
+          "id": "c001_n35_o01",
+          "text": "Cerrar la atención de emergencia",
+          "next": "c001_n36"
+        }
+      ]
+    },
+    {
+      "id": "c001_n36",
+      "type": "dialogue",
+      "speaker_id": "c001_p03",
+      "text": "Conserva la cabecera N-4. No corresponde a un circuito activo de la central. Su procedencia queda pendiente; no borres la captura.",
+      "options": [
+        {
+          "id": "c001_n36_o01",
+          "text": "Ver evaluación del caso",
+          "next": "c001_n37"
+        }
+      ],
+      "text_variants": [
+        {
+          "condition": {
+            "op": "contains",
+            "target": "executed_actions",
+            "value": "c001_q03"
+          },
+          "text": "N-4 coincide con el anexo del hotel: Estación Nadir, Proyecto ECO. Tenemos una relación documental, no una explicación. Separa esa copia para revisar su procedencia."
+        }
+      ]
+    },
+    {
+      "id": "c001_n37",
+      "type": "dialogue",
+      "speaker_id": "c001_p00",
+      "text": "CASO 001 — ATENCIÓN CERRADA. El resultado describe la atención comunicada, no certifica el destino histórico de Clara. Evidencias y grabaciones conservadas.",
+      "options": [
+        {
+          "id": "c001_n37_o01",
+          "text": "Volver al menú principal",
+          "next": "c001_end_route"
+        }
+      ],
+      "text_rows": [
+        {
+          "condition": {
+            "op": "equals",
+            "target": "resultado",
+            "value": "A"
+          },
+          "text": "Resultado: Salida comunicada"
+        },
+        {
+          "condition": {
+            "op": "equals",
+            "target": "resultado",
+            "value": "B"
+          },
+          "text": "Resultado: Refugio sin confirmación"
+        },
+        {
+          "condition": {
+            "op": "equals",
+            "target": "resultado",
+            "value": "C"
+          },
+          "text": "Resultado: Contacto perdido en riesgo"
+        },
+        {
+          "condition": {
+            "op": "contains",
+            "target": "executed_actions",
+            "value": "c001_q02"
+          },
+          "text": "Interpretación del peligro: confirmada"
+        },
+        {
+          "condition": {
+            "op": "not",
+            "condition": {
+              "op": "contains",
+              "target": "executed_actions",
+              "value": "c001_q02"
+            }
+          },
+          "text": "Interpretación del peligro: pendiente"
+        },
+        {
+          "condition": {
+            "op": "contains",
+            "target": "evidence",
+            "value": "c001_e07"
+          },
+          "text": "Acceso posterior: verificado"
+        },
+        {
+          "condition": {
+            "op": "not",
+            "condition": {
+              "op": "contains",
+              "target": "evidence",
+              "value": "c001_e07"
+            }
+          },
+          "text": "Acceso posterior: no verificado"
+        },
+        {
+          "condition": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "at_least",
+                "target": "confianza",
+                "value": 1
+              },
+              {
+                "op": "at_most",
+                "target": "estres",
+                "value": 1
+              }
+            ]
+          },
+          "text": "Cooperación al transmitir: suficiente"
+        },
+        {
+          "condition": {
+            "op": "not",
+            "condition": {
+              "op": "all",
+              "conditions": [
+                {
+                  "op": "at_least",
+                  "target": "confianza",
+                  "value": 1
+                },
+                {
+                  "op": "at_most",
+                  "target": "estres",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "text": "Cooperación al transmitir: insuficiente"
+        },
+        {
+          "condition": {
+            "op": "contains",
+            "target": "executed_actions",
+            "value": "c001_q03"
+          },
+          "text": "N-4: vinculado documentalmente a ECO"
+        },
+        {
+          "condition": {
+            "op": "not",
+            "condition": {
+              "op": "contains",
+              "target": "executed_actions",
+              "value": "c001_q03"
+            }
+          },
+          "text": "N-4: procedencia pendiente"
+        },
+        {
+          "condition": {
+            "op": "contains",
+            "target": "executed_actions",
+            "value": "c001_q04"
+          },
+          "text": "Identidad histórica: correspondencia documentada"
+        },
+        {
+          "condition": {
+            "op": "not",
+            "condition": {
+              "op": "contains",
+              "target": "executed_actions",
+              "value": "c001_q04"
+            }
+          },
+          "text": "Identidad histórica: sin contrastar"
+        },
+        {
+          "condition": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "equals",
+                "target": "resultado",
+                "value": "B"
+              },
+              {
+                "op": "not",
+                "condition": {
+                  "op": "equals",
+                  "target": "plan",
+                  "value": "servicio"
+                }
+              }
+            ]
+          },
+          "text": "No se eligió una evacuación por servicio"
+        },
+        {
+          "condition": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "equals",
+                "target": "resultado",
+                "value": "B"
+              },
+              {
+                "op": "not",
+                "condition": {
+                  "op": "contains",
+                  "target": "executed_actions",
+                  "value": "c001_q02"
+                }
+              }
+            ]
+          },
+          "text": "Faltó confirmar la interpretación del peligro"
+        },
+        {
+          "condition": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "equals",
+                "target": "resultado",
+                "value": "B"
+              },
+              {
+                "op": "not",
+                "condition": {
+                  "op": "contains",
+                  "target": "evidence",
+                  "value": "c001_e07"
+                }
+              }
+            ]
+          },
+          "text": "Faltó verificar el acceso posterior"
+        },
+        {
+          "condition": {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "equals",
+                "target": "resultado",
+                "value": "B"
+              },
+              {
+                "op": "not",
+                "condition": {
+                  "op": "all",
+                  "conditions": [
+                    {
+                      "op": "at_least",
+                      "target": "confianza",
+                      "value": 1
+                    },
+                    {
+                      "op": "at_most",
+                      "target": "estres",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "text": "Faltó recuperar la cooperación"
+        },
+        {
+          "condition": {
+            "op": "equals",
+            "target": "resultado",
+            "value": "C"
+          },
+          "text": "Se indicó abrir al pasillo pese al humo, con confianza agotada y estrés alto"
+        }
+      ]
+    },
+    {
+      "id": "c001_n38",
+      "type": "dialogue",
+      "speaker_id": "c001_p02",
+      "text": "Sí, ese es mi nombre. Me dieron la trescientos cuatro al llegar. Si ese papel está ahí, por favor, no deje que mi llamada se pierda también.",
+      "options": [
+        {
+          "id": "c001_n38_o01",
+          "text": "Conservaré el registro junto a la llamada.",
+          "next": "c001_n10"
+        }
+      ]
+    },
+    {
+      "id": "c001_resolver_a",
+      "type": "transition",
+      "condition": {
+        "op": "all",
+        "conditions": [
+          {
+            "op": "equals",
+            "target": "plan",
+            "value": "servicio"
+          },
+          {
+            "op": "contains",
+            "target": "executed_actions",
+            "value": "c001_q02"
+          },
+          {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "equals",
+                "target": "r1_assignment",
+                "value": "c001_i02"
+              },
+              {
+                "op": "equals",
+                "target": "r1_status",
+                "value": "BUSY"
+              }
+            ]
+          },
+          {
+            "op": "all",
+            "conditions": [
+              {
+                "op": "at_least",
+                "target": "confianza",
+                "value": 1
+              },
+              {
+                "op": "at_most",
+                "target": "estres",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "next": "c001_commit_a",
+      "fallback_next": "c001_resolver_c"
+    },
+    {
+      "id": "c001_resolver_c",
+      "type": "transition",
+      "condition": {
+        "op": "all",
+        "conditions": [
+          {
+            "op": "equals",
+            "target": "plan",
+            "value": "pasillo"
+          },
+          {
+            "op": "equals",
+            "target": "confianza",
+            "value": 0
+          },
+          {
+            "op": "equals",
+            "target": "estres",
+            "value": 2
+          }
+        ]
+      },
+      "next": "c001_commit_c",
+      "fallback_next": "c001_commit_b"
+    },
+    {
+      "id": "c001_commit_a",
+      "type": "transition",
+      "next": "c001_n27",
+      "entry_effects": [
+        {
+          "op": "set",
+          "target": "resultado",
+          "value": "A"
+        },
+        {
+          "op": "set",
+          "target": "etapa",
+          "value": "F"
+        },
+        {
+          "op": "set",
+          "target": "comunicacion",
+          "value": "cerrada"
+        },
+        {
+          "op": "mark_once",
+          "value": "c001_k02"
+        }
+      ]
+    },
+    {
+      "id": "c001_end_a",
+      "type": "ending",
+      "ending_id": "c001_final_a",
+      "text": "Caso 001 · atención cerrada. Puede consultar las fuentes conservadas."
+    },
+    {
+      "id": "c001_commit_b",
+      "type": "transition",
+      "next": "c001_n30",
+      "entry_effects": [
+        {
+          "op": "set",
+          "target": "resultado",
+          "value": "B"
+        },
+        {
+          "op": "set",
+          "target": "etapa",
+          "value": "F"
+        },
+        {
+          "op": "set",
+          "target": "comunicacion",
+          "value": "interrumpida"
+        },
+        {
+          "op": "mark_once",
+          "value": "c001_k02"
+        }
+      ]
+    },
+    {
+      "id": "c001_end_b",
+      "type": "ending",
+      "ending_id": "c001_final_b",
+      "text": "Caso 001 · atención cerrada. Puede consultar las fuentes conservadas."
+    },
+    {
+      "id": "c001_commit_c",
+      "type": "transition",
+      "next": "c001_n33",
+      "entry_effects": [
+        {
+          "op": "set",
+          "target": "resultado",
+          "value": "C"
+        },
+        {
+          "op": "set",
+          "target": "etapa",
+          "value": "F"
+        },
+        {
+          "op": "set",
+          "target": "comunicacion",
+          "value": "interrumpida"
+        },
+        {
+          "op": "mark_once",
+          "value": "c001_k02"
+        }
+      ]
+    },
+    {
+      "id": "c001_end_c",
+      "type": "ending",
+      "ending_id": "c001_final_c",
+      "text": "Caso 001 · atención cerrada. Puede consultar las fuentes conservadas."
+    },
+    {
+      "id": "c001_end_route",
+      "type": "transition",
+      "condition": {
+        "op": "equals",
+        "target": "resultado",
+        "value": "A"
+      },
+      "next": "c001_end_a",
+      "fallback_next": "c001_end_route_c"
+    },
+    {
+      "id": "c001_end_route_c",
+      "type": "transition",
+      "condition": {
+        "op": "equals",
+        "target": "resultado",
+        "value": "C"
+      },
+      "next": "c001_end_c",
+      "fallback_next": "c001_end_b"
+    }
+  ],
+  "investigation": {
+    "evidence": [
+      {
+        "id": "c001_e01",
+        "title": "Clara, habitación 304",
+        "description": "Nombre declarado, hotel y habitación; testimonio sin identidad verificada",
+        "category": "testimony",
+        "source": "Comunicación de la línea dos · Clara Salcedo.",
+        "importance": "essential",
+        "order": 1
+      },
+      {
+        "id": "c001_e02",
+        "title": "Clausura del Mirador",
+        "description": "Incendio y clausura 14/11/1981; daño del vestíbulo",
+        "category": "document",
+        "source": "Archivo municipal · ficha de clausura del Hotel Mirador.",
+        "importance": "essential",
+        "order": 2
+      },
+      {
+        "id": "c001_e03",
+        "title": "Humo y aviso de bomberos",
+        "description": "Hay humo; los golpes no prueban un agresor; voz dice «no abra al pasillo»",
+        "category": "audio",
+        "source": "Línea dos · información sonora y testimonio sobre el humo.",
+        "importance": "essential",
+        "order": 3
+      },
+      {
+        "id": "c001_e04",
+        "title": "Dos puertas de la 304",
+        "description": "Puerta al pasillo y servicio al descansillo/escalera exterior; plano histórico, no certificación actual",
+        "category": "document",
+        "source": "Hotel Mirador · plano de planta y referencia de la puerta de servicio.",
+        "importance": "essential",
+        "order": 4
+      },
+      {
+        "id": "c001_e05",
+        "title": "Huésped de 1981",
+        "description": "Clara Salcedo consta en la 304; folio no confirma evacuación",
+        "category": "document",
+        "source": "Registro histórico de huéspedes · 14/11/1981.",
+        "importance": "optional",
+        "order": 5
+      },
+      {
+        "id": "c001_e06",
+        "title": "Exterior actual clausurado",
+        "description": "Sin humo ni huéspedes visibles; vestíbulo inseguro en 1998",
+        "category": "document",
+        "source": "R1 · inspección exterior actual del Hotel Mirador.",
+        "importance": "essential",
+        "order": 6
+      },
+      {
+        "id": "c001_e07",
+        "title": "Acceso posterior verificado",
+        "description": "Escalera y descansillo existentes y observados desde zona segura",
+        "category": "document",
+        "source": "R1 · parte de inspección del patio posterior.",
+        "importance": "essential",
+        "order": 7
+      },
+      {
+        "id": "c001_e08",
+        "title": "Recibo del 14/11/1981",
+        "description": "Clara lee una fecha incompatible con la consola de 1998",
+        "category": "document",
+        "source": "Línea dos · lectura del recibo de Clara Salcedo.",
+        "importance": "essential",
+        "order": 8
+      },
+      {
+        "id": "c001_e09",
+        "title": "Anexo Nadir / ECO",
+        "description": "Copia de ensayo del circuito N-4 del 10/11/1981; no declara causa del incendio",
+        "category": "document",
+        "source": "Archivo de telefonía · anexo del 10/11/1981.",
+        "importance": "optional",
+        "order": 9
+      },
+      {
+        "id": "c001_e10",
+        "title": "Cabecera N-4",
+        "description": "Circuito de captura no activo en la central; etiqueta, no voz sobrenatural",
+        "category": "document",
+        "source": "Central de comunicaciones · datos de captura de la línea dos.",
+        "importance": "contextual",
+        "order": 10
+      }
+    ],
+    "deductions": [
+      {
+        "id": "c001_q01",
+        "title": "¿Encaja la llamada con el registro actual?",
+        "description": "Seleccione las fuentes que sostienen esta hipótesis.",
+        "required_evidence": [
+          "c001_e01",
+          "c001_e02"
+        ],
+        "additional_conditions": {
+          "op": "all",
+          "conditions": [
+            {
+              "op": "equals",
+              "target": "resultado",
+              "value": "pendiente"
+            },
+            {
+              "op": "any",
+              "conditions": [
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "C"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "D"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "E"
+                }
+              ]
+            }
+          ]
+        },
+        "result_type": "VALID",
+        "effects": [],
+        "repeatable": false,
+        "narrative_feedback": "El testimonio sitúa una habitación ocupada en un hotel registrado como clausurado desde 1981. La contradicción requiere comprobación; no demuestra una broma."
+      },
+      {
+        "id": "c001_q02",
+        "title": "¿Qué amenaza hay y qué salida tiene sentido?",
+        "description": "Seleccione las fuentes que sostienen esta hipótesis.",
+        "required_evidence": [
+          "c001_e03",
+          "c001_e04",
+          "c001_e06"
+        ],
+        "additional_conditions": {
+          "op": "all",
+          "conditions": [
+            {
+              "op": "equals",
+              "target": "resultado",
+              "value": "pendiente"
+            },
+            {
+              "op": "any",
+              "conditions": [
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "C"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "D"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "E"
+                }
+              ]
+            }
+          ]
+        },
+        "result_type": "VALID",
+        "effects": [],
+        "repeatable": false,
+        "narrative_feedback": "Clara describe humo y un aviso de bomberos. El pasillo es el peligro comunicado; servicio ofrece una ruta separada en el plano. La unidad actual debe verificarla antes de usarla."
+      },
+      {
+        "id": "c001_q03",
+        "title": "¿De dónde procede el circuito?",
+        "description": "Seleccione las fuentes que sostienen esta hipótesis.",
+        "required_evidence": [
+          "c001_e09",
+          "c001_e10"
+        ],
+        "additional_conditions": {
+          "op": "all",
+          "conditions": [
+            {
+              "op": "equals",
+              "target": "resultado",
+              "value": "pendiente"
+            },
+            {
+              "op": "any",
+              "conditions": [
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "C"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "D"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "E"
+                }
+              ]
+            }
+          ]
+        },
+        "result_type": "VALID",
+        "effects": [],
+        "repeatable": false,
+        "narrative_feedback": "La cabecera N-4 coincide con el ensayo de telefonía que menciona Estación Nadir y Proyecto ECO. Hay un vínculo documental; su función y relación con el incendio siguen abiertas."
+      },
+      {
+        "id": "c001_q04",
+        "title": "¿Coincide la identidad con el archivo histórico?",
+        "description": "Seleccione las fuentes que sostienen esta hipótesis.",
+        "required_evidence": [
+          "c001_e01",
+          "c001_e05",
+          "c001_e08"
+        ],
+        "additional_conditions": {
+          "op": "all",
+          "conditions": [
+            {
+              "op": "equals",
+              "target": "resultado",
+              "value": "pendiente"
+            },
+            {
+              "op": "any",
+              "conditions": [
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "C"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "D"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "E"
+                }
+              ]
+            }
+          ]
+        },
+        "result_type": "VALID",
+        "effects": [],
+        "repeatable": false,
+        "narrative_feedback": "Nombre, habitación y fecha coinciden con el registro de 1981. La correspondencia apoya revisar esa emergencia, pero no prueba quién habla ni qué ocurrió después."
+      }
+    ],
+    "actions": [
+      {
+        "id": "c001_answer",
+        "title": "Responder comunicación",
+        "internal": true,
+        "condition": {
+          "op": "equals",
+          "target": "comunicacion",
+          "value": "entrante"
+        },
+        "effects": [
+          {
+            "op": "set",
+            "target": "comunicacion",
+            "value": "activa"
+          }
+        ]
+      }
+    ]
+  },
+  "audio_analysis": {
+    "recordings": [
+      {
+        "recording_id": "c001_g01",
+        "title": "Primer contacto",
+        "description": "Grabación de investigación pendiente de producción. Transcripciones aprobadas disponibles; no contiene audio reproducible.",
+        "case_id": "c001",
+        "unlocked_by": {
+          "op": "contains",
+          "target": "evidence",
+          "value": "c001_e02"
+        },
+        "duration": 18,
+        "variants": [
+          {
+            "filter_id": "original",
+            "label": "Original",
+            "audio_path": "",
+            "available": false
+          },
+          {
+            "filter_id": "voces",
+            "label": "Voz de fondo / voz cercana",
+            "audio_path": "",
+            "available": false
+          },
+          {
+            "filter_id": "ambiente",
+            "label": "Ambiente",
+            "audio_path": "",
+            "available": false
+          }
+        ],
+        "segments": [
+          {
+            "segment_id": "c001_g01_s01",
+            "start_time": 0,
+            "end_time": 6,
+            "title": "Fragmento 01",
+            "accessible_information": {
+              "original": "Clara: «Hotel Mirador… habitación trescientos cuatro». Zumbido de línea.",
+              "voces": "Clara: «Hotel Mirador… habitación trescientos cuatro». Zumbido de línea.",
+              "ambiente": "Clara: «Hotel Mirador… habitación trescientos cuatro». Zumbido de línea."
+            }
+          },
+          {
+            "segment_id": "c001_g01_s02",
+            "start_time": 6,
+            "end_time": 14,
+            "title": "Fragmento 02",
+            "accessible_information": {
+              "original": "Tres golpes, alarma grave, tos. Voz lejana [poco clara].",
+              "voces": "Tres golpes, alarma grave, tos. Voz lejana: «¡Bomberos! ¡No abra al pasillo!»",
+              "ambiente": "Tres golpes, alarma grave, tos. Voz lejana: «¡Bomberos! ¡No abra al pasillo!»"
+            }
+          },
+          {
+            "segment_id": "c001_g01_s03",
+            "start_time": 14,
+            "end_time": 18,
+            "title": "Fragmento 03",
+            "accessible_information": {
+              "original": "Clara: «No puedo salir por ahí». Tos, roce junto al teléfono.",
+              "voces": "Clara: «No puedo salir por ahí». Tos, roce junto al teléfono.",
+              "ambiente": "Clara: «No puedo salir por ahí». Tos, roce junto al teléfono."
+            }
+          }
+        ],
+        "waveform": []
+      },
+      {
+        "recording_id": "c001_g02",
+        "title": "Fecha y cabecera",
+        "description": "Grabación de investigación pendiente de producción. Transcripciones aprobadas disponibles; no contiene audio reproducible.",
+        "case_id": "c001",
+        "unlocked_by": {
+          "op": "contains",
+          "target": "evidence",
+          "value": "c001_e08"
+        },
+        "duration": 12,
+        "variants": [
+          {
+            "filter_id": "original",
+            "label": "Original",
+            "audio_path": "",
+            "available": false
+          },
+          {
+            "filter_id": "voces",
+            "label": "Voz de fondo / voz cercana",
+            "audio_path": "",
+            "available": false
+          },
+          {
+            "filter_id": "ambiente",
+            "label": "Ambiente",
+            "audio_path": "",
+            "available": false
+          }
+        ],
+        "segments": [
+          {
+            "segment_id": "c001_g02_s01",
+            "start_time": 0,
+            "end_time": 9,
+            "title": "Fragmento 01",
+            "accessible_information": {
+              "original": "Clara: «Clara Salcedo, trescientos cuatro. Catorce de noviembre de mil novecientos ochenta y uno».",
+              "voces": "Clara: «Clara Salcedo, trescientos cuatro. Catorce de noviembre de mil novecientos ochenta y uno».",
+              "ambiente": "Clara: «Clara Salcedo, trescientos cuatro. Catorce de noviembre de mil novecientos ochenta y uno»."
+            }
+          },
+          {
+            "segment_id": "c001_g02_s02",
+            "start_time": 9,
+            "end_time": 12,
+            "title": "Fragmento 02",
+            "accessible_information": {
+              "original": "Línea con chasquido; sin mensaje secreto ni voz nueva.",
+              "voces": "Línea con chasquido; sin mensaje secreto ni voz nueva.",
+              "ambiente": "Línea con chasquido; sin mensaje secreto ni voz nueva."
+            }
+          }
+        ],
+        "waveform": [],
+        "capture_information": [
+          {
+            "condition": {
+              "op": "contains",
+              "target": "evidence",
+              "value": "c001_e10"
+            },
+            "text": "Cabecera de captura: N-4. No consta como circuito activo"
+          }
+        ]
+      }
+    ],
+    "discovery_rules": [
+      {
+        "id": "c001_t05",
+        "recording_id": "c001_g01",
+        "segment_id": "c001_g01_s02",
+        "filter_id": "voces",
+        "evidence_id": "c001_e03",
+        "min_listen_seconds": 0,
+        "discovery_mode": "consult",
+        "additional_conditions": {
+          "op": "all",
+          "conditions": [
+            {
+              "op": "equals",
+              "target": "resultado",
+              "value": "pendiente"
+            },
+            {
+              "op": "any",
+              "conditions": [
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "C"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "D"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "E"
+                }
+              ]
+            }
+          ]
+        },
+        "once_only": true
+      }
+    ]
+  },
+  "operations": {
+    "map_id": "c001_mirador",
+    "title": "Hotel Mirador · Frente Costero · plano esquemático",
+    "closed_when": {
+      "op": "not",
+      "condition": {
+        "op": "equals",
+        "target": "resultado",
+        "value": "pendiente"
+      }
+    },
+    "districts": [
+      {
+        "id": "c001_costero",
+        "name": "Frente Costero",
+        "bounds": [
+          0.02,
+          0.03,
+          0.96,
+          0.94
+        ]
+      }
+    ],
+    "locations": [
+      {
+        "id": "c001_l01",
+        "name": "Mirador · Paseo del Faro, 18",
+        "district_id": "c001_costero",
+        "description": "Vestíbulo clausurado. Inspección exterior; no entrar en la estructura insegura.",
+        "position": [
+          0.3,
+          0.35
+        ],
+        "visible_when": {
+          "op": "contains",
+          "target": "evidence",
+          "value": "c001_e02"
+        },
+        "information": [
+          {
+            "condition": {
+              "op": "contains",
+              "target": "evidence",
+              "value": "c001_e06"
+            },
+            "text": "Sin humo actual ni personas visibles. Vestíbulo inseguro."
+          },
+          {
+            "condition": {
+              "op": "contains",
+              "target": "evidence",
+              "value": "c001_e07"
+            },
+            "text": "Escalera y descansillo posterior comprobados desde zona segura."
+          }
+        ]
+      },
+      {
+        "id": "c001_l02",
+        "name": "Patio posterior del Mirador",
+        "district_id": "c001_costero",
+        "description": "Acceso exterior por comprobar. No certifica una salida de la habitación hasta contrastar el plano y el parte.",
+        "position": [
+          0.7,
+          0.7
+        ],
+        "visible_when": {
+          "op": "contains",
+          "target": "evidence",
+          "value": "c001_e02"
+        },
+        "information": [
+          {
+            "condition": {
+              "op": "contains",
+              "target": "evidence",
+              "value": "c001_e06"
+            },
+            "text": "Sin humo actual ni personas visibles. Vestíbulo inseguro."
+          },
+          {
+            "condition": {
+              "op": "contains",
+              "target": "evidence",
+              "value": "c001_e07"
+            },
+            "text": "Escalera y descansillo posterior comprobados desde zona segura."
+          }
+        ]
+      }
+    ],
+    "units": [
+      {
+        "unit_id": "c001_r1",
+        "display_name": "R1 · Inés Duarte · rescate exterior",
+        "unit_type": "RESCUE",
+        "initial_status": "AVAILABLE",
+        "status_variable": "r1_status",
+        "assignment_variable": "r1_assignment"
+      }
+    ],
+    "incidents": [
+      {
+        "id": "c001_i01",
+        "title": "Inspeccionar frente",
+        "description": "Vestíbulo clausurado. Inspección exterior; no entrar en la estructura insegura.",
+        "location_id": "c001_l01",
+        "incident_type": "exterior_inspection",
+        "priority": "HIGH",
+        "initial_status": "REPORTED",
+        "status_variable": "frente_status",
+        "required_unit_types": [
+          "RESCUE"
+        ],
+        "unlock_conditions": {
+          "op": "contains",
+          "target": "evidence",
+          "value": "c001_e02"
+        },
+        "activate_conditions": {
+          "op": "all",
+          "conditions": [
+            {
+              "op": "equals",
+              "target": "resultado",
+              "value": "pendiente"
+            },
+            {
+              "op": "any",
+              "conditions": [
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "C"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "D"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "E"
+                }
+              ]
+            }
+          ]
+        },
+        "dispatch_event": "c001_despacho"
+      },
+      {
+        "id": "c001_i02",
+        "title": "Comprobar patio posterior",
+        "description": "Acceso exterior por comprobar. No certifica una salida de la habitación hasta contrastar el plano y el parte.",
+        "location_id": "c001_l02",
+        "incident_type": "exterior_inspection",
+        "priority": "HIGH",
+        "initial_status": "REPORTED",
+        "status_variable": "patio_status",
+        "required_unit_types": [
+          "RESCUE"
+        ],
+        "unlock_conditions": {
+          "op": "contains",
+          "target": "evidence",
+          "value": "c001_e02"
+        },
+        "activate_conditions": {
+          "op": "all",
+          "conditions": [
+            {
+              "op": "equals",
+              "target": "resultado",
+              "value": "pendiente"
+            },
+            {
+              "op": "any",
+              "conditions": [
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "C"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "D"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "E"
+                }
+              ]
+            }
+          ]
+        },
+        "dispatch_event": "c001_despacho"
+      }
+    ],
+    "event_rules": [
+      {
+        "id": "c001_u01",
+        "label": "Recibir parte del frente",
+        "result_text": "R1 en Paseo del Faro. Hotel cerrado, sin humo actual ni personas visibles. El vestíbulo tiene riesgo de derrumbe; no vamos a entrar. Podemos rodear hasta el patio si lo autoriza.",
+        "stage": "arrive",
+        "unit_id": "c001_r1",
+        "incident_id": "c001_i01",
+        "from_unit_status": "ASSIGNED",
+        "to_unit_status": "BUSY",
+        "from_incident_status": "ASSIGNED",
+        "to_incident_status": "ASSIGNED",
+        "condition": {
+          "op": "all",
+          "conditions": [
+            {
+              "op": "equals",
+              "target": "resultado",
+              "value": "pendiente"
+            },
+            {
+              "op": "any",
+              "conditions": [
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "C"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "D"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "E"
+                }
+              ]
+            }
+          ]
+        },
+        "effects": [
+          {
+            "op": "mark_once",
+            "value": "c001_u01"
+          }
+        ],
+        "from_node": "c001_n16",
+        "next": "c001_n19"
+      },
+      {
+        "id": "c001_u02",
+        "label": "Recibir parte del patio",
+        "result_text": "R1 en el patio. No hay humo actual ni personas visibles. El vestíbulo sigue siendo inseguro. Desde fuera confirmamos la escalera posterior y el descansillo de la tercera planta. La puerta de servicio de la 304 da allí, según la placa de planta conservada. Nos quedamos en zona segura.",
+        "stage": "arrive",
+        "unit_id": "c001_r1",
+        "incident_id": "c001_i02",
+        "from_unit_status": "ASSIGNED",
+        "to_unit_status": "BUSY",
+        "from_incident_status": "ASSIGNED",
+        "to_incident_status": "ASSIGNED",
+        "condition": {
+          "op": "all",
+          "conditions": [
+            {
+              "op": "equals",
+              "target": "resultado",
+              "value": "pendiente"
+            },
+            {
+              "op": "any",
+              "conditions": [
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "C"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "D"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "E"
+                }
+              ]
+            }
+          ]
+        },
+        "effects": [
+          {
+            "op": "mark_once",
+            "value": "c001_u02"
+          }
+        ],
+        "from_node": "c001_n16",
+        "next": "c001_n20"
+      },
+      {
+        "id": "c001_m05",
+        "label": "Reubicar R1 al patio",
+        "result_text": "R1 asignada al patio. Reciba el parte cuando esté preparado.",
+        "stage": "reposition",
+        "unit_id": "c001_r1",
+        "incident_id": "c001_i01",
+        "target_incident_id": "c001_i02",
+        "from_unit_status": "BUSY",
+        "to_unit_status": "ASSIGNED",
+        "from_incident_status": "ASSIGNED",
+        "to_incident_status": "CLOSED",
+        "condition": {
+          "op": "all",
+          "conditions": [
+            {
+              "op": "equals",
+              "target": "resultado",
+              "value": "pendiente"
+            },
+            {
+              "op": "any",
+              "conditions": [
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "C"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "D"
+                },
+                {
+                  "op": "equals",
+                  "target": "etapa",
+                  "value": "E"
+                }
+              ]
+            }
+          ]
+        },
+        "effects": [],
+        "from_node": "c001_n16"
+      }
+    ],
+    "layout_kind": "building"
+  },
+  "connection_action": "c001_answer"
+}

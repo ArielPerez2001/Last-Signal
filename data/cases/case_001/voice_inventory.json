@@ -1,0 +1,338 @@
+[
+  {
+    "line_id": "c001_n01_line",
+    "node_id": "c001_n01",
+    "speaker_id": "c001_p03",
+    "text": "Turno de noche. Soy Elena Vargas, tu supervisora. La línea dos está entrando. Primero escucha; después comprobamos los datos.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n02_line",
+    "node_id": "c001_n02",
+    "speaker_id": "c001_p03",
+    "text": "La conversación queda en el historial. El expediente reúne lo que confirmes. Puedes volver a leer sin perder la llamada.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n03_line",
+    "node_id": "c001_n03",
+    "speaker_id": "c001_p02",
+    "text": "¿Emergencias? Por favor… alguien está golpeando. Estoy encerrada en una habitación.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n04_line",
+    "node_id": "c001_n04",
+    "speaker_id": "c001_p02",
+    "text": "Clara Salcedo. Hotel Mirador, habitación trescientos cuatro. No puedo salir por el pasillo.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n05_line",
+    "node_id": "c001_n05",
+    "speaker_id": "c001_p02",
+    "text": "No la he visto. Golpea tres veces y grita algo. La luz se ha ido. Hay otra puerta, junto al baño, pero no sé adónde lleva.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n06_line",
+    "node_id": "c001_n06",
+    "speaker_id": "c001_p01",
+    "text": "Clara, sigo escuchándola mientras consulto los registros.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n07_line",
+    "node_id": "c001_n07",
+    "speaker_id": "c001_p03",
+    "text": "La dirección existe. Pero la ficha dice que el hotel lleva diecisiete años clausurado. Comprueba la fecha antes de sacar conclusiones.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n08_line",
+    "node_id": "c001_n08",
+    "speaker_id": "c001_p00",
+    "text": "HOTEL MIRADOR. Paseo del Faro, 18. Clausurado tras el incendio del 14/11/1981. Prohibido acceder por el vestíbulo: forjado dañado. Anexos: plano de planta, huéspedes y telefonía.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n09_line",
+    "node_id": "c001_n09",
+    "speaker_id": "c001_p03",
+    "text": "Sí. Que el registro no encaje no significa que nadie necesite ayuda. Podemos enviar una unidad a comprobar el exterior.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n10_line",
+    "node_id": "c001_n10",
+    "speaker_id": "c001_p00",
+    "text": "Línea dos activa. Contraste las fuentes antes de decidir. Las consultas no avanzan la emergencia.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n10_variant_01",
+    "node_id": "c001_n10",
+    "speaker_id": "c001_p00",
+    "text": "Clara sigue al teléfono. Puede revisar el expediente y preparar la unidad antes de transmitir una instrucción.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n11_line",
+    "node_id": "c001_n11",
+    "speaker_id": "c001_p00",
+    "text": "PLANTA TERCERA, archivo de 1981. La 304 tiene una puerta al pasillo interior y otra de servicio junto al baño. Esta segunda puerta comunica con un descansillo abierto al patio y una escalera exterior posterior. El plano no certifica el estado actual de la escalera.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n12_line",
+    "node_id": "c001_n12",
+    "speaker_id": "c001_p02",
+    "text": "Ahora huelo humo por debajo de la puerta del pasillo. Entre los golpes oigo “bomberos”… y “no abra al pasillo”. Yo creía que venían a buscarme. La otra puerta tiene una placa: servicio.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n13_line",
+    "node_id": "c001_n13",
+    "speaker_id": "c001_p00",
+    "text": "Grabaciones de la línea dos. Seleccione un fragmento y una variante, o lea su transcripción equivalente. Ninguna pista exige oír el audio.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n14_line",
+    "node_id": "c001_n14",
+    "speaker_id": "c001_p00",
+    "text": "REGISTRO HISTÓRICO, 14/11/1981. Clara Salcedo, habitación 304. Anotación posterior: evacuación no confirmada en este folio. Este documento no permite determinar su destino.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n15_line",
+    "node_id": "c001_n15",
+    "speaker_id": "c001_p00",
+    "text": "ANEXO DE TELEFONÍA, 10/11/1981. Hotel Mirador, circuito N-4. Copia de ensayo de enlace: Estación Nadir / Proyecto ECO. El anexo no describe el objetivo del ensayo ni lo relaciona con el incendio.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n16_line",
+    "node_id": "c001_n16",
+    "speaker_id": "c001_p00",
+    "text": "Vestíbulo clausurado; acceso posterior por el patio. La unidad no entrará en una estructura insegura.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n17_line",
+    "node_id": "c001_n17",
+    "speaker_id": "c001_p00",
+    "text": "Seleccione una hipótesis y las pruebas que la sostienen. Una combinación incompleta o equivocada puede corregirse sin penalización.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n18_line",
+    "node_id": "c001_n18",
+    "speaker_id": "c001_p02",
+    "text": "Está bien. Le escucho. Pensé que no me creía. Dígame una cosa cada vez.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n19_line",
+    "node_id": "c001_n19",
+    "speaker_id": "c001_p04",
+    "text": "R1 en Paseo del Faro. Hotel cerrado, sin humo actual ni personas visibles. El vestíbulo tiene riesgo de derrumbe; no vamos a entrar. Podemos rodear hasta el patio si lo autoriza.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n20_line",
+    "node_id": "c001_n20",
+    "speaker_id": "c001_p04",
+    "text": "R1 en el patio. No hay humo actual ni personas visibles. El vestíbulo sigue siendo inseguro. Desde fuera confirmamos la escalera posterior y el descansillo de la tercera planta. La puerta de servicio de la 304 da allí, según la placa de planta conservada. Nos quedamos en zona segura.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n21_line",
+    "node_id": "c001_n21",
+    "speaker_id": "c001_p02",
+    "text": "Mi recibo está aquí, junto al teléfono. Clara Salcedo, 304… catorce de noviembre de mil novecientos ochenta y uno. ¿Por qué me pregunta eso? El humo está entrando más.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n22_line",
+    "node_id": "c001_n22",
+    "speaker_id": "c001_p03",
+    "text": "Nuestra consola marca catorce de noviembre de 1998. Su recibo dice 1981. Además, la captura lleva la cabecera N-4, un circuito que no figura entre los activos. Conserva la grabación. Ahora resuelve el peligro que está describiendo.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n23_line",
+    "node_id": "c001_n23",
+    "speaker_id": "c001_p02",
+    "text": "Los golpes han parado. El humo sigue por la puerta del pasillo. La puerta de servicio está a mi lado. No sé qué hacer. ¿Me quedo o intento salir?",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n24_line",
+    "node_id": "c001_n24",
+    "speaker_id": "c001_p03",
+    "text": "El pasillo de su llamada tiene humo; nuestro equipo ve un edificio clausurado. No confundas esas dos situaciones. Antes de transmitir, revisa qué acceso has comprobado y si Clara puede seguirte.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n25_line",
+    "node_id": "c001_n25",
+    "speaker_id": "c001_p01",
+    "text": "Clara, manténgase en la habitación, junto a la puerta de servicio y apartada del pasillo. Seguimos con usted mientras verificamos cómo alcanzarla.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n25_variant_01",
+    "node_id": "c001_n25",
+    "speaker_id": "c001_p01",
+    "text": "Clara, manténgase en la habitación, junto a la puerta de servicio y apartada del pasillo. Seguimos con usted mientras verificamos cómo alcanzarla.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n25_variant_02",
+    "node_id": "c001_n25",
+    "speaker_id": "c001_p01",
+    "text": "Clara, la puerta junto al baño comunica con el descansillo exterior. La unidad ha comprobado ese acceso. Siga mi voz hasta esa puerta; no use el pasillo.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n25_variant_03",
+    "node_id": "c001_n25",
+    "speaker_id": "c001_p01",
+    "text": "Clara, nuestra unidad está detrás del hotel. Busque una salida por ese lado.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n25_variant_04",
+    "node_id": "c001_n25",
+    "speaker_id": "c001_p01",
+    "text": "Clara, abra la puerta del pasillo para comprobar quién está fuera.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n26_line",
+    "node_id": "c001_n26",
+    "speaker_id": "c001_p03",
+    "text": "Ha descrito humo en el pasillo. Abrir puede empeorar su situación. Si está alterada, quizá no consiga retroceder a tiempo. Todavía puedes comprobar la salida de servicio o mantenerla apartada.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n27_line",
+    "node_id": "c001_n27",
+    "speaker_id": "c001_p02",
+    "text": "La puerta de servicio abre… estoy en el descansillo. Aquí puedo respirar. Hay una luz abajo. Oigo a los bomberos. Voy con ellos. Gracias por seguir ahí.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n28_line",
+    "node_id": "c001_n28",
+    "speaker_id": "c001_p04",
+    "text": "El descansillo está vacío. No hemos visto salir a nadie. La escalera sigue donde le dijimos. Confirmo: nuestra unidad no ha establecido contacto físico con Clara.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n29_line",
+    "node_id": "c001_n29",
+    "speaker_id": "c001_p03",
+    "text": "Su respiración mejoró y comunicó que había alcanzado una salida. Eso es lo que sabemos. Registra la ayuda prestada y la ausencia de confirmación física. No inventemos lo que pasó después.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n30_line",
+    "node_id": "c001_n30",
+    "speaker_id": "c001_p02",
+    "text": "Me quedo junto a la puerta de servicio. Aquí entra menos humo. ¿Sigue conmigo? La línea… apenas le oigo.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n30_variant_01",
+    "node_id": "c001_n30",
+    "speaker_id": "c001_p02",
+    "text": "Me quedo junto a la puerta de servicio. Aquí entra menos humo. ¿Sigue conmigo? La línea… apenas le oigo.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n30_variant_02",
+    "node_id": "c001_n30",
+    "speaker_id": "c001_p02",
+    "text": "No consigo seguirlo. Me he apartado del pasillo, junto a la otra puerta. Repítalo… su voz se está cortando.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n30_variant_03",
+    "node_id": "c001_n30",
+    "speaker_id": "c001_p02",
+    "text": "¿Por qué lado? No sé qué salida dice. Me quedo junto al baño, lejos del pasillo. Repítalo… su voz se está cortando.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n30_variant_04",
+    "node_id": "c001_n30",
+    "speaker_id": "c001_p02",
+    "text": "He abierto un poco. Hay humo; cierro otra vez. Me aparto. No puedo pasar por ahí. ¿Me oye?",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n31_line",
+    "node_id": "c001_n31",
+    "speaker_id": "c001_p04",
+    "text": "Mantenemos la inspección desde zona segura. No encontramos a la interlocutora ni podemos confirmar una evacuación. El edificio actual no presenta humo.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n32_line",
+    "node_id": "c001_n32",
+    "speaker_id": "c001_p03",
+    "text": "La mantuvimos apartada del pasillo, pero no pudimos confirmar que saliera. Anota qué faltó: una interpretación comprobada, un acceso preparado o recuperar su cooperación. El expediente conservará lo que sí averiguaste.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n33_line",
+    "node_id": "c001_n33",
+    "speaker_id": "c001_p02",
+    "text": "Abro… no veo nada. El humo… no sé volver a la puerta. ¿Dónde está? ¿Me oye?",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n34_line",
+    "node_id": "c001_n34",
+    "speaker_id": "c001_p04",
+    "text": "No localizamos a nadie desde el exterior. No hay una entrada interior segura. No voy a exponer al equipo a un derrumbe sin una localización verificable.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n35_line",
+    "node_id": "c001_n35",
+    "speaker_id": "c001_p03",
+    "text": "La instrucción la llevó hacia el humo cuando ya no conseguía seguirte con calma. Había una advertencia y una alternativa. No podemos confirmar su destino; sí podemos registrar cómo empeoró la atención.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n36_line",
+    "node_id": "c001_n36",
+    "speaker_id": "c001_p03",
+    "text": "Conserva la cabecera N-4. No corresponde a un circuito activo de la central. Su procedencia queda pendiente; no borres la captura.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n36_variant_01",
+    "node_id": "c001_n36",
+    "speaker_id": "c001_p03",
+    "text": "N-4 coincide con el anexo del hotel: Estación Nadir, Proyecto ECO. Tenemos una relación documental, no una explicación. Separa esa copia para revisar su procedencia.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n37_line",
+    "node_id": "c001_n37",
+    "speaker_id": "c001_p00",
+    "text": "CASO 001 — ATENCIÓN CERRADA. El resultado describe la atención comunicada, no certifica el destino histórico de Clara. Evidencias y grabaciones conservadas.",
+    "status": "pending_09b"
+  },
+  {
+    "line_id": "c001_n38_line",
+    "node_id": "c001_n38",
+    "speaker_id": "c001_p02",
+    "text": "Sí, ese es mi nombre. Me dieron la trescientos cuatro al llegar. Si ese papel está ahí, por favor, no deje que mi llamada se pierda también.",
+    "status": "pending_09b"
+  }
+]

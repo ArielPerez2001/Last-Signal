@@ -1,5 +1,19 @@
 # Motor narrativo de Última Señal
 
+**Revisión UX posterior a 11:** get_case_id devuelve identidad sin calcular fingerprint. preview_contextual_dispatch consulta el comando sin mutaciones; process_contextual_dispatch prepara from_node solo por opciones elegibles sin efectos y destinos dialogue sin efectos de entrada (búsqueda limitada a 16 nodos). Copia contenido/estado a un candidato, reutiliza select_choice/process_dispatch y publica una sola transacción estable. Fallo revierte también consultas preparatorias; obsolescencia y reentrada rechazadas. El diario usa las opciones y comandos ya admitidos; la reconstrucción estricta no cambia. process_dispatch conserva su contrato directo. Un plan/emoción/evidencia no se atraviesa automáticamente. [Detalle y pruebas](../cases/CASE_001_UX_REVIEW.md).
+
+## Extensiones de integración 11 · 2026-10-29
+
+Caso oficial y verificaciones en [CASE_001_IMPLEMENTATION_REPORT.md](../cases/CASE_001_IMPLEMENTATION_REPORT.md). Los contratos históricos de 05–10 siguientes conservan su versión; este apartado describe las ampliaciones actuales opcionales, compatibles con los casos existentes.
+
+- Diálogos admiten text_variants y text_rows: listas de {condition,text}, validadas con las mismas condiciones. Primera variante coincidente, respaldo text obligatorio y filas verdaderas en orden. get_current_node y reconstrucción del historial utilizan la misma proyección. panel_id opcional solo calls/audio/map/evidence; es presentación, no efectos.
+- connection_action opcional referencia una acción real de investigation.actions; internal booleano la oculta de las consultas de Expedientes. CallController la confirma al responder, dentro del diario existente, sin duplicar N01 al restaurar.
+- Una regla operativa puede declarar from_node y next; se validan referencias y grafo. La transacción externa aplica efectos operativos y _advance sobre un único candidato, revierte todo si no se alcanza estado estable y publica node_changed solo si avanzó. La reconstrucción agrega la intervención del parte al historial sin reemitir efectos vivos.
+- is_investigation_closed consulta fin o closed_when del catálogo operativo. En el caso oficial K02 cierra herramientas antes de que termine la lectura de la rama final; las opciones F siguen siendo narración, sin nuevas adquisiciones.
+- Observaciones de modalidad consult aceptan comprobante listened_ms=0 solo si la regla declara ese umbral; replay revalida contexto y condición. Las reglas temporales anteriores no aceptan un cero suficiente.
+
+No hay opcodes de código arbitrario ni lógica de hotel/finales en el motor. Esquemas/formatos 1–4 y snapshot de 17 campos conservados. La versión/fingerprint del contenido exige coincidencia exacta; no se migra contenido anterior automáticamente.
+
 PROMPT 05 · 2026-10-27 · Godot `4.7.2.stable.official.ed1daf0bf` · Esquema canónico 1.
 
 Integración añadida en PROMPT 06 · 2026-10-28: validación e importación transaccional de snapshots para el [sistema de guardado](SAVE_SYSTEM.md). Se conserva el esquema narrativo 1 y la API anterior.
