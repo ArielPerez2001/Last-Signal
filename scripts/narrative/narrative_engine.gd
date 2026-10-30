@@ -123,6 +123,34 @@ func select_choice(choice_id: String, expected_revision: int = -1) -> bool:
 	return true
 
 
+func select_choice_sequence(ids: Array, expected_revision: int) -> Dictionary:
+	# A user-confirmed presentation shortcut replays ordinary choices on a
+	# candidate. The normal journal remains the sole authority for restoration.
+	if _busy or _state == null or _state.data.finished:
+		return Deductions.result(false, "LOCKED", "La comunicación no admite esta consulta.")
+	if expected_revision != _state.data.revision:
+		return Deductions.result(false, "STALE", "La consulta corresponde a un estado anterior.")
+	if ids.is_empty() or ids.size() > 4:
+		return Deductions.result(false, "INVALID", "Consulta agrupada no válida.")
+	_busy = true
+	var candidate = get_script().new()
+	candidate._case = _case.duplicate(true)
+	candidate._nodes = _nodes.duplicate(true)
+	candidate._state = _state.copy()
+	var pending: Array[Dictionary] = []
+	candidate.evidence_registered.connect(func(id: String) -> void: pending.append({"kind": "evidence", "id": id}))
+	candidate.event_requested.connect(func(event: Dictionary) -> void: pending.append({"kind": "event", "event": event}))
+	for id: Variant in ids:
+		if not id is String or not candidate.select_choice(id, candidate.get_state_snapshot().revision):
+			_busy = false
+			return Deductions.result(false, "INVALID", "La consulta no pudo completarse. Se conserva el estado anterior.")
+	_state = candidate._state.copy()
+	_clear_errors()
+	_publish(pending, true)
+	_busy = false
+	return Deductions.result(true, "VALID", "Consulta completada.")
+
+
 func _advance(candidate: SessionState, target: String, pending: Array[Dictionary]) -> String:
 	var automatic_steps: int = 0
 	while true:

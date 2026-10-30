@@ -1,0 +1,705 @@
+[
+  {
+    "ending": "A",
+    "includes_optional_qa_detours": true,
+    "mouse_activations": 50,
+    "replacement_dialog_acknowledged_by_signal": false,
+    "steps": [
+      {
+        "intent": "NewGame",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "",
+        "node_after": "c001_n01"
+      },
+      {
+        "intent": "c001_n01_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n01",
+        "node_after": "c001_n03"
+      },
+      {
+        "intent": "c001_n03_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n03",
+        "node_after": "c001_n04"
+      },
+      {
+        "intent": "c001_n04_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n04",
+        "node_after": "c001_n05"
+      },
+      {
+        "intent": "c001_n05_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n05",
+        "node_after": "c001_n08"
+      },
+      {
+        "intent": "c001_n08_o01",
+        "mode": "call",
+        "mode_after": "reason",
+        "node": "c001_n08",
+        "node_after": "c001_n17"
+      },
+      {
+        "intent": "answer:prank",
+        "mode": "reason",
+        "mode_after": "reason",
+        "node": "c001_n17",
+        "node_after": "c001_n17"
+      },
+      {
+        "intent": "hint",
+        "mode": "reason",
+        "mode_after": "help",
+        "node": "c001_n17",
+        "node_after": "c001_n17"
+      },
+      {
+        "intent": "more_hint",
+        "mode": "help",
+        "mode_after": "help",
+        "node": "c001_n17",
+        "node_after": "c001_n17"
+      },
+      {
+        "intent": "more_hint",
+        "mode": "help",
+        "mode_after": "help",
+        "node": "c001_n17",
+        "node_after": "c001_n17"
+      },
+      {
+        "intent": "help_back",
+        "mode": "help",
+        "mode_after": "reason",
+        "node": "c001_n17",
+        "node_after": "c001_n17"
+      },
+      {
+        "intent": "answer:contradiction",
+        "mode": "reason",
+        "mode_after": "reason",
+        "node": "c001_n17",
+        "node_after": "c001_n17"
+      },
+      {
+        "intent": "return",
+        "mode": "reason",
+        "mode_after": "call",
+        "node": "c001_n17",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "audio",
+        "mode": "call",
+        "mode_after": "audio",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "read",
+        "mode": "audio",
+        "mode_after": "audio",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "recordings",
+        "mode": "audio",
+        "mode_after": "recordings",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "segment:c001_g01_s01",
+        "mode": "recordings",
+        "mode_after": "audio",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "return",
+        "mode": "audio",
+        "mode_after": "call",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "inspect",
+        "mode": "call",
+        "mode_after": "dispatch",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "access:c001_i02",
+        "mode": "dispatch",
+        "mode_after": "dispatch",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "dispatch_cancel",
+        "mode": "dispatch",
+        "mode_after": "dispatch",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "access:c001_i02",
+        "mode": "dispatch",
+        "mode_after": "dispatch",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "dispatch_confirm",
+        "mode": "dispatch",
+        "mode_after": "dispatch",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "ContinueButton",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "report",
+        "mode": "call",
+        "mode_after": "dispatch",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "map",
+        "mode": "dispatch",
+        "mode_after": "dispatch",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "event:c001_u02",
+        "mode": "dispatch",
+        "mode_after": "call",
+        "node": "c001_n10",
+        "node_after": "c001_n20"
+      },
+      {
+        "intent": "c001_n20_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n20",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "danger",
+        "mode": "call",
+        "mode_after": "reason",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "answer:separate_route",
+        "mode": "reason",
+        "mode_after": "reason",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "return",
+        "mode": "reason",
+        "mode_after": "call",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "c001_n10_o09",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n10",
+        "node_after": "c001_n21"
+      },
+      {
+        "intent": "c001_n21_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n21",
+        "node_after": "c001_n22"
+      },
+      {
+        "intent": "c001_n22_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n22",
+        "node_after": "c001_n24"
+      },
+      {
+        "intent": "Archive",
+        "mode": "call",
+        "mode_after": "archive",
+        "node": "c001_n24",
+        "node_after": "c001_n24"
+      },
+      {
+        "intent": "all_sources",
+        "mode": "archive",
+        "mode_after": "archive",
+        "node": "c001_n24",
+        "node_after": "c001_n24"
+      },
+      {
+        "intent": "history",
+        "mode": "archive",
+        "mode_after": "history",
+        "node": "c001_n24",
+        "node_after": "c001_n24"
+      },
+      {
+        "intent": "return",
+        "mode": "archive",
+        "mode_after": "call",
+        "node": "c001_n24",
+        "node_after": "c001_n24"
+      },
+      {
+        "intent": "c001_n24_o03",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n24",
+        "node_after": "c001_n25"
+      },
+      {
+        "intent": "Archive",
+        "mode": "call",
+        "mode_after": "archive",
+        "node": "c001_n25",
+        "node_after": "c001_n25"
+      },
+      {
+        "intent": "dispatch",
+        "mode": "archive",
+        "mode_after": "dispatch",
+        "node": "c001_n25",
+        "node_after": "c001_n25"
+      },
+      {
+        "intent": "return",
+        "mode": "dispatch",
+        "mode_after": "call",
+        "node": "c001_n25",
+        "node_after": "c001_n25"
+      },
+      {
+        "intent": "c001_n25_o02",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n25",
+        "node_after": "c001_n24"
+      },
+      {
+        "intent": "c001_n24_o03",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n24",
+        "node_after": "c001_n25"
+      },
+      {
+        "intent": "c001_n25_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n25",
+        "node_after": "c001_n27"
+      },
+      {
+        "intent": "c001_n27_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n27",
+        "node_after": "c001_n28"
+      },
+      {
+        "intent": "c001_n28_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n28",
+        "node_after": "c001_n29"
+      },
+      {
+        "intent": "c001_n29_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n29",
+        "node_after": "c001_n36"
+      },
+      {
+        "intent": "c001_n36_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n36",
+        "node_after": "c001_n37"
+      },
+      {
+        "intent": "c001_n37_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n37",
+        "node_after": "c001_end_a"
+      }
+    ]
+  },
+  {
+    "ending": "B",
+    "includes_optional_qa_detours": false,
+    "mouse_activations": 23,
+    "replacement_dialog_acknowledged_by_signal": true,
+    "steps": [
+      {
+        "intent": "NewGame",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_end_a",
+        "node_after": "c001_end_a"
+      },
+      {
+        "intent": "c001_n01_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n01",
+        "node_after": "c001_n03"
+      },
+      {
+        "intent": "c001_n03_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n03",
+        "node_after": "c001_n04"
+      },
+      {
+        "intent": "c001_n04_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n04",
+        "node_after": "c001_n05"
+      },
+      {
+        "intent": "c001_n05_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n05",
+        "node_after": "c001_n08"
+      },
+      {
+        "intent": "c001_n08_o01",
+        "mode": "call",
+        "mode_after": "reason",
+        "node": "c001_n08",
+        "node_after": "c001_n17"
+      },
+      {
+        "intent": "answer:contradiction",
+        "mode": "reason",
+        "mode_after": "reason",
+        "node": "c001_n17",
+        "node_after": "c001_n17"
+      },
+      {
+        "intent": "return",
+        "mode": "reason",
+        "mode_after": "call",
+        "node": "c001_n17",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "inspect",
+        "mode": "call",
+        "mode_after": "dispatch",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "access:c001_i01",
+        "mode": "dispatch",
+        "mode_after": "dispatch",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "dispatch_confirm",
+        "mode": "dispatch",
+        "mode_after": "dispatch",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "event:c001_u01",
+        "mode": "dispatch",
+        "mode_after": "call",
+        "node": "c001_n10",
+        "node_after": "c001_n19"
+      },
+      {
+        "intent": "c001_n19_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n19",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "c001_n10_o09",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n10",
+        "node_after": "c001_n21"
+      },
+      {
+        "intent": "c001_n21_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n21",
+        "node_after": "c001_n22"
+      },
+      {
+        "intent": "c001_n22_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n22",
+        "node_after": "c001_n24"
+      },
+      {
+        "intent": "c001_n24_o02",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n24",
+        "node_after": "c001_n25"
+      },
+      {
+        "intent": "c001_n25_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n25",
+        "node_after": "c001_n30"
+      },
+      {
+        "intent": "c001_n30_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n30",
+        "node_after": "c001_n31"
+      },
+      {
+        "intent": "c001_n31_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n31",
+        "node_after": "c001_n32"
+      },
+      {
+        "intent": "c001_n32_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n32",
+        "node_after": "c001_n36"
+      },
+      {
+        "intent": "c001_n36_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n36",
+        "node_after": "c001_n37"
+      },
+      {
+        "intent": "c001_n37_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n37",
+        "node_after": "c001_end_b"
+      }
+    ]
+  },
+  {
+    "ending": "C",
+    "includes_optional_qa_detours": false,
+    "mouse_activations": 24,
+    "replacement_dialog_acknowledged_by_signal": true,
+    "steps": [
+      {
+        "intent": "NewGame",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_end_b",
+        "node_after": "c001_end_b"
+      },
+      {
+        "intent": "c001_n01_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n01",
+        "node_after": "c001_n03"
+      },
+      {
+        "intent": "c001_n03_o02",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n03",
+        "node_after": "c001_n04"
+      },
+      {
+        "intent": "c001_n04_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n04",
+        "node_after": "c001_n05"
+      },
+      {
+        "intent": "c001_n05_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n05",
+        "node_after": "c001_n08"
+      },
+      {
+        "intent": "c001_n08_o01",
+        "mode": "call",
+        "mode_after": "reason",
+        "node": "c001_n08",
+        "node_after": "c001_n17"
+      },
+      {
+        "intent": "answer:contradiction",
+        "mode": "reason",
+        "mode_after": "reason",
+        "node": "c001_n17",
+        "node_after": "c001_n17"
+      },
+      {
+        "intent": "return",
+        "mode": "reason",
+        "mode_after": "call",
+        "node": "c001_n17",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "inspect",
+        "mode": "call",
+        "mode_after": "dispatch",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "access:c001_i01",
+        "mode": "dispatch",
+        "mode_after": "dispatch",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "dispatch_confirm",
+        "mode": "dispatch",
+        "mode_after": "dispatch",
+        "node": "c001_n10",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "event:c001_u01",
+        "mode": "dispatch",
+        "mode_after": "call",
+        "node": "c001_n10",
+        "node_after": "c001_n19"
+      },
+      {
+        "intent": "c001_n19_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n19",
+        "node_after": "c001_n10"
+      },
+      {
+        "intent": "c001_n10_o09",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n10",
+        "node_after": "c001_n21"
+      },
+      {
+        "intent": "c001_n21_o02",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n21",
+        "node_after": "c001_n22"
+      },
+      {
+        "intent": "c001_n22_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n22",
+        "node_after": "c001_n24"
+      },
+      {
+        "intent": "c001_n24_o04",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n24",
+        "node_after": "c001_n26"
+      },
+      {
+        "intent": "c001_n26_o02",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n26",
+        "node_after": "c001_n25"
+      },
+      {
+        "intent": "c001_n25_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n25",
+        "node_after": "c001_n33"
+      },
+      {
+        "intent": "c001_n33_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n33",
+        "node_after": "c001_n34"
+      },
+      {
+        "intent": "c001_n34_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n34",
+        "node_after": "c001_n35"
+      },
+      {
+        "intent": "c001_n35_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n35",
+        "node_after": "c001_n36"
+      },
+      {
+        "intent": "c001_n36_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n36",
+        "node_after": "c001_n37"
+      },
+      {
+        "intent": "c001_n37_o01",
+        "mode": "call",
+        "mode_after": "call",
+        "node": "c001_n37",
+        "node_after": "c001_end_c"
+      }
+    ]
+  }
+]

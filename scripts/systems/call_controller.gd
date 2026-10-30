@@ -112,6 +112,19 @@ func select_choice(choice_id: String, expected_revision: int) -> Dictionary:
 	return _result(true, "choice_confirmed", "Respuesta confirmada.")
 
 
+func select_choices(ids: Array, expected_revision: int) -> Dictionary:
+	if _locked() or state != CallState.CONNECTED:
+		return _result(false, "busy", "La comunicación no admite esta consulta ahora.")
+	_busy = true
+	var result: Dictionary = engine.select_choice_sequence(ids, expected_revision)
+	if result.ok:
+		_last_error = {}
+		_refresh()
+	_busy = false
+	_publish()
+	return result
+
+
 func restore_call(path: String = DEMO_PATH) -> Dictionary:
 	if saves.get_paths().get("main", "").begins_with(OFFICIAL_DIRECTORY + "/") and path != OFFICIAL_PATH:
 		return _reject("isolated_storage", "El contenido de desarrollo no puede usar la partida oficial.")

@@ -1,0 +1,49 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/case_experience.gd" id="1"]
+
+[node name="CaseExperience" type="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+script = ExtResource("1")
+
+[node name="Header" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Station" type="Label" parent="Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SignalLabel"
+text = "PUERTO UMBRAL · 02:17\nLÍNEA DOS"
+
+[node name="Menu" type="Button" parent="Header"]
+layout_mode = 2
+custom_minimum_size = Vector2(140, 88)
+text = "Menú"
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+follow_focus = true
+
+[node name="Body" type="VBoxContainer" parent="Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
+[node name="Secondary" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Archive" type="Button" parent="Secondary"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 88)
+text = "Registros"
+
+[node name="Help" type="Button" parent="Secondary"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 88)
+text = "Ayuda"

@@ -1,8 +1,8 @@
 # ÚLTIMA SEÑAL — Plan de desarrollo
 
-Actualizado: 2026-10-28. Las fases son planificación y no autorizan ejecución. Cada prompt posterior delimita el trabajo; una etapa puede requerir varios prompts.
+Actualizado: 2026-10-29. Las fases son planificación y no autorizan ejecución. Cada prompt posterior delimita el trabajo; una etapa puede requerir varios prompts.
 
-Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**. Las etapas 00–08, 09A y 10 están completadas. Cuatro módulos con demos y guardado aislado; Continuar deshabilitado y Caso 001 sin integrar. 09B pospuesto intencionalmente, no es error/dependencia bloqueante de 10 o 11. 09 figura en proceso solo por esa división; ninguna etapa de planificación autoriza continuar.
+Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**. 00–08, 09A y 10 completadas; 11 integrado funcionalmente con tres cierres y Nueva partida/Continuar. PROMPT 11R autoriza la reestructuración de su experiencia y tutorial progresivo, documentada en [el plan](ux/CASE_001_REDESIGN_PLAN.md). Validación humana, audio oficial y Android físico pendientes. 09B pospuesto; 12 y posteriores no iniciados. Los apartados históricos de cada entrega conservan su contexto.
 
 ## 00. Contexto maestro
 
@@ -117,6 +117,8 @@ Estados permitidos: **pendiente**, **en proceso**, **bloqueado**, **completado**
 - **Estado:** implementación funcional completada con validaciones pendientes. 38 diálogos/57 opciones, diez evidencias/cuatro deducciones, dos grabaciones con ruta textual y recursos sonoros pendientes, dos accesos del hotel y R1. Diez recorridos y tres cierres con guardado/restauración; Nueva partida/Continuar oficiales, demos aisladas. Validación auditiva y Android pendientes; no se considera totalmente validada la experiencia. [Informe](cases/CASE_001_IMPLEMENTATION_REPORT.md). 09B permanece pospuesto; no iniciar 12 sin su prompt.
 
 ## 12. Resultados y finales
+
+**Continuidad 11R:** llamada como superficie principal, consultas contextuales, preguntas de deducción, archivo voluntario y tutoriales persistentes; [comparación](ux/CASE_001_BEFORE_AFTER.md) y [protocolo humano pendiente](ux/CASE_001_PLAYTEST_PLAN.md). No adelanta resultados definitivos de 12 ni audio de 09B.
 
 Nota de continuidad: antes de esta fase se autorizó una corrección UX de 11, descrita en [CASE_001_UX_REVIEW.md](cases/CASE_001_UX_REVIEW.md). Su implementación no autoriza ni inicia 12, 13 o 09B.
 

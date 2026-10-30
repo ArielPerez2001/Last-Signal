@@ -1,5 +1,7 @@
 # ÚLTIMA SEÑAL — Documento de diseño
 
+**PROMPT 11R · 2026-10-29:** el Caso 001 se presenta como llamada y consultas contextuales, con archivo voluntario y tutoriales progresivos persistentes. Se sustituyen las cuatro pestañas del recorrido oficial; las demos conservan sus herramientas. Razonamiento mediante preguntas respaldadas por fuentes, audio textual directo e inspección sin mapa obligatorio. Historia y condiciones de tres cierres conservadas. [Diseño de la experiencia](ux/CASE_001_REDESIGN_PLAN.md), [comparación](ux/CASE_001_BEFORE_AFTER.md) y [validación humana pendiente](ux/CASE_001_PLAYTEST_PLAN.md). No inicia 09B, 12 o 13.
+
 Fecha de registro: 2026-10-27. Actualización técnica: 2026-10-29, PROMPT 11. Estado: Caso 001 integrado funcionalmente con sus tres desenlaces, menú/guardado oficial y herramientas compartidas. Grabaciones de investigación con habla pendientes, con alternativa textual funcional; validación auditiva y Android pendientes. 09B pospuesto. Detalles y límites en [el informe de implementación](cases/CASE_001_IMPLEMENTATION_REPORT.md); sin comenzar 12.
 
 Revisión posterior de experiencia autorizada por el usuario: orientación contextual, consultas agrupadas, navegación coherente y menos pasos de selección. [Resultado y límites](cases/CASE_001_UX_REVIEW.md). Conserva historia, datos, decisiones y desenlaces; comodidad/duración con jugadores y Android aún requieren validación.

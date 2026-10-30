@@ -1,0 +1,401 @@
+{
+  "version": 1,
+  "case_id": "c001",
+  "goals": [
+    {
+      "when": {
+        "op": "not_equals",
+        "target": "resultado",
+        "value": "pendiente"
+      },
+      "text": "Conservar lo averiguado y leer el cierre.",
+      "help": [
+        "La atención ya está cerrada. Puedes consultar las fuentes.",
+        "Lee la intervención actual; Registros conserva lo descubierto."
+      ]
+    },
+    {
+      "when": {
+        "op": "equals",
+        "target": "etapa",
+        "value": "A"
+      },
+      "text": "Localizar a quien pide ayuda.",
+      "help": [
+        "Escucha a la interlocutora antes de comprobar sus datos.",
+        "Responde a Clara. Cuando indique el establecimiento podrás verificarlo."
+      ]
+    },
+    {
+      "when": {
+        "op": "equals",
+        "target": "etapa",
+        "value": "B"
+      },
+      "text": "Verificar el Hotel Mirador.",
+      "help": [
+        "La ficha municipal permite contrastar el establecimiento.",
+        "Lee la fecha de clausura y compárala con la llamada."
+      ]
+    },
+    {
+      "when": {
+        "op": "equals",
+        "target": "etapa",
+        "value": "D"
+      },
+      "text": "Contrastar las fechas sin perder el contacto.",
+      "help": [
+        "La consola y el recibo no coinciden; conserva ambas versiones.",
+        "Responde a Clara y prepara una instrucción después de escucharla."
+      ]
+    },
+    {
+      "when": {
+        "op": "equals",
+        "target": "etapa",
+        "value": "E"
+      },
+      "text": "Decidir qué comunicar a Clara.",
+      "help": [
+        "Puedes revisar lo averiguado y corregir tu plan antes de transmitir.",
+        "Elige una instrucción. La revisión previa permite corregirla; pedir ayuda no elige por ti."
+      ]
+    },
+    {
+      "when": {
+        "op": "not_contains",
+        "target": "executed_actions",
+        "value": "c001_q01"
+      },
+      "text": "Entender por qué el registro no encaja con la llamada.",
+      "help": [
+        "Compara el testimonio y la ficha municipal.",
+        "Examina la contradicción y elige la conclusión que ambos documentos permiten sostener."
+      ]
+    },
+    {
+      "when": {
+        "op": "not_contains",
+        "target": "evidence",
+        "value": "c001_e06"
+      },
+      "text": "Comprobar el exterior sin exponer al equipo.",
+      "help": [
+        "Una inspección exterior puede contrastar el registro con el presente.",
+        "Prepara la inspección, elige un acceso y confirma. Después recibe el parte de R1."
+      ]
+    },
+    {
+      "when": {
+        "op": "always"
+      },
+      "text": "Preguntar a Clara qué fecha tiene ante ella.",
+      "help": [
+        "La inspección y el registro permiten plantear una nueva pregunta.",
+        "Usa «Contrastar la fecha con Clara». Puedes revisar fuentes antes de hacerlo."
+      ]
+    }
+  ],
+  "sequences": {
+    "c001_n05_o01": [
+      "c001_n05_o01",
+      "c001_n06_o01",
+      "c001_n07_o01"
+    ],
+    "c001_n06_o01": [
+      "c001_n06_o01",
+      "c001_n07_o01"
+    ],
+    "c001_n08_o01": [
+      "c001_n08_o01",
+      "c001_n10_o07"
+    ],
+    "c001_n22_o01": [
+      "c001_n22_o01",
+      "c001_n23_o01"
+    ]
+  },
+  "labels": {
+    "c001_n05_o01": "Verificar establecimiento",
+    "c001_n06_o01": "Consultar ficha municipal",
+    "c001_n07_o01": "Consultar ficha municipal",
+    "c001_n08_o01": "Examinar contradicción",
+    "c001_n10_o01": "Revisar plano de la 304",
+    "c001_n10_o03": "Examinar grabación",
+    "c001_n10_o06": "Preparar inspección",
+    "c001_n10_o07": "Examinar contradicción",
+    "c001_n22_o01": "Preparar una instrucción",
+    "c001_n36_o01": "Leer cierre de atención"
+  },
+  "summaries": {
+    "c001_n10": "La línea sigue abierta. Puedes comprobar lo que Clara describe y volver a hablar con ella.",
+    "c001_n13": "La línea quedó registrada. Examina el fragmento pertinente sin interrumpir la comunicación.",
+    "c001_n17": "El testimonio y las fuentes pueden contrastarse. ¿Qué permiten concluir?",
+    "c001_n24": "Clara: «El humo sigue por la puerta del pasillo. La puerta de servicio está a mi lado. ¿Me quedo o intento salir?»\n\nAntes de transmitir, considera las fuentes, la inspección exterior y si puede seguir tus indicaciones."
+  },
+  "tutorials": {
+    "answer": "La línea dos está entrando. Atiende para escuchar a quien necesita ayuda.",
+    "dialogue": "Tus respuestas cambian la relación con la interlocutora. Elige cómo dirigirte a ella.",
+    "record": "Consulta el registro del establecimiento. Las fuentes quedan guardadas al descubrirlas.",
+    "deduction": "Lee las fuentes y elige qué conclusión sostienen. Equivocarte permite revisar, sin penalización.",
+    "audio": "Esta captura se consulta mediante texto mientras se producen las grabaciones. Examinarla registra lo observado.",
+    "dispatch": "R1 es la única unidad. Elige un acceso y confirma la inspección exterior. Abrir esta consulta no envía a nadie.",
+    "critical": "Puedes revisar lo averiguado y corregir el plan antes de transmitir. Las instrucciones tienen consecuencias.",
+    "archive": "Aquí puedes releer descubrimientos y ampliar la investigación. Las consultas opcionales no son una lista que debas completar."
+  },
+  "hub_actions": [
+    {
+      "id": "deduction",
+      "kind": "reason",
+      "target": "c001_q01",
+      "label": "Examinar contradicción",
+      "when": {
+        "op": "not_contains",
+        "target": "executed_actions",
+        "value": "c001_q01"
+      }
+    },
+    {
+      "id": "inspect",
+      "kind": "dispatch",
+      "label": "Preparar inspección",
+      "when": {
+        "op": "all",
+        "conditions": [
+          {
+            "op": "contains",
+            "target": "executed_actions",
+            "value": "c001_q01"
+          },
+          {
+            "op": "not_contains",
+            "target": "evidence",
+            "value": "c001_e06"
+          },
+          {
+            "op": "equals",
+            "target": "r1_status",
+            "value": "AVAILABLE"
+          }
+        ]
+      }
+    },
+    {
+      "id": "report",
+      "kind": "dispatch",
+      "label": "Recibir parte de R1",
+      "when": {
+        "op": "all",
+        "conditions": [
+          {
+            "op": "contains",
+            "target": "executed_actions",
+            "value": "c001_q01"
+          },
+          {
+            "op": "not_contains",
+            "target": "evidence",
+            "value": "c001_e06"
+          },
+          {
+            "op": "equals",
+            "target": "r1_status",
+            "value": "ASSIGNED"
+          }
+        ]
+      }
+    },
+    {
+      "id": "date",
+      "kind": "choice",
+      "choice": "c001_n10_o09",
+      "when": {
+        "op": "all",
+        "conditions": [
+          {
+            "op": "equals",
+            "target": "etapa",
+            "value": "C"
+          },
+          {
+            "op": "contains",
+            "target": "executed_actions",
+            "value": "c001_q01"
+          },
+          {
+            "op": "contains",
+            "target": "evidence",
+            "value": "c001_e06"
+          }
+        ]
+      }
+    },
+    {
+      "id": "critical",
+      "kind": "choice",
+      "choice": "c001_n10_o10",
+      "when": {
+        "op": "equals",
+        "target": "etapa",
+        "value": "E"
+      }
+    },
+    {
+      "id": "danger",
+      "kind": "reason",
+      "target": "c001_q02",
+      "label": "Interpretar el peligro · opcional",
+      "when": {
+        "op": "all",
+        "conditions": [
+          {
+            "op": "contains",
+            "target": "executed_actions",
+            "value": "c001_q01"
+          },
+          {
+            "op": "contains",
+            "target": "evidence",
+            "value": "c001_e03"
+          },
+          {
+            "op": "contains",
+            "target": "evidence",
+            "value": "c001_e04"
+          },
+          {
+            "op": "contains",
+            "target": "evidence",
+            "value": "c001_e06"
+          },
+          {
+            "op": "not_contains",
+            "target": "executed_actions",
+            "value": "c001_q02"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calm",
+      "kind": "choice",
+      "choice": "c001_n10_o08",
+      "when": {
+        "op": "all",
+        "conditions": [
+          {
+            "op": "any",
+            "conditions": [
+              {
+                "op": "less_or_equal",
+                "target": "confianza",
+                "value": 0
+              },
+              {
+                "op": "greater_or_equal",
+                "target": "estres",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "op": "once_not_applied",
+            "value": "c001_n18_o01"
+          }
+        ]
+      }
+    },
+    {
+      "id": "audio",
+      "kind": "audio",
+      "label": "Examinar registro de los golpes · opcional",
+      "when": {
+        "op": "all",
+        "conditions": [
+          {
+            "op": "contains",
+            "target": "executed_actions",
+            "value": "c001_q01"
+          },
+          {
+            "op": "not_contains",
+            "target": "evidence",
+            "value": "c001_e03"
+          }
+        ]
+      }
+    }
+  ],
+  "reasoning": [
+    {
+      "id": "c001_q01",
+      "question": "Clara dice estar alojada. La ficha registra una clausura. ¿Qué puedes sostener?",
+      "answers": [
+        {
+          "id": "contradiction",
+          "text": "Las fuentes se contradicen; hay que comprobar la emergencia.",
+          "correct": true
+        },
+        {
+          "id": "prank",
+          "text": "La clausura demuestra que Clara está mintiendo.",
+          "feedback": "La ficha describe el edificio, pero no prueba la intención de quien llama. Distingue la contradicción de una acusación."
+        }
+      ]
+    },
+    {
+      "id": "c001_q02",
+      "question": "¿Qué interpretación del peligro está respaldada por estas fuentes?",
+      "answers": [
+        {
+          "id": "attack",
+          "text": "Los golpes demuestran que un agresor intenta entrar.",
+          "feedback": "Los golpes por sí solos no identifican a un agresor. Contrasta también lo que se oye y el humo descrito."
+        },
+        {
+          "id": "separate_route",
+          "text": "El humo amenaza el pasillo; la salida de servicio requiere comprobación exterior.",
+          "correct": true
+        },
+        {
+          "id": "present",
+          "text": "El edificio actual sin humo demuestra que Clara está fuera de peligro.",
+          "feedback": "La inspección describe el presente de R1. No invalida el humo que Clara comunica por la línea."
+        }
+      ]
+    },
+    {
+      "id": "c001_q03",
+      "question": "¿Qué relación permite establecer el anexo con la captura?",
+      "answers": [
+        {
+          "id": "cause",
+          "text": "ECO provocó el incendio del hotel.",
+          "feedback": "El anexo no declara la causa del incendio. Una coincidencia documental no demuestra causalidad."
+        },
+        {
+          "id": "link",
+          "text": "N-4 coincide con el ensayo que menciona Nadir y ECO; su función sigue abierta.",
+          "correct": true
+        }
+      ]
+    },
+    {
+      "id": "c001_q04",
+      "question": "¿Qué permiten afirmar el testimonio, el registro y el recibo?",
+      "answers": [
+        {
+          "id": "identity",
+          "text": "Nombre, habitación y fecha coinciden; la identidad y el destino siguen sin verificarse.",
+          "correct": true
+        },
+        {
+          "id": "fate",
+          "text": "La coincidencia certifica el destino histórico de Clara.",
+          "feedback": "El archivo no confirma su evacuación ni su destino. Una correspondencia no resuelve esos hechos."
+        }
+      ]
+    }
+  ]
+}

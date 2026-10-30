@@ -627,6 +627,41 @@ Los registros D-012–D-015 describen el estado de diseño al entregar 02. Su ap
 - **Consecuencias:** funcionamiento y menor cantidad de pasos comprobables no equivalen a validar satisfacción o duración humana. Android físico, rendimiento/accesibilidad móvil y producción auditiva siguen pendientes. No presentar la actualización como implementación de 09B, 12 o 13.
 - **Estado:** comprobada en escritorio; resultados en PROGRESS. Trabajo detenido al terminar esta corrección.
 
+## D-072 — Autorización y alcance de 11R
+
+- **Fecha:** 2026-10-29.
+- **Decisión:** el PROMPT 11R autoriza reestructurar recorrido, navegación, enseñanza y redundancias del Caso 001. Sustituye las limitaciones de presentación de la corrección UX anterior; no modifica continuidad, cronología o significado de A/B/C.
+- **Consecuencias:** llamada como centro y archivo voluntario, sin nuevas pestañas, casos, unidades, voz, 09B, 12, 13 o publicación. Plan documentado antes de implementar en docs/ux/CASE_001_REDESIGN_PLAN.md.
+- **Estado:** autorizada e implementada localmente; percepción humana pendiente.
+
+## D-073 — Presentación contextual y consultas agrupadas
+
+- **Fecha:** 2026-10-29.
+- **Decisión:** CaseFlowDirector proyecta experience.json; CaseExperience presenta la campaña con los mismos servicios. Las consultas redundantes se agrupan por una acción explícita y se ejecutan mediante opciones normales sobre candidato atómico.
+- **Consecuencias:** ocultar pestañas oficiales, mostrar fuentes/fragmento/incidente pertinente y hacer opcional el plano. Diario y JSON narrativo sin cambios; rollback completo, sin escoger emociones o planes por el jugador. Paneles/demos anteriores conservados.
+- **Estado:** implementada; verificación en PROGRESS.
+
+## D-074 — Razonamiento contextual con autoridad existente
+
+- **Fecha:** 2026-10-29.
+- **Decisión:** ampliar DeductionManager con preguntas y fuentes descubiertas. La primera enseñanza pide una conclusión; las siguientes contrastan afirmaciones. El servicio valida y usa confirm_deduction con los conjuntos declarados.
+- **Consecuencias:** ninguna selección de fichas exactas obligatoria en campaña; sin otro sistema de deducción, efectos duplicados, equivalencias inventadas ni conclusión favorable concedida por tutorial. Combinación libre conservada en APIs/paneles genéricos.
+- **Estado:** implementada; Q01–Q04 y reglas A/B/C conservadas.
+
+## D-075 — Tutoriales en la misma ranura
+
+- **Fecha:** 2026-10-29.
+- **Decisión:** extensión opcional presentation versión 1 de SaveManager, ocho tutoriales conocidos como máximo; dirty, validación, verificación y respaldo integrados en el gestor existente.
+- **Consecuencias:** nuevo lector acepta partidas previas de ocho campos; snapshot, esquema 4 y fingerprint intactos. Sin migración o archivo paralelo. Ejecutables antiguos pueden rechazar el campo nuevo conservadoramente; no se promete lectura por versiones viejas. Ayudas sin penalización ni modificación de finales.
+- **Estado:** implementada y probada con archivos viejos/nuevos y metadatos inválidos aislados.
+
+## D-076 — Evidencia funcional y aceptación humana separadas
+
+- **Fecha:** 2026-10-29.
+- **Decisión:** validar rutas A/B/C, regresiones, persistencia y GUI gráfica en cuatro tamaños; comparar procedimientos definidos, sin inventar mínimos universales ni tiempos humanos.
+- **Consecuencias:** protocolo de playtest entregado. Diversión, duración de 8–15 minutos, comprensión espontánea y Android físico pendientes. Audio oficial sigue en texto; una demo con WAV no acredita producción sonora de c001.
+- **Estado:** alcance y límites adoptados; resultados finales en PROGRESS e informe 11R. Detenerse al terminar.
+
 ## Plantilla para nuevos registros
 
 - **Identificador y tema:** D-XXX — título.

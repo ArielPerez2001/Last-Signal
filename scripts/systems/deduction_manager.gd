@@ -2,6 +2,59 @@ extends RefCounted
 
 const Conditions = preload("res://scripts/narrative/condition_evaluator.gd")
 var _engine: RefCounted
+static var _reasoning_catalog: Dictionary = {}
+
+
+func get_reasoning(id: String) -> Dictionary:
+	if _engine == null or _engine.get_case_id() != "c001" or _engine.get_state_snapshot().is_empty():
+		return result(false, "UNAVAILABLE", "No hay una pregunta contextual disponible.")
+	if _reasoning_catalog.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/cases/case_001/experience.json"))
+		if not parsed is Dictionary:
+			return result(false, "INVALID", "No se pudo cargar la pregunta.")
+		_reasoning_catalog = parsed
+	var state: Dictionary = _engine.get_state_snapshot()
+	for definition: Dictionary in _engine.get_investigation_catalog().get("deductions", []):
+		if definition.id != id:
+			continue
+		var sources: Array = []
+		for record: Dictionary in _engine.get_investigation_catalog().evidence:
+			if record.id in definition.required_evidence and record.id in state.evidence:
+				sources.append({"id": record.id, "title": record.title, "description": record.description, "source": record.source})
+		var confirmed: bool = id in state.executed_actions
+		var ready: bool = sources.size() == definition.required_evidence.size() and Conditions.evaluate(definition.additional_conditions, state) and not _engine.is_investigation_closed()
+		for question: Dictionary in _reasoning_catalog.get("reasoning", []):
+			if question.id == id:
+				var answers: Array = []
+				if ready and not confirmed:
+					for answer: Dictionary in question.answers:
+						answers.append({"id": answer.id, "text": answer.text})
+				return result(true, "CONFIRMED" if confirmed else ("READY" if ready else "INCOMPLETE"), definition.narrative_feedback if confirmed else ("" if ready else "Aún falta contrastar fuentes. Puedes seguir hablando, consultar el plano o recibir la inspección, según lo que ya conoces."), {"id": id, "title": definition.title, "question": question.question, "sources": sources, "answers": answers, "revision": state.revision})
+	return result(false, "UNAVAILABLE", "Pregunta no disponible.")
+
+
+func reason(id: String, answer_id: String, revision: int) -> Dictionary:
+	var view: Dictionary = get_reasoning(id)
+	if not view.ok:
+		return view
+	if revision != _engine.get_state_snapshot().revision:
+		return result(false, "STALE", "La pregunta corresponde a un estado anterior. Revisa las fuentes actuales.")
+	if view.code == "CONFIRMED":
+		return result(true, "ALREADY_DISCOVERED", view.message)
+	if view.code != "READY":
+		return result(false, "INSUFFICIENT", view.message)
+	for question: Dictionary in _reasoning_catalog.reasoning:
+		if question.id != id:
+			continue
+		for answer: Dictionary in question.answers:
+			if answer.id != answer_id:
+				continue
+			if not answer.get("correct", false):
+				return result(false, "UNSUPPORTED", answer.feedback)
+			for definition: Dictionary in _engine.get_investigation_catalog().deductions:
+				if definition.id == id:
+					return relate_hypothesis(id, definition.required_evidence, revision)
+	return result(false, "INVALID", "Respuesta no disponible.")
 
 
 func _init(engine: RefCounted = null) -> void:

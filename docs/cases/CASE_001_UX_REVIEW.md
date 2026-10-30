@@ -1,5 +1,7 @@
 # Caso 001 — Orientación y reducción de fricción
 
+**Revisión posterior 11R:** el usuario autorizó sustituir este recorrido por una experiencia centrada en llamada y consultas contextuales. Este documento conserva el resultado histórico de la primera corrección. Estado vigente: [plan](../ux/CASE_001_REDESIGN_PLAN.md), [comparación](../ux/CASE_001_BEFORE_AFTER.md) y [contrato](../technical/CASE_FLOW_EXPERIENCE.md).
+
 2026-10-29. Revisión correctiva posterior a PROMPT 11, autorizada por el usuario con «Adelante, hazlo» después del diagnóstico de flujo/interfaz. No inicia 12, 13 o 09B.
 
 ## Problema y resultado

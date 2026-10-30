@@ -1,5 +1,7 @@
 # Motor narrativo de Última Señal
 
+**11R · 2026-10-29:** select_choice_sequence(ids, expected_revision) agrupa de una a cuatro opciones reales sobre candidato aislado, con rollback y una publicación estable. Sus comandos normales quedan en el diario, sin nueva semántica de snapshot o cambios del contenido/fingerprint. No escoge tono, plan o riesgo por orientación. [Contrato y secuencias autorizadas](CASE_FLOW_EXPERIENCE.md).
+
 **Revisión UX posterior a 11:** get_case_id devuelve identidad sin calcular fingerprint. preview_contextual_dispatch consulta el comando sin mutaciones; process_contextual_dispatch prepara from_node solo por opciones elegibles sin efectos y destinos dialogue sin efectos de entrada (búsqueda limitada a 16 nodos). Copia contenido/estado a un candidato, reutiliza select_choice/process_dispatch y publica una sola transacción estable. Fallo revierte también consultas preparatorias; obsolescencia y reentrada rechazadas. El diario usa las opciones y comandos ya admitidos; la reconstrucción estricta no cambia. process_dispatch conserva su contrato directo. Un plan/emoción/evidencia no se atraviesa automáticamente. [Detalle y pruebas](../cases/CASE_001_UX_REVIEW.md).
 
 ## Extensiones de integración 11 · 2026-10-29

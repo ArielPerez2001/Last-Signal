@@ -2,6 +2,8 @@ extends VBoxContainer
 
 signal back_requested
 const Guidance = preload("res://scripts/ui/case_guidance.gd")
+const ExperienceScene = preload("res://scenes/screens/case_experience.tscn")
+var experience: Control
 
 var active_section: StringName = &"calls"
 var _engine: RefCounted
@@ -23,6 +25,10 @@ var _unread: Dictionary = {}
 
 
 func _ready() -> void:
+	experience = ExperienceScene.instantiate()
+	add_child(experience)
+	experience.visible = false
+	experience.menu_requested.connect(back_requested.emit)
 	%ConsoleHeader.get_node("Content/TopRow/MenuButton").pressed.connect(back_requested.emit)
 	navigation.section_selected.connect(select_section)
 	%CallsPanel.call_presentation_changed.connect(_update_call_status)
@@ -40,12 +46,22 @@ func _ready() -> void:
 
 
 func open_console() -> void:
+	if Guidance.active(_engine):
+		experience._queue_render()
+		return
 	select_section(&"calls")
 	navigation.buttons[&"calls"].grab_focus()
 
 
 func select_section(section_id: StringName, reset_scroll: bool = false) -> void:
 	if not panels.has(section_id):
+		return
+	if Guidance.active(_engine):
+		if section_id == &"calls":
+			experience.back_to_call()
+		elif experience.director.unlocked({&"map": "dispatch", &"evidence": "archive"}.get(section_id, String(section_id))):
+			experience._open({&"map": "dispatch", &"evidence": "archive"}.get(section_id, String(section_id)))
+		experience._queue_render()
 		return
 	if Guidance.active(_engine) and section_id != &"calls" and _engine.get_state_snapshot().get("variables", {}).get("etapa", "A") in ["A", "B"]:
 		return
@@ -97,6 +113,7 @@ func _bind_investigation(controller: RefCounted) -> void:
 	%EvidencePanel.bind_engine(controller.engine, controller.saves)
 	%AudioPanel.bind_engine(controller.engine, controller.saves)
 	%MapPanel.bind_engine(controller.engine, controller.saves)
+	experience.bind_services(controller, %EvidencePanel.evidence, %EvidencePanel.deductions, %AudioPanel.manager, %MapPanel.dispatch, %MapPanel.map_manager)
 	_update_guidance()
 
 
@@ -146,6 +163,15 @@ func _update_guidance() -> void:
 	if not is_node_ready() or _engine == null:
 		return
 	var guided: bool = Guidance.active(_engine)
+	if is_instance_valid(experience):
+		experience.visible = guided
+	%ConsoleHeader.visible = not guided
+	content_scroll.visible = not guided
+	navigation.visible = not guided
+	if guided:
+		$Guidance.visible = false
+		$ActionDock.visible = false
+		return
 	$Guidance.visible = guided
 	%ConsoleHeader.get_node("Content/LocationRow").visible = not guided
 	%ConsoleHeader.get_node("Content/Status").visible = not guided

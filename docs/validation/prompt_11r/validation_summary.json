@@ -1,0 +1,176 @@
+{
+  "date": "2026-10-29",
+  "scope": "PROMPT 11R",
+  "base_commit": "ca0d75f",
+  "functional_suites": 21,
+  "reference_assertions": 13009,
+  "suites": [
+    {
+      "suite": "tests/narrative/test_narrative_engine.gd",
+      "exit_code": 0,
+      "assertions": 151
+    },
+    {
+      "suite": "tests/narrative/test_narrative_validation.gd",
+      "exit_code": 0,
+      "assertions": 334
+    },
+    {
+      "suite": "tests/save/test_save_manager.gd",
+      "exit_code": 0,
+      "assertions": 114
+    },
+    {
+      "suite": "tests/save/test_save_validation.gd",
+      "exit_code": 0,
+      "assertions": 905
+    },
+    {
+      "suite": "tests/cases/case_001/test_case_flow.gd",
+      "exit_code": 0,
+      "assertions": 3285
+    },
+    {
+      "suite": "tests/cases/case_001/test_case_validation.gd",
+      "exit_code": 0,
+      "assertions": 52
+    },
+    {
+      "suite": "tests/cases/case_001/test_case_guidance.gd",
+      "exit_code": 0,
+      "assertions": 108
+    },
+    {
+      "suite": "tests/calls/test_call_controller.gd",
+      "exit_code": 0,
+      "assertions": 68
+    },
+    {
+      "suite": "tests/calls/test_call_integration.gd",
+      "exit_code": 0,
+      "assertions": 404
+    },
+    {
+      "suite": "tests/investigation/test_evidence_manager.gd",
+      "exit_code": 0,
+      "assertions": 69
+    },
+    {
+      "suite": "tests/investigation/test_deduction_manager.gd",
+      "exit_code": 0,
+      "assertions": 88
+    },
+    {
+      "suite": "tests/investigation/test_integration.gd",
+      "exit_code": 0,
+      "assertions": 2375
+    },
+    {
+      "suite": "tests/audio/test_audio_catalog.gd",
+      "exit_code": 0,
+      "assertions": 70
+    },
+    {
+      "suite": "tests/audio/test_audio_analysis.gd",
+      "exit_code": 0,
+      "assertions": 58
+    },
+    {
+      "suite": "tests/audio/test_audio_integration.gd",
+      "exit_code": 0,
+      "assertions": 1679
+    },
+    {
+      "suite": "tests/dispatch/test_map_manager.gd",
+      "exit_code": 0,
+      "assertions": 65
+    },
+    {
+      "suite": "tests/dispatch/test_dispatch_manager.gd",
+      "exit_code": 0,
+      "assertions": 63
+    },
+    {
+      "suite": "tests/dispatch/test_dispatch_integration.gd",
+      "exit_code": 0,
+      "assertions": 1718
+    },
+    {
+      "suite": "tests/audio/test_audio_playback.gd",
+      "exit_code": 0,
+      "assertions": 11
+    },
+    {
+      "suite": "tests/cases/case_001/test_case_redesign.gd",
+      "exit_code": 0,
+      "assertions": 98
+    },
+    {
+      "suite": "tests/cases/case_001/test_case_experience.gd",
+      "exit_code": 0,
+      "assertions": 1294
+    }
+  ],
+  "headless": [
+    {
+      "resolution": "720x1280",
+      "exit_code": 0,
+      "assertions": 1294
+    },
+    {
+      "resolution": "1080x1920",
+      "exit_code": 0,
+      "assertions": 1294
+    },
+    {
+      "resolution": "1080x2400",
+      "exit_code": 0,
+      "assertions": 1290
+    },
+    {
+      "resolution": "720x1600",
+      "exit_code": 0,
+      "assertions": 1290
+    }
+  ],
+  "graphics": [
+    {
+      "resolution": "720x1280",
+      "exit_code": 0,
+      "assertions": 1404,
+      "captures": 21
+    },
+    {
+      "resolution": "1080x1920",
+      "exit_code": 0,
+      "assertions": 1404,
+      "captures": 21
+    },
+    {
+      "resolution": "1080x2400",
+      "exit_code": 0,
+      "assertions": 1400,
+      "captures": 21
+    },
+    {
+      "resolution": "720x1600",
+      "exit_code": 0,
+      "assertions": 1400,
+      "captures": 21
+    }
+  ],
+  "renderer": "Windows Compatibility OpenGL 3.3 Intel UHD Graphics",
+  "official_audio": "Text only; no official recordings produced",
+  "demo_playback": "WASAPI, 11 assertions passed in isolated execution; first concurrent attempt failed position threshold; assertion unchanged",
+  "canonical_sha256": "052d1b73bbc5b8d1beb29da8a3a084f823360c2a90cc48b403239e6e19238064",
+  "voice_inventory_sha256": "6328a582ff82b6ca15346c8553353515629d06efda294c5d131d27168529e3b7",
+  "pending": [
+    "Human playtest",
+    "Measured human duration",
+    "Android device",
+    "Mobile accessibility and performance",
+    "Official audio production"
+  ],
+  "human_fun_verified": false,
+  "import_exit_code": 0
+}

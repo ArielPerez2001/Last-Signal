@@ -44,6 +44,10 @@ func _notification(what: int) -> void:
 
 
 func go_back() -> void:
+	if current_screen == &"console" and console.experience.visible and console.experience.mode != "call":
+		console.experience.go_back()
+		console.experience._queue_render()
+		return
 	if current_screen != &"menu":
 		_open_menu()
 

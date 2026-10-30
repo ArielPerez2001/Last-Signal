@@ -12,6 +12,7 @@ const DEFAULT_DIRECTORY: String = "user://saves"
 const MAX_FILE_BYTES: int = 4 * 1024 * 1024
 const DOCUMENT_FIELDS: Array[String] = ["save_version", "game_id", "case_id", "content_version", "narrative_schema_version", "content_fingerprint", "saved_at", "session"]
 const SLOT_FILES: Array[String] = ["slot_01.json", "slot_01.tmp", "slot_01.bak", "slot_01.bak.tmp"]
+const TUTORIAL_IDS: Array[String] = ["answer", "dialogue", "record", "deduction", "audio", "dispatch", "critical", "archive"]
 
 # Main-thread service. Shared locks cover distinct managers using the same directory.
 static var _directory_locks: Dictionary = {}
@@ -24,6 +25,24 @@ var _dirty: bool = false
 var _persisted_snapshot: Dictionary = {}
 var _last_result: Dictionary = {}
 var _write_count: int = 0
+var _tutorials_seen: Array = []
+var _persisted_tutorials: Array = []
+
+
+func get_tutorials_seen() -> Array:
+	return _tutorials_seen.duplicate() if _engine != null and _engine.get_case_id() == "c001" else []
+
+
+func mark_tutorial_seen(id: String) -> Dictionary:
+	if _busy or _engine == null or _engine.is_busy() or _engine.get_case_id() != "c001" or _engine.get_state_snapshot().is_empty() or id not in TUTORIAL_IDS:
+		return _result(false, "invalid_tutorial", "No se puede registrar esta instrucción.")
+	if id in _tutorials_seen:
+		return _result(true, "unchanged", "Instrucción ya consultada.")
+	_tutorials_seen.append(id)
+	_dirty = true
+	if _autosave_enabled:
+		request_autosave()
+	return _result(true, "tutorial_seen", "Instrucción consultada.")
 
 
 func _init(engine: RefCounted = null, directory: String = DEFAULT_DIRECTORY) -> void:
@@ -111,6 +130,8 @@ func _save() -> Dictionary:
 		"content_fingerprint": metadata.content_fingerprint,
 		"saved_at": Time.get_datetime_string_from_system(true) + "Z", "session": snapshot,
 	}
+	if metadata.case_id == "c001" and not _tutorials_seen.is_empty():
+		document["presentation"] = {"version": 1, "tutorials_seen": _tutorials_seen.duplicate()}
 	var validation: Dictionary = _validate_document(document)
 	if not validation.ok:
 		return validation
@@ -148,6 +169,7 @@ func _save() -> Dictionary:
 	if not confirmed.ok or confirmed.data.document != validation.data.document:
 		return _result(false, "commit_verify_error", "El principal no pasó la verificación final; consulte el respaldo.")
 	_persisted_snapshot = snapshot.duplicate(true)
+	_persisted_tutorials = _tutorials_seen.duplicate()
 	_dirty = false
 	_write_count += 1
 	return _result(true, "saved", "Partida guardada y verificada.", _metadata(document))
@@ -172,6 +194,8 @@ func _load(backup_only: bool) -> Dictionary:
 			validation = _result(false, "restore_failed", "No se reemplazó la sesión activa.")
 		else:
 			_persisted_snapshot = _engine.get_state_snapshot()
+			_tutorials_seen = validation.data.document.get("presentation", {}).get("tutorials_seen", []).duplicate()
+			_persisted_tutorials = _tutorials_seen.duplicate()
 			_dirty = false
 			validation = _result(true, "restored_backup" if validation.data.recovered_from_backup else "loaded", "Sesión restaurada desde el respaldo; archivos originales conservados." if validation.data.recovered_from_backup else "Sesión restaurada.", {"metadata": _metadata(validation.data.document), "recovered_from_backup": validation.data.recovered_from_backup, "diagnostics": validation.data.diagnostics})
 	return _complete(validation)
@@ -216,7 +240,7 @@ func set_autosave_enabled(enabled: bool) -> Dictionary:
 		_engine.case_loaded.disconnect(content_callback)
 	_autosave_enabled = enabled
 	if enabled:
-		_dirty = _engine.get_state_snapshot() != _persisted_snapshot
+		_dirty = _engine.get_state_snapshot() != _persisted_snapshot or _tutorials_seen != _persisted_tutorials
 	return _result(true, "autosave_enabled" if enabled else "autosave_disabled", "Política de autoguardado actualizada.")
 
 
@@ -247,11 +271,11 @@ func _needs_save() -> bool:
 	if _engine == null:
 		return false
 	var snapshot: Dictionary = _engine.get_state_snapshot()
-	return not snapshot.is_empty() and (_dirty or snapshot != _persisted_snapshot)
+	return not snapshot.is_empty() and (_dirty or snapshot != _persisted_snapshot or _tutorials_seen != _persisted_tutorials)
 
 
 func _on_state_changed(snapshot: Dictionary) -> void:
-	_dirty = snapshot != _persisted_snapshot
+	_dirty = snapshot != _persisted_snapshot or _tutorials_seen != _persisted_tutorials
 	request_autosave()
 
 
@@ -263,6 +287,8 @@ func _on_restored(snapshot: Dictionary) -> void:
 
 func _on_case_loaded(_case_id: String) -> void:
 	_persisted_snapshot = {}
+	_tutorials_seen.clear()
+	_persisted_tutorials.clear()
 	_dirty = false
 
 
@@ -273,7 +299,20 @@ func _flush_autosave() -> void:
 
 
 func _validate_document(value: Variant) -> Dictionary:
-	if not value is Dictionary or not StateValidator.json_safe(value, 0, [0]) or not StateValidator.has_fields(value, DOCUMENT_FIELDS):
+	if not value is Dictionary or not StateValidator.json_safe(value, 0, [0]):
+		return _result(false, "invalid_save", "Valores no JSON.")
+	var fields: Array = DOCUMENT_FIELDS.duplicate()
+	if value.has("presentation"):
+		fields.append("presentation")
+		var ui: Variant = value.presentation
+		if value.get("case_id") != "c001" or not ui is Dictionary or not StateValidator.has_fields(ui, ["version", "tutorials_seen"]) or not StateValidator.is_integer(ui.version, 1, 1) or not ui.tutorials_seen is Array or ui.tutorials_seen.size() > TUTORIAL_IDS.size():
+			return _result(false, "invalid_presentation", "Metadatos de orientación no compatibles.")
+		var seen: Array = []
+		for id: Variant in ui.tutorials_seen:
+			if not id is String or id not in TUTORIAL_IDS or id in seen:
+				return _result(false, "invalid_presentation", "Instrucción desconocida o repetida.")
+			seen.append(id)
+	if not StateValidator.has_fields(value, fields):
 		return _result(false, "invalid_save", "Formato incompleto, campos desconocidos o valores no JSON.")
 	var loaded_schema: int = int(_engine.get_case_metadata().get("narrative_schema_version", 1)) if _engine != null else 1
 	var expected_save_version: int = loaded_schema
@@ -303,6 +342,8 @@ func _validate_document(value: Variant) -> Dictionary:
 	document.save_version = int(document.save_version)
 	document.narrative_schema_version = int(document.narrative_schema_version)
 	document.session = state.data
+	if document.has("presentation"):
+		document.presentation.version = 1
 	return _result(true, "valid_save", "Guardado validado.", {"document": document})
 
 

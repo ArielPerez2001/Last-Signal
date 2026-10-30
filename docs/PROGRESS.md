@@ -2,6 +2,10 @@
 
 ## Estado actual
 
+**Publicación posterior autorizada de 11R · 2026-10-29:** después del cierre, el usuario solicitó «Directo pa github». Esta autorización posterior permite commit/push de la entrega 11R y del informe de jugabilidad previo a main de ArielPerez2001/Last-Signal. Antes de publicar, fetch confirmó HEAD = origin/main en ca0d75f; diff --check limpio. Incluye código, pruebas, documentación y 84 capturas. La copia idéntica del informe en la raíz pasa a enlazar el documento íntegro de docs/cases, evitando duplicación y enlaces relativos incorrectos. Las restricciones de publicación en los registros de desarrollo conservan su contexto histórico. Se mantienen los límites de Android/audio/evaluación humana; no se inicia 09B, 12 o 13.
+
+**PROMPT 11R — reestructuración local:** la llamada sustituye las cuatro pestañas oficiales; consultas y fuentes directas, razonamiento contextual, ayuda voluntaria, archivo opcional y tutoriales persistentes por SaveManager. Canon/fingerprint y decisiones A/B/C conservados. [Plan](ux/CASE_001_REDESIGN_PLAN.md), [comparativa](ux/CASE_001_BEFORE_AFTER.md), [contrato](technical/CASE_FLOW_EXPERIENCE.md) y [protocolo humano](ux/CASE_001_PLAYTEST_PLAN.md). Resultados definitivos de esta revisión en su apartado al final del registro. Sin commits/pushes ni inicio de 09B, 12 o 13; evaluación humana y Android pendientes.
+
 Actualizado: 2026-10-29. **PROMPT 11: implementación funcional del Caso 001 realizada, con validación auditiva y Android pendientes.** 38 diálogos/57 opciones, diez evidencias/cuatro deducciones, dos grabaciones con ruta textual y recursos sonoros pendientes, mapa del hotel/R1 y tres desenlaces. Nueva partida/Continuar oficiales, demos aisladas. Godot 4.7.2 estable / Windows / Compatibility. No se presenta como experiencia totalmente validada. Trabajo detenido antes de 12; 09B sigue pendiente. Sin commits/pushes en 11.
 
 **Revisión UX posterior autorizada e implementada:** objetivo contextual, avisos de avance, consultas agrupadas, entrada sin doble respuesta, navegación con posición conservada, retorno directo, deducción con confirmación fija, despacho de dos pasos y audio textual sin controles inactivos. [Descripción y límites](cases/CASE_001_UX_REVIEW.md). Conserva datos/fingerprint y decisiones A/B/C. Pruebas de escritorio aprobadas; la comodidad y duración humana aún requieren una partida del usuario. No inicia fases posteriores ni publica cambios.
@@ -13,6 +17,12 @@ Publicaciones históricas: 08 en cc13c23 y, tras otra autorización expresa «Di
 - Después del cierre de la corrección UX, el usuario solicitó expresamente «Directo a github». Esta autorización posterior permite commit/push de la entrega local pendiente de 11 y su revisión; las restricciones de publicación registradas durante el desarrollo conservan su contexto histórico.
 - Destino: main de ArielPerez2001/Last-Signal. Antes de preparar el commit, HEAD y origin/main coincidían en 5d12f88; diff --check sin incidencias. Se incluyen contenido oficial, corrección de flujo, pruebas, documentación y capturas.
 - Se mantienen los resultados y límites documentados: Android, producción auditiva y evaluación humana pendientes. No se inicia 12, 13 o 09B por publicar esta entrega.
+
+## Informe de jugabilidad solicitado — 2026-10-29
+
+- Creado [CASE_001_GAMEPLAY_REPORT.md](cases/CASE_001_GAMEPLAY_REPORT.md) sobre el tedio, la cantidad de acciones y la orientación. Revisión de código/datos, decisiones y cuatro capturas existentes de la corrección UX. Distingue mejoras comprobadas, evaluación de fricciones y validación humana pendiente; registra encabezados históricos desactualizados sin reescribir la planificación.
+- Comprobaciones repetidas en Godot 4.7.2: test_case_guidance, 108 aserciones; test_case_flow, diez rutas A/B/C y 3285 aserciones. Ambas suites aprobadas, 3393 aserciones en esta revisión. Los resultados anteriores de 20 suites y 56 capturas se citan como históricos; no se repitieron todas ni hubo nueva partida humana/Android.
+- Solo informe y este registro; sin cambios de producto o código, nuevas decisiones de diseño, commit/push o inicio de fases. La reducción de fricción no se presenta como demostración de que el tedio esté resuelto.
 
 ## Etapas completadas
 
@@ -28,7 +38,7 @@ Publicaciones históricas: 08 en cc13c23 y, tras otra autorización expresa «Di
 - **09A — Analizador de grabaciones:** catálogo esquema 3, un reproductor físico, tres WAV propios/mezclas alineadas, tres segmentos, texto equivalente, dos observaciones y deducción. Guardado 3 con comprobante mínimo, sin duplicar estado y conservando 1/2. Cuatro suites nuevas, regresión intacta y 48 capturas reales en cuatro tamaños. Sin locuciones de llamadas.
 - **10 — Mapa y despacho:** catálogo esquema 4, tres ubicaciones/sectores técnicos, tres incidentes y dos unidades. Confirmación explícita, asignaciones exclusivas y llegada/resultado/liberación por partes. Estado central enum, consecuencias/evidencias atómicas, guardado 4 y lectores 1/2/3. Tres suites, regresión previa y 48 capturas reales en cuatro tamaños; no integra Caso 001.
 
-00–08, 09A y 10 completados; 09B pospuesto, 11–23 y 19.1–19.4 pendientes. 09 figura en proceso solo por esa división; no bloquea 11 ni autoriza su ejecución. Aceptación en [ROADMAP.md](ROADMAP.md). Registros anteriores conservan el alcance histórico de su entrega; las ampliaciones se detallan por fase. El diseño de 02 fue aprobado en 03.
+00–08, 09A y 10 completados; 11 integrado funcionalmente y revisado mediante UX/11R, con validación humana, auditiva y Android pendientes. 09B pospuesto; 12–23 y 19.1–19.4 pendientes. 09 figura en proceso solo por esa división. Aceptación en [ROADMAP.md](ROADMAP.md). Registros anteriores conservan el alcance histórico de su entrega; las ampliaciones se detallan por fase. El diseño de 02 fue aprobado en 03.
 
 ## Cambios de fase 01 — 2026-10-27
 
@@ -690,3 +700,52 @@ Limitaciones: no se afirma que el juego ya resulte entretenido para todos ni que
 ## Próxima etapa autorizable
 
 **12 — Resultados y finales**, solo mediante autorización explícita de su prompt. La integración funcional de 11 termina aquí con producción/validación sonora y Android pendientes. 09B sigue pospuesto. **No se inicia 12 ni se realizan commits/pushes.** Al reanudar consultar [AGENTS.md](../AGENTS.md), [informe del caso](cases/CASE_001_IMPLEMENTATION_REPORT.md), checklist, documentación técnica y diseño aprobado. El roadmap no constituye autorización.
+
+## PROMPT 11R — Reestructuración del recorrido — 2026-10-29
+
+### Alcance y entrega
+
+Autorización expresa en PROMPT 11R: auditoría, rediseño e implementación, tutorial progresivo, razonamiento contextual y reducción de operaciones, conservando premisa y A/B/C. Se documentó [el plan](ux/CASE_001_REDESIGN_PLAN.md) antes de implementar; [auditoría](ux/CASE_001_ACTION_AUDIT.md) individual de 38 diálogos/57 opciones, [comparativa](ux/CASE_001_BEFORE_AFTER.md), [protocolo humano](ux/CASE_001_PLAYTEST_PLAN.md) e [informe final](ux/CASE_001_REDESIGN_REPORT.md) entregados. D-072–D-076 registran las decisiones. Las secciones anteriores conservan su alcance histórico.
+
+- Llamada como superficie oficial; cuatro pestañas/cabecera/guía grandes ocultas en campaña. Las demos conservan sus paneles.
+- Verificación directa, primera deducción con fuentes y conclusiones, audio textual con fragmento pertinente, inspección sin mapa obligatorio y preparación sin traspasos redundantes. Registros e historial voluntarios.
+- Objetivo breve, propósito local, tutorial por necesidad narrativa y ayudas voluntarias; no se altera tiempo narrativo, emociones, pistas o resultado al consultar orientación.
+- CaseFlowDirector proyecta experience.json. CaseExperience utiliza los managers ya compartidos; no hay otro motor, inventario, AudioStreamPlayer o guardado. Contratos en [CASE_FLOW_EXPERIENCE](technical/CASE_FLOW_EXPERIENCE.md) y documentos técnicos afectados.
+- Secuencias de una a cuatro opciones normales con candidato/rollback y publicación estable. DeductionManager evalúa preguntas y confirma las Q originales; las selecciones libres siguen en las APIs/demos.
+- Canon, voice_inventory, STORY_BIBLE, project.godot y Theme sin cambios. Fingerprint conservado; archivo viejo de ocho campos aceptado. SaveManager admite presentation v1 opcional de tutoriales vistos en la misma ranura, tipos/campos/IDs estrictos. Binarios antiguos pueden rechazar esa extensión; no hay migración narrativa.
+- Verificar desde N05: 3→1 activaciones; primera deducción desde ficha y retorno: 8→3; Q02 con fuentes: 8→3; audio contextual y retorno: 6→3; preparar desde N22: 2→1. Seleccionar/confirmar acceso sigue en dos pasos, mejora previa conservada. Convenciones y límites en la comparativa.
+
+### Comprobaciones definitivas
+
+Godot `4.7.2.stable.official.ed1daf0bf`, Windows/Compatibility, OpenGL 3.3 Intel UHD Graphics. **21 suites funcionales aprobadas; 13 009 aserciones de referencia:** 8172 anteriores, 3285 flujo, 52 validación, 108 contexto, 98 rediseño y 1294 GUI base. El comando antiguo test_case_integrations ahora ejecuta la GUI vigente; no se suma como otra suite. [Resultados portables](validation/prompt_11r/validation_summary.json).
+
+| Ventana | GUI headless final | GUI gráfica final | Capturas |
+| --- | --- | --- | --- |
+| 720×1280 | PASS, 1294 | PASS, 1404 | 21 |
+| 1080×1920 | PASS, 1294 | PASS, 1404 | 21 |
+| 1080×2400 | PASS, 1290 | PASS, 1400 | 21 |
+| 720×1600 | PASS, 1290 | PASS, 1400 | 21 |
+
+Bootstrap/navegación de demos pasan en los cuatro tamaños. Las diferencias de aserciones por tamaño/renderizado corresponden a verificaciones de controles/capturas; no son escenarios humanos nuevos. **84 PNG** con dimensiones correctas, inspeccionados en cuatro hojas de contacto y muestras completas. Incluyen introducción, ficha, deducciones/errores, pistas, audio, confirmación, continuación, mapa opcional, archivo, historial, plan, advertencia, A/B/C y error de E/S. Las trazas ui_route_metrics registran acciones de ratón reales: A 50, B 23, C 24 en referencia, con desvíos de QA y reconocimiento por señal del diálogo nativo; no se presentan como mínimos o duración humana.
+
+Las diez rutas de lógica anteriores mantienen cobertura de 38 diálogos/57 elecciones/diez evidencias y A/B/C; tres rutas GUI recorren la presentación nueva. Las nuevas 98 comprobaciones incluyen Q01–Q04 correctas/incorrectas, fuentes incompletas, revisión obsoleta, rollback total, publicación única, consultas puras, idempotencia, metadatos viejos/nuevos/inválidos y conservación exacta de archivos rechazados. La GUI prueba continuación fría tras asignación, tutoriales vistos, cancelación, plan preparado, corrección y recuperación tras fallo de escritura intencional. Pruebas solo bajo user://save_tests.
+
+La demo física de audio conserva sus once comprobaciones y pasa con WASAPI al ejecutarse aislada. Un primer intento simultáneo falló el umbral de posición inicial; se conserva el resultado como incidencia observada, sin afirmar su causa ni modificar la prueba para aprobar. El caso oficial sigue sin grabaciones producidas y no se acredita escucha humana.
+
+Importación final y arranque normal headless: salida 0; sin errores/advertencias de script. diff --check limpio. Auditoría documental: 404 enlaces locales de docs válidos antes de añadir este registro; 60 referencias runtime literales distintas resueltas. SHA-256 canónico `052d1b73bbc5b8d1beb29da8a3a084f823360c2a90cc48b403239e6e19238064`; inventario `6328a582ff82b6ca15346c8553353515629d06efda294c5d131d27168529e3b7`. Copias previas de contenido/gestor en TEMP; informes locales preexistentes conservados.
+
+Comandos reproducibles (ejecutable existente; las capturas requieren ejecución gráfica):
+
+```powershell
+$r11Godot = 'D:\Descargas\Exe\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64_console.exe'
+& $r11Godot --headless --path 'D:\Ultima Señal' --script res://tests/cases/case_001/test_case_redesign.gd
+& $r11Godot --headless --path 'D:\Ultima Señal' --script res://tests/cases/case_001/test_case_flow.gd
+& $r11Godot --headless --path 'D:\Ultima Señal' --script res://tests/cases/case_001/test_case_integrations.gd -- 720x1280
+& $r11Godot --path 'D:\Ultima Señal' --script res://tests/cases/case_001/test_case_experience.gd -- 720x1280 'D:/Ultima Señal/docs/validation/prompt_11r/720x1280'
+```
+
+Repetir las dos últimas en los otros tamaños de la tabla. Las otras suites constan individualmente en validation_summary.json. No se alteraron las pruebas de lógica anteriores para adaptar resultados; se reemplazó el recorrido GUI cuya interfaz fue autorizada a cambiar.
+
+### Límites y cierre de 11R
+
+Implementación y verificación funcional de escritorio completadas; evaluación humana expresamente pendiente mediante protocolo entregado. No se demuestra entretenimiento, comprensión de una primera partida ni duración de 8–15 minutos. Pendientes Android físico, tacto/gestos, accesibilidad/perfil móvil y producción sonora. Sin nuevas unidades/casos, puntuación definitiva, TTS, instalaciones, APK, commits/pushes o cambios remotos. **Trabajo detenido al finalizar 11R; no se inicia 09B, 12 o 13.**
